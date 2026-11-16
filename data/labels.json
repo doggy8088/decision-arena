@@ -1,0 +1,145 @@
+{
+  "_comment": "測試資料標註。control 組假設 stroke 專案既有音檔發音正確（僅 lu2 已知有瑕疵）；target 組為同一注音 ㄌㄨˊ 的新舊音檔；negative 組不含語音。",
+  "clips": [
+    {
+      "id": "ma",
+      "file": "data/control/ma.mp3",
+      "category": "control",
+      "zhuyin": "ㄇㄚ",
+      "pinyin": "ma1",
+      "expect_lu2": false,
+      "verdict": "correct-audio",
+      "note": "對照組：一聲"
+    },
+    {
+      "id": "ma3",
+      "file": "data/control/ma3.mp3",
+      "category": "control",
+      "zhuyin": "ㄇㄚˇ",
+      "pinyin": "ma3",
+      "expect_lu2": false,
+      "verdict": "correct-audio",
+      "note": "對照組：與 ma 同音段、不同聲調，用於檢驗分調能力"
+    },
+    {
+      "id": "da4",
+      "file": "data/control/da4.mp3",
+      "category": "control",
+      "zhuyin": "ㄉㄚˋ",
+      "pinyin": "da4",
+      "expect_lu2": false,
+      "verdict": "correct-audio",
+      "note": "對照組：四聲"
+    },
+    {
+      "id": "ni3",
+      "file": "data/control/ni3.mp3",
+      "category": "control",
+      "zhuyin": "ㄋㄧˇ",
+      "pinyin": "ni3",
+      "expect_lu2": false,
+      "verdict": "correct-audio",
+      "note": "對照組：三聲，聲母 ㄋ（與 ㄌ 易混）"
+    },
+    {
+      "id": "shui3",
+      "file": "data/control/shui3.mp3",
+      "category": "control",
+      "zhuyin": "ㄕㄨㄟˇ",
+      "pinyin": "shui3",
+      "expect_lu2": false,
+      "verdict": "correct-audio",
+      "note": "對照組：複韻母"
+    },
+    {
+      "id": "xue2",
+      "file": "data/control/xue2.mp3",
+      "category": "control",
+      "zhuyin": "ㄒㄩㄝˊ",
+      "pinyin": "xue2",
+      "expect_lu2": false,
+      "verdict": "correct-audio",
+      "note": "對照組：撮口呼 + 二聲"
+    },
+    {
+      "id": "zhong",
+      "file": "data/control/zhong.mp3",
+      "category": "control",
+      "zhuyin": "ㄓㄨㄥ",
+      "pinyin": "zhong1",
+      "expect_lu2": false,
+      "verdict": "correct-audio",
+      "note": "對照組：舌尖後音 + 鼻音韻尾"
+    },
+    {
+      "id": "ai4",
+      "file": "data/control/ai4.mp3",
+      "category": "control",
+      "zhuyin": "ㄞˋ",
+      "pinyin": "ai4",
+      "expect_lu2": false,
+      "verdict": "correct-audio",
+      "note": "對照組：無聲母、四聲"
+    },
+    {
+      "id": "old_M_lu2",
+      "file": "data/lu2/old_M_lu2.mp3",
+      "category": "target",
+      "zhuyin": "ㄌㄨˊ",
+      "pinyin": "lu2",
+      "expect_lu2": false,
+      "verdict": "defective-audio",
+      "note": "舊男聲音檔，使用者判定發音錯誤；實測被聽成 lü2（驢）"
+    },
+    {
+      "id": "new_M_lu2",
+      "file": "data/lu2/new_M_lu2.mp3",
+      "category": "target",
+      "zhuyin": "ㄌㄨˊ",
+      "pinyin": "lu2",
+      "expect_lu2": true,
+      "verdict": "correct-audio",
+      "note": "以 ElevenLabs eleven_v4 重生成的男聲音檔，使用者確認正確"
+    },
+    {
+      "id": "old_F_lu2",
+      "file": "data/lu2/old_F_lu2.mp3",
+      "category": "target",
+      "zhuyin": "ㄌㄨˊ",
+      "pinyin": "lu2",
+      "expect_lu2": false,
+      "verdict": "defective-audio",
+      "note": "舊女聲音檔，使用者判定發音錯誤；實測被聽成 lü3"
+    },
+    {
+      "id": "new_F_lu2",
+      "file": "data/lu2/new_F_lu2.mp3",
+      "category": "target",
+      "zhuyin": "ㄌㄨˊ",
+      "pinyin": "lu2",
+      "expect_lu2": true,
+      "verdict": "correct-audio",
+      "note": "以 ElevenLabs eleven_v4 重生成的女聲音檔，使用者確認正確"
+    },
+    {
+      "id": "silence",
+      "file": "data/negative/silence.mp3",
+      "category": "negative",
+      "zhuyin": null,
+      "pinyin": null,
+      "expect_lu2": false,
+      "verdict": "not-speech",
+      "note": "1 秒純靜音，用於檢驗是否會幻聽出音節"
+    },
+    {
+      "id": "noise",
+      "file": "data/negative/noise.mp3",
+      "category": "negative",
+      "zhuyin": null,
+      "pinyin": null,
+      "expect_lu2": false,
+      "verdict": "not-speech",
+      "note": "1 秒粉紅噪音（振幅 0.02），用於檢驗是否會幻聽出音節"
+    }
+  ]
+}

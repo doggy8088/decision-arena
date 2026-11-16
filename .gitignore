@@ -1,0 +1,13 @@
+# 執行結果
+out/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# macOS
+.DS_Store
+
+# 暫存音檔
+*.wav
