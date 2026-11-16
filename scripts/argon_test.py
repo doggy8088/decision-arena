@@ -97,8 +97,10 @@ def main() -> None:
     print("-" * len(header))
 
     for clip in clips:
-        expected_zhuyin, expected_tone = strip_bopomofo_tone(clip["zhuyin"])
-        expected_pinyin, _ = strip_pinyin(clip["pinyin"])
+        expected_zhuyin, zhuyin_tone = strip_bopomofo_tone(clip["zhuyin"])
+        expected_pinyin, pinyin_tone = strip_pinyin(clip["pinyin"])
+        # 一聲在注音沒有調號，必須回退到拼音的數字（ma1 → 1）
+        expected_tone = zhuyin_tone if zhuyin_tone is not None else pinyin_tone
         output = generate(MODEL, PROMPT, ROOT / clip["file"], thinking=THINKING)
         parsed = parse(output)
 
