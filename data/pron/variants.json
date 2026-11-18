@@ -1,0 +1,96 @@
+{
+  "_comment": "發音判斷基準測試用的語料。用 macOS say 合成；variants 內每一個都是刻意設計的錯誤類型。gold: ok=應該被接受；error=應該被抓出。expect_flag 指出應該被標記的字。",
+  "voices": { "en": "Samantha", "zh": "Meijia" },
+  "items": [
+    {
+      "id": "en_1", "lang": "en", "target": "I like to read books.",
+      "variants": {
+        "correct":      { "text": "I like to read books.", "gold": "ok" },
+        "wrong_word":   { "text": "I like to read hooks.", "gold": "error", "expect_flag": "books", "why": "最小對比 b／h" },
+        "missing_word": { "text": "I like to read.", "gold": "error", "expect_flag": "books", "why": "漏字" },
+        "off_topic":    { "text": "She wants to buy a car.", "gold": "error", "expect_flag": null, "why": "完全不同句" }
+      }
+    },
+    {
+      "id": "en_2", "lang": "en", "target": "The cat sat on the mat.",
+      "variants": {
+        "correct":      { "text": "The cat sat on the mat.", "gold": "ok" },
+        "wrong_word":   { "text": "The cat sat on the hat.", "gold": "error", "expect_flag": "mat", "why": "最小對比 m／h" },
+        "missing_word": { "text": "The cat sat on the.", "gold": "error", "expect_flag": "mat", "why": "漏字" },
+        "off_topic":    { "text": "I have two brothers.", "gold": "error", "expect_flag": null, "why": "完全不同句" }
+      }
+    },
+    {
+      "id": "en_5", "lang": "en", "target": "I would like a glass of water, please.",
+      "variants": {
+        "correct":      { "text": "I would like a glass of water, please.", "gold": "ok" },
+        "wrong_word":   { "text": "I would like a glass of waiter, please.", "gold": "error", "expect_flag": "water", "why": "近似詞混淆" },
+        "missing_word": { "text": "I would like a glass of please.", "gold": "error", "expect_flag": "water", "why": "漏字" },
+        "off_topic":    { "text": "Where is the train station?", "gold": "error", "expect_flag": null, "why": "完全不同句" }
+      }
+    },
+    {
+      "id": "en_8", "lang": "en", "target": "Three green trees grow in the garden.",
+      "variants": {
+        "correct":      { "text": "Three green trees grow in the garden.", "gold": "ok" },
+        "wrong_word":   { "text": "Free green trees grow in the garden.", "gold": "error", "expect_flag": "Three", "why": "th→f 常見母語干擾" },
+        "missing_word": { "text": "Three trees grow in the garden.", "gold": "error", "expect_flag": "green", "why": "漏字" },
+        "off_topic":    { "text": "My sister is a doctor.", "gold": "error", "expect_flag": null, "why": "完全不同句" }
+      }
+    },
+    {
+      "id": "en_9", "lang": "en", "target": "She sells seashells by the seashore.",
+      "variants": {
+        "correct":      { "text": "She sells seashells by the seashore.", "gold": "ok" },
+        "wrong_word":   { "text": "She sells seashells by the seesaw.", "gold": "error", "expect_flag": "seashore", "why": "近似詞混淆" },
+        "missing_word": { "text": "She sells by the seashore.", "gold": "error", "expect_flag": "seashells", "why": "漏字" },
+        "off_topic":    { "text": "The meeting starts at nine.", "gold": "error", "expect_flag": null, "why": "完全不同句" }
+      }
+    },
+    {
+      "id": "zh_1", "lang": "zh", "target": "我喜歡吃蘋果。",
+      "variants": {
+        "correct":    { "text": "我喜歡吃蘋果。", "gold": "ok" },
+        "tone_error": { "text": "我喜歡吃蘋鍋。", "gold": "error", "expect_flag": "果", "why": "三聲→一聲（guǒ→guō）" },
+        "wrong_word": { "text": "我喜歡吃青菜。", "gold": "error", "expect_flag": "蘋果", "why": "換詞" },
+        "off_topic":  { "text": "今天下雨了。", "gold": "error", "expect_flag": null, "why": "完全不同句" }
+      }
+    },
+    {
+      "id": "zh_2", "lang": "zh", "target": "牛肉麵真好吃。",
+      "variants": {
+        "correct":    { "text": "牛肉麵真好吃。", "gold": "ok" },
+        "tone_error": { "text": "牛肉麵真豪吃。", "gold": "error", "expect_flag": "好", "why": "三聲→二聲（hǎo→háo）" },
+        "wrong_word": { "text": "牛肉麵真難吃。", "gold": "error", "expect_flag": "好", "why": "反義詞（nán／hǎo）" },
+        "off_topic":  { "text": "我要去學校。", "gold": "error", "expect_flag": null, "why": "完全不同句" }
+      }
+    },
+    {
+      "id": "zh_6", "lang": "zh", "target": "小兔子乖乖，把門兒開開。",
+      "variants": {
+        "correct":    { "text": "小兔子乖乖，把門兒開開。", "gold": "ok" },
+        "tone_error": { "text": "小兔紫乖乖，把門兒開開。", "gold": "error", "expect_flag": "子", "why": "輕聲→三聲（zi→zǐ）" },
+        "wrong_word": { "text": "小白兔乖乖，把門兒開開。", "gold": "error", "expect_flag": "兔子", "why": "換詞" },
+        "off_topic":  { "text": "這個蘋果很甜。", "gold": "error", "expect_flag": null, "why": "完全不同句" }
+      }
+    },
+    {
+      "id": "zh_8", "lang": "zh", "target": "四是四，十是十，十四是十四。",
+      "variants": {
+        "correct":    { "text": "四是四，十是十，十四是十四。", "gold": "ok" },
+        "tone_error": { "text": "死是四，十是十，十四是十四。", "gold": "error", "expect_flag": "四", "why": "四聲→三聲（sì→sǐ）" },
+        "wrong_word": { "text": "四是四，十是十，四十是四十。", "gold": "error", "expect_flag": "十四", "why": "詞序顛倒" },
+        "off_topic":  { "text": "我今年八歲。", "gold": "error", "expect_flag": null, "why": "完全不同句" }
+      }
+    },
+    {
+      "id": "zh_10", "lang": "zh", "target": "媽媽騎馬，馬慢，媽媽罵馬。",
+      "variants": {
+        "correct":    { "text": "媽媽騎馬，馬慢，媽媽罵馬。", "gold": "ok" },
+        "tone_error": { "text": "媽媽騎馬，馬慢，媽媽馬馬。", "gold": "error", "expect_flag": "罵", "why": "四聲→三聲（mà→mǎ）" },
+        "wrong_word": { "text": "媽媽騎馬，馬慢，媽媽愛馬。", "gold": "error", "expect_flag": "罵", "why": "換詞" },
+        "off_topic":  { "text": "弟弟在睡覺。", "gold": "error", "expect_flag": null, "why": "完全不同句" }
+      }
+    }
+  ]
+}
