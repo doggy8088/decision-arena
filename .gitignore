@@ -11,3 +11,10 @@ __pycache__/
 
 # 暫存音檔
 *.wav
+
+# 研究素材（可重新下載／合成，不進版控）
+data/scenes/*/*.mp3
+data/pron/*.mp3
+
+# App 的錄音與研究紀錄
+app/data/
