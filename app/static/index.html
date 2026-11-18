@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>發音練習實驗室 · Gemini Decisions vs Argon</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">🎙️</span>
+    <div>
+      <h1>發音練習實驗室</h1>
+      <p class="sub">念一句話，同時比較 <code>gemini-decision-1</code> 與 <code>gemini-4-argon</code></p>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span class="chip" id="costChip" title="累計 API 花費">US$ --</span>
+    <button class="ghost" id="historyBtn">研究紀錄</button>
+  </div>
+</header>
+
+<main>
+  <!-- 1. 選句 -->
+  <section class="card sentence-card">
+    <div class="row">
+      <div class="tabs" id="langTabs">
+        <button class="tab active" data-lang="en">English</button>
+        <button class="tab" data-lang="zh">中文</button>
+      </div>
+      <select id="levelSel" title="難度">
+        <option value="0">全部難度</option>
+        <option value="1">★ 簡單</option>
+        <option value="2">★★ 中等</option>
+        <option value="3">★★★ 困難</option>
+        <option value="4">★★★★ 挑戰</option>
+      </select>
+      <button class="ghost" id="nextSentence">換一句 ⟳</button>
+      <button class="ghost" id="speakBtn" title="用系統語音念一次">🔊 聽示範</button>
+    </div>
+
+    <p class="sentence" id="sentenceText">—</p>
+    <p class="pinyin" id="pinyinText"></p>
+    <p class="focus" id="focusText"></p>
+  </section>
+
+  <!-- 2. 錄音 -->
+  <section class="card record-card">
+    <div class="recorder">
+      <button id="recordBtn" class="mic">
+        <span class="mic-icon">🎤</span>
+        <span class="mic-label">按下開始錄音</span>
+      </button>
+      <div class="meter-wrap">
+        <canvas id="meter" width="640" height="72"></canvas>
+        <div class="recTimer" id="recTimer">00.0s</div>
+      </div>
+    </div>
+
+    <div class="review" id="review" hidden>
+      <audio id="preview" controls></audio>
+      <div class="review-actions">
+        <button class="ghost" id="redoBtn">重錄</button>
+        <button class="primary" id="submitBtn">送出判斷 →</button>
+      </div>
+    </div>
+
+    <div class="who">
+      <label>誰在唸
+        <select id="speakerSel">
+          <option value="child">小朋友</option>
+          <option value="teen">青少年</option>
+          <option value="adult">大人</option>
+        </select>
+      </label>
+      <label>備註（選填）
+        <input id="speakerNote" placeholder="例如：6 歲、第一次練這句" maxlength="60">
+      </label>
+      <label class="file-label">或上傳音檔
+        <input type="file" id="fileInput" accept="audio/*">
+      </label>
+    </div>
+  </section>
+
+  <!-- 3. 結果 -->
+  <section class="results" id="results" hidden>
+    <div class="verdict" id="verdict">
+      <span class="verdict-emoji">⏳</span>
+      <div>
+        <p class="verdict-main" id="verdictMain">正在判斷…</p>
+        <p class="verdict-sub" id="verdictSub"></p>
+      </div>
+    </div>
+
+    <div class="card blind-card" id="blindBox">
+      <header>
+        <h2>🔎 盲聽（不給答案）</h2>
+        <code>gemini-4-argon</code>
+      </header>
+      <p class="hint">
+        這一支只做聽寫、不告訴它題目，所以不會把錯的字自動「聽成」對的字。
+        下面的逐字比對是程式自己算的，不是模型說的。
+      </p>
+      <p class="transcript" id="blindTranscript">—</p>
+      <div class="chips" id="blindWords"></div>
+      <p class="blind-score" id="blindScore"></p>
+      <footer class="meta" id="blindMeta"></footer>
+    </div>
+
+    <div class="grid2">
+      <article class="card model-card" id="decisionsCard">
+        <header>
+          <h2>Decisions API</h2>
+          <code>gemini-decision-1</code>
+        </header>
+        <div class="bigstat">
+          <span class="bigstat-num" id="decP">—</span>
+          <span class="bigstat-label">P（唸對）</span>
+        </div>
+        <div class="bar"><div class="bar-fill" id="decBar"></div></div>
+        <p class="level-label" id="decLevel">—</p>
+        <div class="levelbars" id="decLevels"></div>
+        <h3>逐字判斷</h3>
+        <div class="chips" id="decWords"></div>
+        <footer class="meta" id="decMeta"></footer>
+      </article>
+
+      <article class="card model-card" id="argonCard">
+        <header>
+          <h2>生成式對照組</h2>
+          <code>gemini-4-argon</code>
+        </header>
+        <div class="bigstat">
+          <span class="bigstat-num" id="argScore">—</span>
+          <span class="bigstat-label">/ 100 發音分</span>
+        </div>
+        <div class="bar"><div class="bar-fill alt" id="argBar"></div></div>
+        <p class="level-label" id="argSummary">—</p>
+        <h3>它聽到的</h3>
+        <p class="transcript" id="argTranscript">—</p>
+        <h3>逐字判斷</h3>
+        <div class="chips" id="argWords"></div>
+        <div class="tips" id="argTips"></div>
+        <footer class="meta" id="argMeta"></footer>
+      </article>
+    </div>
+
+    <div class="card agreement" id="agreementBox" hidden>
+      <h3>兩模型一致性</h3>
+      <p id="agreementText"></p>
+    </div>
+
+    <!-- 4. 回饋 -->
+    <div class="card feedback" id="feedbackBox">
+      <h3>這份回饋準嗎？<span class="hint">（記錄下來做研究，不會上傳到別的地方）</span></h3>
+      <div class="fb-row">
+        <span class="fb-label">Decisions 的判斷</span>
+        <div class="seg" data-field="decisions_verdict">
+          <button data-val="accurate">準</button>
+          <button data-val="partial">部分</button>
+          <button data-val="inaccurate">不準</button>
+        </div>
+      </div>
+      <div class="fb-row">
+        <span class="fb-label">Argon 的判斷</span>
+        <div class="seg" data-field="argon_verdict">
+          <button data-val="accurate">準</button>
+          <button data-val="partial">部分</button>
+          <button data-val="inaccurate">不準</button>
+        </div>
+      </div>
+      <div class="fb-row">
+        <span class="fb-label">盲聽轉寫</span>
+        <div class="seg" data-field="blind_verdict">
+          <button data-val="accurate">準</button>
+          <button data-val="partial">部分</button>
+          <button data-val="inaccurate">不準</button>
+        </div>
+      </div>
+      <div class="fb-row">
+        <span class="fb-label">小朋友反應</span>
+        <div class="seg" data-field="child_reaction">
+          <button data-val="happy">😀 喜歡</button>
+          <button data-val="neutral">😐 普通</button>
+          <button data-val="frustrated">😣 挫折</button>
+        </div>
+      </div>
+      <textarea id="fbNote" rows="2" placeholder="補充觀察：哪個字判錯？小朋友看得懂回饋嗎？"></textarea>
+      <button class="primary" id="saveFeedback">儲存回饋</button>
+      <span class="saved" id="fbSaved" hidden>✓ 已記錄</span>
+    </div>
+  </section>
+
+  <!-- 5. 歷史 -->
+  <section class="card history" id="history" hidden>
+    <div class="row">
+      <h2>研究紀錄</h2>
+      <div>
+        <a class="ghost btn-link" href="/api/export">匯出 CSV</a>
+        <button class="ghost" id="closeHistory">關閉</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table id="historyTable">
+        <thead>
+          <tr><th>時間</th><th>句子</th><th>誰</th><th>Decisions</th><th>Argon</th>
+              <th>回饋</th><th>音檔</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="empty" id="historyEmpty" hidden>還沒有紀錄。</p>
+  </section>
+</main>
+
+<footer class="sitefoot">
+  <p>錄音與回饋都存在本機 <code>app/data/</code>；只有音訊會送到 Gemini API 做判斷。
+     預算上限 US$5，目前 <span id="footCost">—</span>。</p>
+</footer>
+
+<div class="toast" id="toast" hidden></div>
+<script src="app.js"></script>
+</body>
+</html>

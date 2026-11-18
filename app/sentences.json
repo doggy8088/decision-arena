@@ -1,0 +1,27 @@
+{
+  "_comment": "題庫。zh 句子的 pinyin 逐字對齊（空格分隔、含調號），用於顯示提示；en 的 focus 說明練習重點。",
+  "en": [
+    { "id": "en_1", "level": 1, "text": "I like to read books.", "focus": "短句暖身、常見字" },
+    { "id": "en_2", "level": 1, "text": "The cat sat on the mat.", "focus": "短母音 æ" },
+    { "id": "en_3", "level": 1, "text": "My favorite color is blue.", "focus": "雙母音、連音" },
+    { "id": "en_4", "level": 2, "text": "The quick brown fox jumps over the lazy dog.", "focus": "全字母句、節奏" },
+    { "id": "en_5", "level": 2, "text": "I would like a glass of water, please.", "focus": "語調、句尾禮貌上揚" },
+    { "id": "en_6", "level": 2, "text": "Could you please pass me the red pencil?", "focus": "問句語調、r／l" },
+    { "id": "en_7", "level": 2, "text": "The weather is really wonderful today.", "focus": "ð／w／r" },
+    { "id": "en_8", "level": 3, "text": "Three green trees grow in the garden.", "focus": "th／gr／tr 子音串" },
+    { "id": "en_9", "level": 3, "text": "She sells seashells by the seashore.", "focus": "s 與 ʃ 對比" },
+    { "id": "en_10", "level": 4, "text": "Peter Piper picked a peck of pickled peppers.", "focus": "p 爆破與氣流" }
+  ],
+  "zh": [
+    { "id": "zh_1", "level": 1, "text": "我喜歡吃蘋果。", "pinyin": "wǒ xǐ huān chī píng guǒ", "focus": "三聲連讀" },
+    { "id": "zh_2", "level": 1, "text": "牛肉麵真好吃。", "pinyin": "niú ròu miàn zhēn hǎo chī", "focus": "ㄋ／ㄌ、ㄓ" },
+    { "id": "zh_3", "level": 2, "text": "今天天氣很好，我們去公園玩。", "pinyin": "jīn tiān tiān qì hěn hǎo, wǒ men qù gōng yuán wán", "focus": "ㄑ／ㄊ、連續三聲" },
+    { "id": "zh_4", "level": 2, "text": "老師說我們要努力學習。", "pinyin": "lǎo shī shuō wǒ men yào nǔ lì xué xí", "focus": "ㄌ／ㄖ、ㄒ" },
+    { "id": "zh_5", "level": 2, "text": "我需要一杯冰水。", "pinyin": "wǒ xū yào yì bēi bīng shuǐ", "focus": "ㄅㄧㄥ、ㄕㄨㄟ" },
+    { "id": "zh_6", "level": 2, "text": "小兔子乖乖，把門兒開開。", "pinyin": "xiǎo tù zi guāi guai, bǎ ménr kāi kai", "focus": "兒化韻、疊字輕聲" },
+    { "id": "zh_7", "level": 2, "text": "藍藍的天空白白的雲。", "pinyin": "lán lán de tiān kōng bái bái de yún", "focus": "ㄢ／ㄤ 鼻音韻尾" },
+    { "id": "zh_8", "level": 3, "text": "四是四，十是十，十四是十四。", "pinyin": "sì shì sì, shí shì shí, shí sì shì shí sì", "focus": "ㄙ／ㄕ 舌尖前後" },
+    { "id": "zh_9", "level": 3, "text": "十二點半在圖書館見面。", "pinyin": "shí èr diǎn bàn zài tú shū guǎn jiàn miàn", "focus": "ㄢ／ㄤ、時間詞" },
+    { "id": "zh_10", "level": 4, "text": "媽媽騎馬，馬慢，媽媽罵馬。", "pinyin": "mā ma qí mǎ, mǎ màn, mā ma mà mǎ", "focus": "一／二／三／四聲對比" }
+  ]
+}
