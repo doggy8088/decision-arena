@@ -1,333 +1,578 @@
-# Gemini Decisions 1 辨音測試
+# Gemini Decisions 多模態實測
 
-驗證 **Gemini Decisions API（`gemini-decision-1`）能不能判斷國語單音節的發音正確性**，並以 `gemini-4-argon`、`gemini-3.8-flash`、`gemini-3.1-flash-lite` 作為對照。
+三個研究，回答同一個問題：**`gemini-decision-1`（Decisions API）在「非文字」的判斷上到底能做什麼、不能做什麼**，並以 `gemini-4-argon` 當對照組。
 
-測試日期：2026-11-17 ｜ 環境：macOS（arm64）、Python 3（僅標準函式庫）｜ 樣本：14 段音檔
+測試日期：2026-11-17 ｜ 環境：macOS arm64、Python 3（僅標準函式庫）、ffmpeg ｜ 總花費：約 **US$1.0**
+
+> 📊 **互動版報告**：[`report.html`](report.html)（單檔、可離線開、深淺色切換）。
+> 由 `python3 scripts/build_report.py` 從 `out/*.json` 直接產生，報告裡的數字與本文同源。
+
+> 🔍 **注音音檔稽核**：[`audit-report.html`](audit-report.html)（flash-lite 全量 2,934 檔的檢查結果）。
+> 由 `python3 scripts/build_audit_report.py` 產生。
+
+> 🏢 **Microsoft Decision 1.1 實測**：[`ms-decision-report.html`](ms-decision-report.html)。
+> 結論：該端點只吃文字、不支援音訊；文字任務上與 Gemini 同級但請求不穩。
+> 「支援音訊嗎」的完整查證（一手文件 + 端點探針）：[`docs/ms-decision-audio-support.md`](docs/ms-decision-audio-support.md)。
 
 ---
 
 ## 一句話結論
 
-**Decisions API 不適合這個任務**；同一個任務交給 `gemini-4-argon` 或便宜的 `gemini-3.1-flash-lite` 都做得很好——但要用多次取樣投票，單次呼叫會誤判。
+| 任務 | `gemini-decision-1` | `gemini-4-argon` | 該用哪個 |
+| --- | --- | --- | --- |
+| **單音節辨音**（研究一） | ❌ 無鑑別力 | ✅ 12/12（需多次取樣） | Argon |
+| **音場分類 7 類**（研究二） | 🟡 76%（32/42） | ✅ 90%（38/42） | 粗分類可用 Decisions，細分類用 Argon |
+| **「有沒有人聲」守門**（研究二） | ✅ 42/42 | ✅ 42/42 | **兩者都可以**，Decisions 快 13 倍、便宜 26 倍 |
+| **發音練習判斷**（研究三） | ❌ 逐字抓錯 0/34、誤放 19/30 | 🟡 句子層級準，聲調不行 | 見研究三 |
 
-| API／模型 | 能否判斷單音節發音正確性 | 實測結果 |
-| --- | --- | --- |
-| `gemini-decision-1`（Decisions API） | **否** | 12 段無鑑別力；正確的 `lu2` 拿到 P=0.611，毫不相干的「水」卻拿到 P=0.780；四選一 0/2 命中 |
-| `gemini-4-argon` | **是**（需多次取樣） | 首輪 12/12；重跑對照組 8/8、瑕疵 2/2 全抓出，但正確檔出現 1 次誤判（`lóng`） |
-| `gemini-3.8-flash` | 是（小樣本） | 5/5，含新舊 `lu2` 的 `lü`／`lu` 區辨 |
-| `gemini-3.1-flash-lite` | 是（小樣本） | 5/5，負向控制（靜音／噪音）正確回 `NONE` |
-
----
-
-## 背景：為什麼會有這組測試資料
-
-來源是 [stroke](https://github.com/doggy8088/stroke)（國小生字筆順練習 PWA）的一個真實缺陷：
-
-1. 「爐」的注音是 `ㄌㄨˊ`（`lu2`），音檔 `M/lu2.mp3`、`F/lu2.mp3` 由 13 個 ㄌㄨˊ 的字共用。
-2. 使用者反映發音錯誤。本次測試中，模型盲聽舊檔得到 **`lü2`／`lü3`**，也就是被唸成「驢」而不是「爐」。
-3. 舊檔已用 **ElevenLabs `eleven_v4`** 重新生成（男聲 Will 保哥、女聲 Vivian），使用者確認新發音正確。
-
-於是得到一組難得的 **labeled pair**：同一個注音、一個確定錯、一個確定對。這正是判斷「API 到底聽不聽得出來」最直接的素材。
-
-> 音檔是**按注音共用**的，不是逐字；全站 2,934 個音檔只對應 1,468 個音節。
+**最反直覺的一點**：Decisions 在「說話 / 唱歌 / 純音樂 / 噪音」這四類上是 **24/24 全對**，而且只要 500 ms、幾乎零成本。它壞掉的地方非常特定——**「同一個內容、不同場合」的判斷**（演唱會 vs 錄音室）、**人數**（一個人 vs 多個人）、以及**語氣層的音對不對**。這正好對應它「一次前向傳播、給你校準機率」的設計：它能回答「這段音訊屬於哪個語意類型」，但答不出「有幾個人在講」「這個音節的聲調對嗎」。
 
 ---
 
-## 測試資料
+## 目錄
 
-`data/labels.json` 是唯一的標註來源。
-
-### 對照組（假設既有音檔正確）
-
-| id | 期望 | 用途 |
-| --- | --- | --- |
-| `ma` | ㄇㄚ（ma1） | 一聲基準 |
-| `ma3` | ㄇㄚˇ（ma3） | 與 `ma` 同音段、不同調，專門檢驗分調能力 |
-| `da4` | ㄉㄚˋ（da4） | 四聲 |
-| `ni3` | ㄋㄧˇ（ni3） | 聲母 ㄋ（與 ㄌ 易混） |
-| `shui3` | ㄕㄨㄟˇ（shui3） | 複韻母 |
-| `xue2` | ㄒㄩㄝˊ（xue2） | 撮口呼 ＋ 二聲 |
-| `zhong` | ㄓㄨㄥ（zhong1） | 舌尖後音 ＋ 鼻音韻尾 |
-| `ai4` | ㄞˋ（ai4） | 無聲母、四聲 |
-
-### 目標組（已知對錯）
-
-| id | 期望 | 判定 |
-| --- | --- | --- |
-| `old_M_lu2` | ㄌㄨˊ | 瑕疵（使用者判定錯） |
-| `new_M_lu2` | ㄌㄨˊ | 正確 |
-| `old_F_lu2` | ㄌㄨˊ | 瑕疵（使用者判定錯） |
-| `new_F_lu2` | ㄌㄨˊ | 正確 |
-
-### 負向控制（不含語音）
-
-| id | 內容 |
-| --- | --- |
-| `silence` | 1 秒純靜音 |
-| `noise` | 1 秒粉紅噪音（振幅 0.02） |
+1. [研究一：單音節辨音](#研究一單音節辨音)
+2. [研究二：音場分類（YouTube 片段）](#研究二音場分類youtube-片段)
+3. [研究三：發音練習能不能靠它](#研究三發音練習能不能靠它)
+4. [發音練習 Web App](#發音練習-web-app)
+5. [成本總表](#成本總表)
+6. [限制](#限制)
+7. [如何重跑](#如何重跑)
+8. [專案結構](#專案結構)
 
 ---
 
-## 測試方法
+# 研究一：單音節辨音
 
-所有請求都是 `temperature: 0`，每個音檔一次請求。
+> 完整版仍在本文後段，這裡只留結論與關鍵數據。
 
-### 1. Decisions API（`gemini-decision-1`）
+**素材**：14 段音檔，含一組難得的 labeled pair——同一個注音 `ㄌㄨˊ` 的「確定錯」（舊 ElevenLabs 音檔被唸成 `lü`）與「確定對」（重新生成）。
 
-`POST /v1beta/decisions`，一個音訊 input ＋ 兩個獨立題目：
+| API／模型 | 判斷單音節發音正確性 | 實測 |
+| --- | --- | --- |
+| `gemini-decision-1` | **否** | 12 段無鑑別力；正確的「爐」P=0.611，毫不相干的「水」P=0.780；四選一 0/2 |
+| `gemini-4-argon` | 是（需多次取樣） | 首輪 12/12；重跑 8/8 對照組、瑕疵 2/2 抓出，但出現 1 次假警報（把 `lu2` 聽成 `lóng`） |
+| `gemini-3.8-flash` | 是（小樣本） | 5/5 |
+| `gemini-3.1-flash-lite` | 是（小樣本） | 5/5，靜音／噪音正確回 `NONE`（沒有幻聽） |
+
+**判讀**：Decisions 不是「聽錯」，是**它沒在做音素辨識**。它的 `confidence` 看起來很專業，但與正確性無關——這是本專案最重要的一個陷阱：**有校準分數 ≠ 可用於驗收**。
+
+<details>
+<summary>研究一原始數據（點開）</summary>
+
+### Decisions：無鑑別力
+
+| 音檔 | 應為 lu2？ | P(lu2) | 四選一最高 |
+| --- | --- | --- | --- |
+| `ma` | 否 | 0.180 | lü3 |
+| `ma3` | 否 | 0.708 | lü2 |
+| `da4` | 否 | 0.704 | lü2 |
+| `ni3` | 否 | 0.596 | lü3 |
+| `shui3` | 否 | 0.780 | lü2 |
+| `xue2` | 否 | 0.761 | lü2 |
+| `zhong` | 否 | 0.727 | **lu2** |
+| `ai4` | 否 | 0.589 | lü2 |
+| `old_M_lu2` | 否 | 0.657 | lü2 |
+| `new_M_lu2` | **是** | 0.611 | lü2 |
+| `old_F_lu2` | 否 | 0.691 | lü2 |
+| `new_F_lu2` | **是** | 0.715 | lü2 |
+
+正例平均 0.663、其餘 0.639；`min(P|正)=0.611 < max(P|負)=0.780` → 無法分離。重跑一次結論相同（正例 0.703、其餘 0.597，四選一仍 0/2）。
+
+### Argon 盲測
+
+| 音檔 | 期望 | Argon | 判定 |
+| --- | --- | --- | --- |
+| `ma` / `ma3` / `da4` / `ni3` / `shui3` / `xue2` / `zhong` / `ai4` | 各自音節 | 全部正確 | ✅ 8/8 |
+| `old_M_lu2` | 應被判定為錯 | `ㄌㄩ｜lü｜2` | 🎯 |
+| `old_F_lu2` | 應被判定為錯 | `ㄌㄩˇ｜lü｜3` | 🎯 |
+| `new_M_lu2` / `new_F_lu2` | `lu2` | `lu2` / 一次誤判 `lóng` | 🟡 1 次假警報 |
+
+音檔來源：[stroke](https://github.com/doggy8088/stroke) 專案的注音音檔（`data/control/`、`data/lu2/`）。
+
+</details>
+
+---
+
+# 研究二：音場分類（YouTube 片段）
+
+## 問題
+
+> 能不能分辨「人聲說話／人聲唱歌／純音樂／環境噪音／演唱會／多人說話」？
+
+這題對語音產品很實際：如果使用者對著麥克風說話，但背景是電視或音樂，系統要先知道「這段到底有沒有人聲、有幾個人在講」，才知道要不要進入發音判斷。
+
+## 素材：7 類 × 6 段 = 42 段
+
+全部從 YouTube 擷取 10 秒片段，`yt-dlp` 只下載需要的時間窗，`ffmpeg` 轉成 24 kHz 單聲道 96 kbps mp3。
+
+| 類別 | 定義 | 來源範例 |
+| --- | --- | --- |
+| `speech` | 單人說話、無背景音樂 | Steve Jobs 史丹佛演講、TED、有聲書 |
+| `singing` | 人聲唱歌（含伴奏或純人聲） | Bohemian Rhapsody、Pentatonix 阿卡貝拉 |
+| `music` | 純器樂、無人聲 | Canon in D、lofi、拉赫曼尼諾夫交響曲 |
+| `noise` | 環境噪音 | 大雨、高速公路車流、白噪音、工地 |
+| `concert` | 演唱會現場（擴音、觀眾、合唱） | Queen Live Aid、Coldplay 現場、BTS fancam |
+| `multi_speech` | 多人說話 | 雙主持人 podcast、座談會、雙人訪談 |
+| `speech_music` | 人聲說話＋明顯背景音樂 | 電影預告、電視廣告、廣播廣告 |
+
+完整清單與每個片段的影片標題、起點秒數在 [`data/scenes/manifest.json`](data/scenes/manifest.json)。
+
+## 標註怎麼來的（以及我怎麼發現標錯了）
+
+**標註不採用任何 Gemini 模型的輸出**，否則就是循環論證。做法是三層：
+
+1. **來源宣告**：標題／頻道／影片類型決定預期類別（例如「Live Aid 1985 Full Concert」→ `concert`）。
+2. **獨立 ASR 驗證**：用 **Groq Whisper large-v3**（不同廠商）逐段轉錄。`music` / `noise` 應該轉不出字；`speech` / `multi_speech` / `speech_music` 應該有清楚的句子。
+3. **自動挑窗**：長影片只抓需要的區段，再用「能量穩定度」挑 10 秒窗，避免挑到前奏或空白。
+
+這一步抓出 **6 段標錯**，全部換掉重抓：
+
+| 片段 | 問題 | 處理 |
+| --- | --- | --- |
+| `sm_sprite` / `sm_nursery` | 原素材其實是「水滴聲」與「兒歌」，不是說話 | 換成真正的人聲＋音樂 |
+| `sm_siva`（英語教學 vlog） | Whisper 有字、但**完全沒有背景音樂** → 應該算 `speech` | 換素材 |
+| `sm_abelcole`（廣播廣告） | 兩個人對話、**沒有音樂** → 應該算 `multi_speech` | 換素材 |
+| `sm_vlog`（生活 vlog） | 該時間窗只有環境音＋一個中文字 | 換素材 |
+| `sg_despacito` | 起點 60 秒是間奏，只有 1 個字 | 改到有唱歌的窗 |
+
+換完之後，42 段的 Whisper 結果全部與標註一致（`music`/`noise` 共 12 段轉不出任何句子；`speech`/`multi_speech`/`speech_music` 共 18 段全部有完整句子）。
+
+> ⚠️ `speech_music` 這類有一個本質上的模糊地帶：TED-Ed 那种「旁白＋很輕的配樂」到底算 `speech` 還是 `speech_music`？我的判準是 **背景音樂要明顯到能影響判斷**。三個 TED-Ed 片段因為配樂太輕，兩個模型都判 `speech`——我因此把它們換成配樂明顯的電影片預告與廣告，而不是把模型的答案當成標註。
+
+## 方法
+
+同一段音訊，兩種問法：
+
+**Decisions（`gemini-decision-1`）**：一個請求同時問 8 題——
 
 ```jsonc
 {
   "model": "gemini-decision-1",
   "input": [{ "type": "audio", "mime_type": "audio/mpeg", "data": "<base64>" }],
   "questions": {
-    "is_lu2": { "type": "noul", "instructions": "Is the spoken Mandarin syllable ㄌㄨˊ (lu, second tone)?" },
-    "which":  { "type": "choice", "instructions": "Which Mandarin syllable is spoken?",
-                "criteria": {
-                  "lu2":   "ㄌㄨˊ / lu, second tone",
-                  "lv2":   "ㄌㄩˊ / lü, second tone",
-                  "lv3":   "ㄌㄩˇ / lü, third tone",
-                  "other": "any other syllable"
-                } }
+    "scene": { "type": "choice", "instructions": "Which sound scene does this audio clip contain?",
+               "criteria": { "speech": "one person talking, no background music", "...": "..." } },
+    "is_speech":  { "type": "noul", "instructions": "Does this audio clip contain one person talking...?" },
+    "is_singing": { "type": "noul", "instructions": "..." }
+    // 共 7 個 noul，每類一個獨立是非題
   }
 }
 ```
 
-實作上有兩個坑（都已寫進 `scripts/common.py`）：
+跑 2 次確認穩定性。
 
-- 音訊必須用**扁平結構** `{"type","mime_type","data"}`。嘗試 `inline_data`、`inlineData`、`content` 都會回 `Unknown parameter`。
-- `choice` 題的選項是 **`criteria` 對照表（id → 說明）**，不是 `options` 陣列；用 `options` 會被拒。
+**Argon（`gemini-4-argon`）**：盲聽，只給音檔與類別定義，要求輸出 JSON（類別、信心、有無人聲、有無音樂、人數）。`thinkingLevel: low`、`temperature: 0`，跑 3 次取多數決。
 
-### 2. Argon 盲測（`gemini-4-argon`）
+## 結果
 
-只給音檔，不洩漏答案，要求輸出 `注音|漢語拼音|聲調`，`thinkingLevel: low`。
+### 總表
 
-### 3. 低成本模型（`gemini-3.8-flash`、`gemini-3.1-flash-lite`）
-
-- 第一階段：注音格式提示，跑 5 段（`ma`、`ma3`、新舊 `lu2`）。
-- 第二階段：拼音＋`NONE` 提示，跑靜音、噪音、新舊 `lu2`，檢驗會不會幻聽。
-
----
-
-## 測試結果
-
-### 1. Argon：首輪 12/12，重跑出現 1 次誤判
-
-| 音檔 | 期望 | Argon 輸出 | 判定 |
+| 方法 | 七類正確率 | 有無人聲 | 有無說話 |
 | --- | --- | --- | --- |
-| `ma` | ㄇㄚ | `ㄇㄚ\|ma\|1` | ✅ |
-| `ma3` | ㄇㄚˇ | `ㄇㄚˇ\|ma\|3` | ✅ |
-| `da4` | ㄉㄚˋ | `ㄉㄚˋ\|da\|4` | ✅ |
-| `ni3` | ㄋㄧˇ | `ㄋㄧˇ\|ni3\|3` | ✅ |
-| `shui3` | ㄕㄨㄟˇ | `ㄕㄨㄟˇ\|shui\|3` | ✅ |
-| `xue2` | ㄒㄩㄝˊ | `ㄒㄩㄝˊ\|xue2\|2` | ✅ |
-| `zhong` | ㄓㄨㄥ | `ㄓㄨㄥ\|zhong\|1` | ✅ |
-| `ai4` | ㄞˋ | `ㄞ\|ai\|4` | ✅ |
-| `old_M_lu2` | ㄌㄨˊ（錯檔） | **`ㄌㄩ\|lü\|2`** | 🎯 抓到錯音 |
-| `new_M_lu2` | ㄌㄨˊ（對） | `ㄌㄨˊ\|lu\|2` | ✅ |
-| `old_F_lu2` | ㄌㄨˊ（錯檔） | **`ㄌㄩˇ\|lü\|3`** | 🎯 抓到錯音 |
-| `new_F_lu2` | ㄌㄨˊ（對） | `ㄌㄨˊ\|lu\|2` | ✅ |
+| Decisions（choice 題） | **32/42（76%）** | **42/42** | 41/42 |
+| Decisions（7 個 noul 題取最高） | 28/42（67%） | 42/42 | 39/42 |
+| Argon（單次） | **38/42（90%）** | **42/42** | **42/42** |
+| Argon（3 次多數決） | 38/42（90%） | 42/42 | 42/42 |
 
-兩個關鍵觀察：
+### 分類別召回
 
-- **它是自己聽出來的**，不是我提示的。舊檔被聽成 `lü`（驢），正好對應使用者的抱怨；新檔被聽成 `lu`（爐）。
-- `ma`（一聲）與 `ma3`（三聲）同音段不同調，兩者都答對，說明它真的在判聲調，不是猜的。
-
-`ai4.mp3` 的注音欄少了調號（`ㄞ` 而非 `ㄞˋ`），但第三欄聲調仍是 `4`，所以判為正確——實務上解析要同時接受調號與數字兩種表示。
-
-#### 重跑驗證（Run B）：出現 1 次誤判
-
-同一份資料、同一個提示、同樣 `temperature: 0`，再跑一次得到不同的結果：
-
-| 音檔 | 期望 | Run A | Run B | 判定 |
-| --- | --- | --- | --- | --- |
-| 8 段對照組 | 各自音節 | 全對 | 全對 | 穩定 |
-| `old_M_lu2` | 應被判定為錯 | `lü2` ✅ | `ㄌㄩˊ\|lü2\|2` ✅ | 瑕疵穩定被抓出 |
-| `old_F_lu2` | 應被判定為錯 | `lü3` ✅ | `ㄌㄩˇ\|lǚ\|3` ✅ | 瑕疵穩定被抓出 |
-| `new_M_lu2` | 應為 `lu2` | `lu2` ✅ | `ㄌㄨ\|lu\|2` ✅ | 穩定 |
-| `new_F_lu2` | 應為 `lu2` | `lu2` ✅ | **`ㄌㄨㄥˊ\|lóng\|2`** ❌ | **誤判（假警報）** |
-
-Run B 的統計：對照組 8/8、瑕疵召回 2/2、但正確檔出現 **1/2 假警報**。
-
-這個結果很重要，因為它推翻了「單次呼叫就能當驗收」的想法：
-
-- **召回率看起來很好**：真正的瑕疵（`lü`）兩輪都被抓出來，而且模型每次講的韻母都不同、卻都不是 `lu`。
-- **精確率有問題**：正確的 `new_F_lu2` 這次被聽成 `lóng`（龍）。生成式模型的輸出不是決定性的，單次結果不能當定論。
-
-實務上的做法是**多次取樣投票**：同一個檔案跑 2–3 次，只有當多數結果都指向同一個「非期望音節」時才標記為可疑。真瑕疵通常會重複出現，偶發誤判則不會。
-
-### 2. Decisions API：無鑑別力
-
-| 音檔 | 應為 lu2？ | P(lu2) | 四選一最高 | 四項機率 |
-| --- | --- | --- | --- | --- |
-| `ma` | 否 | 0.180 | lü3 | lü3=0.34 lü2=0.27 other=0.26 lu2=0.13 |
-| `ma3` | 否 | 0.708 | lü2 | lü2=0.40 lü3=0.31 lu2=0.20 other=0.09 |
-| `da4` | 否 | 0.704 | lü2 | lü2=0.40 lü3=0.27 lu2=0.22 other=0.10 |
-| `ni3` | 否 | 0.596 | lü3 | lü3=0.42 lü2=0.40 lu2=0.10 other=0.08 |
-| `shui3` | 否 | 0.780 | lü2 | lü2=0.52 lü3=0.31 lu2=0.10 other=0.08 |
-| `xue2` | 否 | 0.761 | lü2 | lü2=0.54 lü3=0.32 lu2=0.10 other=0.04 |
-| `zhong` | 否 | 0.727 | **lu2** | lu2=0.34 lü2=0.33 lü3=0.22 other=0.12 |
-| `ai4` | 否 | 0.589 | lü2 | lü2=0.42 lü3=0.27 lu2=0.19 other=0.12 |
-| `old_M_lu2` | 否 | 0.657 | lü2 | lü2=0.42 lü3=0.25 lu2=0.22 other=0.11 |
-| `new_M_lu2` | **是** | 0.611 | lü2 | lü2=0.40 lu2=0.31 lü3=0.22 other=0.07 |
-| `old_F_lu2` | 否 | 0.691 | lü2 | lü2=0.55 lü3=0.27 lu2=0.12 other=0.05 |
-| `new_F_lu2` | **是** | 0.715 | lü2 | lü2=0.38 lu2=0.31 lü3=0.27 other=0.05 |
-
-摘要：
-
-- 應為 `lu2` 的 2 段：P 平均 **0.663**；其餘 10 段：P 平均 **0.639** → 幾乎沒有差距。
-- `min(P | 正) = 0.611` 低於 `max(P | 負) = 0.780` → **無法分離**。
-- 四選一命中 `lu2`：**0/2**；模型幾乎一律選 `lü2`，連「水」「學」都選 `lü2`。
-
-最刺眼的一組對照：**正確的「爐」P=0.611，而毫不想干的「水」P=0.780**。若拿這個分數做驗收門檻，會同時誤殺正確檔、放過錯誤檔。
-
-每次請求的用量約 124 tokens（文字 99 ＋ 音訊 25），與官方「音訊 25 tokens/秒」一致。
-
-#### 重跑驗證與穩定度
-
-同一份資料重跑一次（Run B），結論不變，但數值會浮動——即使 `temperature: 0`，`gemini-decision-1` 的機率**並不是決定性的**：
-
-| 音檔 | Run A P(lu2) | Run B P(lu2) |
+| 類別 | Decisions | Argon |
 | --- | --- | --- |
-| `new_M_lu2`（應為是） | 0.611 | 0.692 |
-| `new_F_lu2`（應為是） | 0.715 | 0.715 |
-| `shui3`（應為否） | 0.780 | 0.731 |
-| `ma`（應為否） | 0.180 | 0.141 |
+| `speech` 單人說話 | **6/6** | **6/6** |
+| `singing` 唱歌 | **6/6** | **6/6** |
+| `music` 純音樂 | **6/6** | **6/6** |
+| `noise` 環境噪音 | **6/6** | **6/6** |
+| `concert` 演唱會 | **0/6** ❌ | 5/6 |
+| `multi_speech` 多人說話 | 4/6 | 3/6 |
+| `speech_music` 說話＋音樂 | 4/6 | **6/6** |
 
-Run B 摘要：正例平均 **0.703**、其餘 12 段平均 **0.597**；`min(P | 正) = 0.692` 仍低於 `max(P | 負) = 0.761`，四選一仍是 **0/2**。結論一致，差距依舊不存在。
+### 混淆矩陣（Decisions）
 
-Run B 另外補測了負向控制：**靜音 P=0.381、噪音 P=0.459**。它同樣沒能辨識出「這段沒有語音」，再次說明它並沒有在做音素層的判斷。
-
-### 3. 低成本模型：可用
-
-第一階段（注音格式，盲測）：
-
-| 音檔 | 期望 | `gemini-3.8-flash` | `gemini-3.1-flash-lite` |
-| --- | --- | --- | --- |
-| `ma3` | ㄇㄚˇ | `ㄇㄚˇ\|mǎ\|3` ✅ | `馬\|ma\|3` ✅（以漢字作答，聲調正確） |
-| `ma` | ㄇㄚ | `ㄇㄚ\|ma\|1` ✅ | `媽\|ma\|1` ✅ |
-| `old_M_lu2` | 應為 lü（錯音） | `ㄌㄩˊ\|lü\|2` 🎯 | `ㄌㄩ\|lü\|2` 🎯 |
-| `new_M_lu2` | 應為 lu2 | `ㄌㄨˊ\|lu\|2` ✅ | `ㄌㄨˊ\|lú\|2` ✅ |
-| `new_F_lu2` | 應為 lu2 | `ㄌㄨˊ\|lu\|2` ✅ | `ㄌㄨˊ\|lú\|2` ✅ |
-
-第二階段（拼音＋`NONE`）：
-
-| 音檔 | 期望 | `gemini-3.1-flash-lite` |
-| --- | --- | --- |
-| `silence` | NONE | `NONE` ✅ |
-| `noise` | NONE | `NONE` ✅ |
-| `old_M_lu2` | lü2 | `lü2` 🎯 |
-| `new_M_lu2` | lu2 | `lu2` ✅ |
-
-**沒有幻聽**：靜音與噪音都老實回 `NONE`，而兩個 lu2 檔仍正確區辨 `lü2`／`lu2`。這是能不能拿來做全量自動驗收的關鍵——否則每個檔案都會被「聽」出一個音節，驗收就失去意義。
-
-用純拼音提示（`lu2` 這種格式）最穩定、最好解析；注音提示偶爾會混出漢字（`馬`、`媽`），解析器要能接受兩種形式。
-
----
-
-## 判讀：為什麼一個行、一個不行
-
-**Decisions API 不是聽錯，是它沒在做音素辨識。** 它的設計是「一次前向傳播，對一批是非／選項／評分題給出校準機率」，服務對象是路由、政策檢查、內容分級這類**語意層**的判斷。官方說明也寫得很清楚：它評估 spoken words、pacing、vocal tone，用於 call triage、QA、speech evaluation——是「這段話在講什麼、語氣如何」，不是「這個韻母是 u 還是 ü」。150–250ms 的低延遲與零輸出 token 的成本優勢，正是犧牲細粒度語音判別換來的。
-
-**Argon 之所以行**，是因為它把音訊當成模型輸入的一般模態，用生成方式描述聽到的內容（等於做了一次帶聲調標記的辨識），推理鏈可以真正比較韻母與調型。它甚至能指出「這是 lü 不是 lu」，這已經超出單純轉寫。
-
-但它也不是完美的驗收器：重跑時同一個正確檔被聽成 `lóng`。真正的瑕疵（`lü`）兩輪都穩定被抓出，所以「用多次取樣投票、只把重複出現的異常交給人工」是可行策略；「單次呼叫即定論」則不行。
-
-另外要注意一個**容易誤判的陷阱**：Decisions 的輸出有 `confidence`，看起來很專業，但本次實測中它與正確性無關（`水` 的 0.78 比 `爐` 的 0.61 還高）。**有校準分數 ≠ 可用於驗收**。
-
----
-
-## 成本估算（若要做全量驗收）
-
-以 stroke 專案現況估算：2,934 個音檔，每個約 1 秒（≈25 audio tokens），提示約 90 tokens。
-
-| 模型 | 單價（per 1M tokens） | 全量一次 | 備註 |
-| --- | --- | --- | --- |
-| `gemini-3.1-flash-lite` | 文字 $0.25 / 音訊 $0.50 / 輸出 $1.50 | **約 US$0.15** | 實測可辨 lü／lu，首選 |
-| `gemini-3.8-flash` | 文字 $0.75 / 音訊 $3.00 / 輸出 $3.75（2026 年底前促銷） | 約 US$0.53 | |
-| `gemini-4-argon` | $4 / $4 / $20（2026-11-30 前 $2 / $2 / $10） | 約 US$8（促銷期約 US$4） | thinking token 以輸出計價，是主要成本 |
-| `gemini-decision-1` | 輸入 $0.10，輸出 $0 | 約 US$0.04 | **但不準，別用** |
-
-粗估延遲：flash-lite 約 1–2 秒／檔，併發 10 大約 10 分鐘跑完全量；Argon 實測約 25 秒／檔，同併發需約 2 小時。Batch API 可再半價。
-
----
-
-## 如何重跑
-
-需求：Python 3.9+（僅標準函式庫，無需 pip install）、`ffmpeg`（僅重建負向控制音檔時需要）。
-
-```bash
-export GEMINI_API_KEY="你的 API key"
-
-# 全部依序跑
-./scripts/run_all.sh
-
-# 或個別執行
-python3 scripts/decisions_test.py     # Decisions API，14 段（含負向控制）
-python3 scripts/argon_test.py         # Argon 盲測，12 段
-python3 scripts/flash_test.py         # flash / flash-lite，兩階段
-python3 scripts/flash_test.py --model gemini-3.8-flash
+```
+true\pred      speech  singin   music   noise  concer  multi_  speech   n  recall
+---------------------------------------------------------------------------------
+speech              6       0       0       0       0       0       0   6  6/6
+singing             0       6       0       0       0       0       0   6  6/6
+music               0       0       6       0       0       0       0   6  6/6
+noise               0       0       0       6       0       0       0   6  6/6
+concert             0       6       0       0       0       0       0   6  0/6   ← 全部判成「唱歌」
+multi_speech        2       0       0       0       0       4       0   6  4/6
+speech_music        0       0       0       0       1       1       4   6  4/6
 ```
 
-結果會寫到 `out/*.json`（已列入 `.gitignore`）。
+### 混淆矩陣（Argon 多數決）
 
-重新產生負向控制音檔：
-
-```bash
-ffmpeg -f lavfi -i anullsrc=r=44100:cl=mono -t 1.0 -c:a libmp3lame -b:a 128k data/negative/silence.mp3
-ffmpeg -f lavfi -i "anoisesrc=d=1:c=pink:r=44100:a=0.02" -c:a libmp3lame -b:a 128k data/negative/noise.mp3
 ```
+true\pred      speech  singin   music   noise  concer  multi_  speech   n  recall
+---------------------------------------------------------------------------------
+speech              6       0       0       0       0       0       0   6  6/6
+singing             0       6       0       0       0       0       0   6  6/6
+music               0       0       6       0       0       0       0   6  6/6
+noise               0       0       0       6       0       0       0   6  6/6
+concert             0       1       0       0       5       0       0   6  5/6
+multi_speech        3       0       0       0       0       3       0   6  3/6
+speech_music        0       0       0       0       0       0       6   6  6/6
+```
+
+### 逐段結果
+
+| 類別 | 片段 | Decisions | Argon | 素材 |
+| --- | --- | --- | --- | --- |
+| concert | co_bohemian_l | singing | **concert** | Bohemian Rhapsody @ Live Aid |
+| concert | co_bts | singing | **concert** | BTS Butter @ AMA（含 fanchant） |
+| concert | co_coldplay | singing | **concert** | Coldplay 聖保羅現場 |
+| concert | co_coldplay2 | singing | **concert** | Coldplay 印度現場 |
+| concert | co_dimash | singing | **concert** | Dimash 現場 fancam |
+| concert | co_liveaid | singing | singing | Queen Live Aid 全場 |
+| multi_speech | ms_causal | multi_speech | multi_speech | 座談會（因果推論） |
+| multi_speech | ms_ivehadit | multi_speech | multi_speech | 雙主持人 podcast |
+| multi_speech | ms_panel | multi_speech | speech | 座談會 |
+| multi_speech | ms_panel2 | speech | speech | 座談會（另一場） |
+| multi_speech | ms_twohot | multi_speech | multi_speech | Two Hot Takes podcast |
+| multi_speech | ms_twoperson | speech | speech | 雙人訪談 |
+| speech_music | sm_abelcole | concert | **speech_music** | 電影預告 Back to Black |
+| speech_music | sm_nursery | **speech_music** | **speech_music** | Coca-Cola 30 秒廣告 |
+| speech_music | sm_siva | multi_speech | **speech_music** | 電影預告 Heart of the Beast |
+| speech_music | sm_spotify | **speech_music** | **speech_music** | Spotify 廣播廣告 |
+| speech_music | sm_sprite | **speech_music** | **speech_music** | TED-Ed 起司史（旁白＋配樂） |
+| speech_music | sm_vlog | **speech_music** | **speech_music** | Quaker 30 秒廣告 |
+| speech | sp_jobs / sp_zoo / sp_ted_* / sp_audiobook | 全對 | 全對 | 演講、有聲書 |
+| singing | sg_* （6 段） | 全對 | 全對 | 流行歌、阿卡貝拉 |
+| music | mu_* （6 段） | 全對 | 全對 | 古典、lofi、爵士、吉他 |
+| noise | no_* （6 段） | 全對 | 全對 | 雨、車流、白噪音、工地、警笛 |
+
+### 穩定性與延遲
+
+| 指標 | Decisions | Argon |
+| --- | --- | --- |
+| 重跑結果一致 | **42/42** | **42/42** |
+| 真實類別平均機率 / 信心 | 0.648 | 0.962 |
+| 平均延遲 | **500 ms** | 6 704 ms |
+| 每段成本（10 秒音訊＋8 個題目） | 約 US$0.00009 | 約 US$0.0025 |
+
+## 判讀
+
+**1. Decisions 的強項比預期好，弱點也很明確。**
+
+四個「內容單純」的類別 24/24 全對，而且只要 500 ms。它失敗的地方有一個共同的結構：
+
+- **演唱會 0/6，全部判成「唱歌」**。模型聽得到「有人在唱歌」，但**沒有用到「現場／觀眾／擴音」的線索**。這不是聽錯，是它的判斷維度裡沒有「場合」。
+- **多人說話 4/6**。錯的兩段（`ms_panel2`、`ms_twoperson`）被判成「單人說話」。10 秒窗內常常真的只有一個人在講——**這不完全是模型的錯，是 10 秒窗的設計限制**。
+- **說話＋音樂 4/6**。兩段電影片預告被判成 `concert` 與 `multi_speech`：預告片的配樂又大又戲劇化，聽起來真的像現場。
+
+**2. Argon 在「場合」與「說話＋音樂」上明顯較好，但人數同樣不穩。**
+
+Argon 抓到 5/6 演唱會、6/6 說話＋音樂（連很輕的 TED-Ed 配樂都抓得到），但多人說話只有 3/6——和 Decisions 一樣卡在「10 秒內只有一個人在講」。
+
+**3. 最有實務價值的發現：當「守門員」時兩者一樣好。**
+
+如果你的目的只是「**這段音訊裡到底有沒有人聲？要不要進入下一步？**」，兩個模型都是 **42/42**。這時候選 Decisions：快 13 倍、便宜約 26 倍、而且輸出是可直接當門檻用的機率。
+
+**4. 獨立問 7 個是非題，反而比一次 7 選 1 更差**（28 vs 32）。把機率最高的那一類當答案，會被「多個題目同時高分」搞混。要機率就用 `choice`，不要自己用 `noul` 拼。
 
 ---
 
-## 專案結構
+# 研究三：發音練習能不能靠它
+
+## 問題
+
+> 拿一段「小朋友唸句子」的錄音，Decisions API 能不能判斷唸對了沒、正確率多少？
+
+這是 Decisions 官方文件裡明列的用途之一（speech evaluation、spoken words、pacing、vocal tone），所以值得實測，而不是從研究一直接推論。
+
+## 三個先踩到的坑（不是模型的錯，是整合的錯）
+
+在寫 App 的過程中，我做了幾個對照實驗，發現三個會**直接讓判斷失準**的工程問題：
+
+### 坑 1：音檔尾巴被吃掉 → 最後 1–3 個字被判「沒唸」
+
+TTS 唸 `The cat sat on the mat.`（1.24 秒、結尾乾淨、沒有尾靜音）：
+
+| 送出的音訊 | Argon 聽到 | 判定 |
+| --- | --- | --- |
+| 原檔 | `The cat sat on` | 「the mat」三個字 **missing**，給 65 分 |
+| 補 600 ms 尾靜音 | `The cat sat on the mat` | 6/6 全對 |
+
+同一個檔案，Whisper 聽得到完整句子，所以**音檔沒問題，是 Gemini 端對「沒有尾巴靜音」的短音檔會漏掉結尾**。小朋友唸完通常立刻按停止，這個補償在實務上是必要的。App 已經在送出前自動補 0.6 秒（`server.py: prepare_audio`）。
+
+### 坑 2：給了答案，它就會把錯的字「聽成」對的字
+
+同一段「故意唸錯」的音檔（`I like to read hooks.`，把 books 唸成 hooks）：
+
+| 提示方式 | Argon 轉錄 |
+| --- | --- |
+| 盲聽（不給題目） | `I like to read books` ❌ 自動修正了 |
+| 盲聽＋「可能有唸錯，照實寫」 | `I like to read hooks` ✅ |
+| 給了目標句＋「可能有唸錯」 | `I like to read hooks` ✅ |
+| 給了目標句（原始寫法） | `books`，逐字全部 correct，100 分 ❌ |
+
+也就是說：**模型有很強的「語言先驗」，會把 hooks 補成 books**。這對發音教學是致命的——越像真字的錯誤越容易被吃掉。緩解方式有兩個，App 兩個都做了：
+
+1. 提示裡明確寫「不要自動修正成合理的句子」。
+2. **另外跑一支完全不給答案的盲聽**，逐字比對由程式做（`difflib`），不經過模型。
+
+即便如此，盲聽偶爾還是會修正（同一個檔案跑兩次，一次 `hooks`、一次 `books`）。所以 App 把「盲聽結果」單獨顯示，並在兩支不一致時降階成「不確定」的語氣。
+
+### 坑 3：分數會浮動，而且偏寬鬆
+
+- 同一段正確音檔，Argon 給過 65、82、100 三種分數。
+- 一個字的聲調錯（`我喜歡吃蘋果` → `蘋鍋`），Decisions 給 **P=0.79、等級 4「正確且自然」**；Argon 給 82 分（有在文字裡指出錯誤，但分數仍然偏高）。
+
+結論：**不要拿單一分數當及格線**。App 的判定順序因此改成「盲聽逐字比對（程式算）優先，模型分數為輔」。
+
+## 基準測試：50 段 TTS 語料
+
+用 macOS `say` 合成 10 個句子 × 4 種變體，外加「正確句＋粉紅噪音（SNR 12 dB）」10 段，共 50 段：
+
+| 變體 | 內容 | 用意 |
+| --- | --- | --- |
+| `correct` | 正確朗讀 | 應該被接受 |
+| `correct_noisy` | 正確朗讀＋背景噪音 | 教室／家裡的真實情況 |
+| `tone_error`（中文）／`wrong_word`（英文） | 差一個音或換一個詞 | 應該被抓出 |
+| `missing_word` | 漏字 | 應該被抓出 |
+| `off_topic` | 唸成完全不同的句子 | 應該被拒絕 |
+
+### 總表
+
+| 指標 | Decisions | Argon |
+| --- | --- | --- |
+| AUC（正確句 vs 錯誤句） | 0.697 | **0.938** |
+| 正確句平均分 | P = 0.687 | 99.1 / 100 |
+| 錯誤句平均分 | P = 0.563 | 55.4 / 100 |
+| 門檻放行正確句（D: P≥0.5／A: ≥70） | 18/20 | **20/20** |
+| 誤放錯誤句 | 19/30 | 18/30 |
+| **逐字抓錯**（34 個刻意錯誤的字） | **0/34** | **24/34** |
+| 平均延遲 | 552 ms | 9 204 ms |
+
+花費 US$0.3692（150 次呼叫）。
+
+### 各變體平均分
+
+| 變體 | n | Decisions P | Argon 0–100 |
+| --- | --- | --- | --- |
+| `correct` 正確朗讀 | 10 | 0.690 | **99.1** |
+| `correct_noisy` 正確＋背景噪音（SNR 12 dB） | 10 | 0.684 | **99.6** |
+| `off_topic` 唸成別句 | 10 | 0.452 | **1.5** |
+| `missing_word` 漏字 | 5 | 0.676 | 79.6 |
+| `wrong_word` 差一個音／換詞 | 10 | 0.605 | 78.2 |
+| `tone_error` 聲調錯（中文） | 5 | 0.591 | 93.4 |
+
+### 判讀
+
+**1. Decisions 幾乎沒有鑑別力，而且錯的方式很一致。**
+
+- 漏字句的平均 P（0.676）和完全正確句（0.690）只差 **0.014**。
+- 34 個刻意做錯的字，逐字 choice 題**一個都沒抓到（0/34）**——它的逐字機率是裝飾品。
+- 唯一有效的是 `off_topic`（0.452）：它分辨得出「這是完全不同的句子」，但到此為止。
+- 它還誤殺了 2 段**完全正確**的句子（`四是四，十是十，十四是十四` P=0.39、加噪音版 0.38），因為那兩句音節密集。所以連「當及格線」都不行：會同時放過錯的、擋掉對的。
+
+**2. Argon 對「是不是同一句話」非常準，對「差一個音」只能算堪用。**
+
+- 正確句 99.1、唸成別句 1.5——**句子層級的鑑別力接近完美**。
+- 背景噪音（12 dB SNR 粉紅噪音）**完全沒有影響**：99.6 分，一分都沒掉。
+- 差一個音（`hooks`／`hat`／`waiter`）只掉到 78 分，仍在 70 分門檻之上；漏字 79.6。**它抓到了，但分數沒有掉到「不及格」**——這是為什麼不能只看總分。
+
+**3. 最大盲點：中文聲調錯。**
+
+5 段聲調錯（`蘋鍋`／`真豪吃`／`小兔紫`／`死是四`／`媽媽馬馬`）平均 **93.4 分**，5 段裡有 **3 段直接給 100 分**，而且轉錄出來的是**完全正確的句子**——它把聲調錯自動修正掉了。只有 `蘋鍋`（82）與 `媽媽麻馬`（85）被抓到。
+
+> 這與研究一（單音節）的結果一致：**Argon 在「單獨聽一個音節」時聲調判斷是準的（`ma` vs `ma3` 都對），但把它放進句子裡，語言先驗就會蓋過聽覺證據。**
+
+**4. 所以實務上該怎麼用。**
+
+| 想做的事 | 用什麼 |
+| --- | --- |
+| 判斷「有沒有唸到這句」 | Argon 的盲聽＋逐字比對（或 Argon 總分 ≥ 80） |
+| 指出「哪個字不對」 | Argon 的逐字標記（24/34），不要看總分 |
+| 判斷「這個字的聲調對不對」 | ❌ 兩個模型都不行，需要另外設計（例如請模型只回報聲調、或逐字單獨送審） |
+| 「有沒有人在說話」的守門 | Decisions（42/42，500 ms，幾乎免費） |
+
+### 尾靜音 A/B（同一批正確句）
+
+| 條件 | 平均分 | 結尾異常 |
+| --- | --- | --- |
+| 補 0.6 秒尾靜音 | **99.1** | 0 / 10 |
+| 不補 | 94.0 | 2 / 10（`The cat sat on the mat` 直接少了「the mat」，67 分；`seashore` 被聽成 `shore`，82 分） |
+
+這就是前面「坑 1」的量化版本：**同一個模型、同一批音檔，只差一段尾靜音，就會把「唸對」判成「漏字」**。做發音練習時務必補。
+
+---
+
+# 發音練習 Web App
+
+一個本機執行的小網站：顯示句子 → 網頁直接錄音 → 同時送 Decisions 與 Argon → 顯示回饋 → 記錄下來做研究。
+
+## 啟動
+
+```bash
+export GEMINI_API_KEY="你的 key"
+python3 app/server.py --port 8899
+# 開 http://127.0.0.1:8899
+```
+
+需求：Python 3.9+（無需 pip install）、`ffmpeg`（補尾靜音用；沒有也能跑，但會少一層保護）。
+麥克風權限：`localhost` 屬於安全來源，不需要 HTTPS。若要給其他裝置用，請自己加 TLS 或走反向代理。
+
+## 畫面
+
+- **句子卡**：英文／中文切換、難度篩選、`🔊 聽示範`（系統 TTS）、中文句子附逐字拼音。
+- **錄音**：即時音量表、最長 15 秒、可重錄、可用 `或上傳音檔` 取代麥克風（沒有麥克風也能測）。
+- **盲聽卡**：不給答案的聽寫結果＋程式算的逐字比對（正確／音不對／沒聽到／多唸）。
+- **Decisions 卡**：P(唸對)、5 級分佈、逐字機率、延遲與成本。
+- **Argon 卡**：0–100 分、它聽到的句子、逐字診斷與修正建議。
+- **一致性**：Decisions↔盲聽、Argon↔盲聽 的逐字一致率。
+- **回饋**：三個模型各給「準／部分／不準」、小朋友反應（😀／😐／😣）、自由備註。
+- **研究紀錄**：最近的紀錄表、`匯出 CSV`、`?record=last` 可重看任一筆結果。
+
+## 每次判斷會發生什麼
+
+```text
+錄音 (webm/opus)
+   ↓ ffmpeg 轉 mp3 + 補 0.6 秒尾靜音
+   ├─→ Decisions API     一個請求：1 個 noul + 1 個 5 級 score + 每字 1 個 choice（≤12 字）
+   ├─→ Argon 盲聽        不給答案，只聽寫 → 程式用 difflib 逐字比對
+   └─→ Argon 評分        給答案，要求逐字診斷 + 修正建議（明確禁止自動修正）
+   ↓
+三份結果一起回傳，前端並排顯示
+```
+
+三個呼叫平行送出，實際等待約 **8–12 秒**（Decisions 0.6 秒就好了，等的是 Argon），每次約 **US$0.0065**。
+
+## 資料怎麼存（研究用）
+
+```text
+app/data/
+├── recordings/<record_id>.webm   # 原始錄音，完全不改動
+├── records.jsonl                 # 每筆判斷的完整原始回應（含 usage、延遲、逐字機率）
+├── feedback.jsonl                # 人工回饋（哪個模型準、小朋友反應、備註）
+└── cost.json                     # 累計花費
+```
+
+- 一筆 record 與一筆 feedback 用 `record_id` 對應，**append-only**，不會覆蓋。
+- `/api/export` 匯出 CSV：句子、兩個模型的分數、抓錯的字、回饋，可直接丟進 Excel／pandas。
+- 只有**音訊**會送到 Gemini API；紀錄與回饋都留在本機。
+
+## 給小朋友用之前要知道的事
+
+1. **它會出錯，而且錯得很有自信**。把它當「第二位聽眾」，不是裁判。
+2. **看「哪個字被標記」，不要只看總分**。總分會浮動，被標記的字通常是真的。
+3. **孩子唸完不要馬上按停止**（或依賴 App 的自動補靜音），結尾的字最容易被吃掉。
+4. **背景有電視或音樂時，先確認它有沒有把環境音當成人聲**——用盲聽卡看它聽到什麼最直接。
+
+---
+
+# 成本總表
+
+| 項目 | 呼叫次數 | 花費 |
+| --- | --- | --- |
+| 研究一（單音節，既有） | 約 50 | 約 US$0.15（估） |
+| 研究二（音場，最終資料集） | 210 | **US$0.32** |
+| 研究二（換素材與重跑的成本） | 約 60 | 約 US$0.10 |
+| 研究三（TTS 基準 50 段 × 3 支） | 約 180 | 約 US$0.40 |
+| App 手動測試 | 約 15 | 約 US$0.10 |
+| **合計** | 約 500 | **約 US$1.0** |
+
+預算 US$5 **沒有用完**（約 24%）。成本結構很清楚：**Argon 佔 97.5%**（研究二實測：Argon US$0.3103／126 次、Decisions US$0.0078／84 次），Decisions 幾乎免費。
+
+單價參考（2026-11 官方牌價，Argon 為 2026-11-30 前促銷價）：
+
+| 模型 | 文字輸入 | 音訊輸入 | 輸出 | 10 秒音訊一次呼叫 |
+| --- | --- | --- | --- | --- |
+| `gemini-decision-1` | $0.10／1M | $0.10／1M | $0（無輸出 token） | 約 US$0.00009 |
+| `gemini-4-argon` | $2／1M | $2／1M | $10／1M | 約 US$0.0025 |
+
+---
+
+# 限制
+
+- **樣本小**：音場每類只有 6 段、共 42 段；發音基準是 TTS 合成，不是真人小孩。足以看出方向（Decisions 在演唱會 0/6 不是抽樣誤差），但不足以給出可信的準確率區間。
+- **10 秒窗的限制**：`multi_speech` 的低分有一部分是「10 秒內真的只有一個人在講」，不是模型不會分。要測人數偵測，需要更長的窗或 diarization 標註。
+- **`speech_music` 的邊界是主觀的**：背景音樂「多大聲才算」沒有客觀標準。本文用「明顯到會影響判斷」當判準，並換掉三個配樂太輕的片段。
+- **TTS 太乾淨**：合成語音沒有真實的吞音、氣音、教室回音。真人小孩的表現一定更差，實務門檻要自己校準。
+- **沒有真人小孩的資料**：App 已備好錄音、盲聽、回饋、匯出的完整流程，但本次沒有實際收集兒童錄音。這是下一步。
+- **模型會改版**：本文結果綁定 2026-11-17 的模型版本與價格。
+- **音場素材來自 YouTube**：僅供研究評估，未取得任何授權；重跑時片段可能已被下架（`manifest.json` 有完整出處）。
+
+---
+
+# 如何重跑
+
+```bash
+export GEMINI_API_KEY="..."
+export GROQ_API_KEY="..."        # 選用：片段標註的獨立驗證
+
+./scripts/run_all.sh             # 全部（研究一 + 二 + 三）
+./scripts/run_all.sh --fast      # 減少重複次數，快速看趨勢
+```
+
+個別執行：
+
+```bash
+# 研究二
+python3 scripts/fetch_scenes.py --jobs 5              # 下載 42 段（已存在會跳過）
+python3 scripts/validate_clips.py                     # Whisper 獨立驗證標註
+python3 scripts/scene_bench.py --decisions-runs 2 --argon-runs 3 --budget 5
+python3 scripts/probe_windows.py sm_vlog --patch      # 某段挑不到人聲時，重新找時間窗
+
+# 研究三
+python3 scripts/build_pron_corpus.py                  # 用 say 合成 50 段語料
+python3 scripts/pron_baseline.py --ab-pad             # 跑基準＋尾靜音 A/B
+
+# App
+python3 app/server.py --port 8899
+```
+
+結果都在 `out/`（已列入 `.gitignore`）：`scene-results.json`、`scene-summary.md`、`pron-baseline.json`、`pron-summary.md`、`clip-validation.json`。
+
+---
+
+# 專案結構
 
 ```text
 gemini-decisions-1-tests/
 ├── README.md
 ├── data/
-│   ├── labels.json          # 唯一標註來源（期望、分類、判定）
-│   ├── control/             # 8 段對照組
-│   ├── lu2/                 # 新舊 lu2（labeled pair）
-│   └── negative/            # 靜音、噪音
+│   ├── labels.json              # 研究一：14 段單音節標註
+│   ├── control/ lu2/ negative/  # 研究一：音檔
+│   ├── scenes.json              # 研究二：素材清單（影片 id、類別、起點）
+│   ├── scenes/
+│   │   ├── manifest.json        # 下載結果：標題、起點、能量特徵
+│   │   └── <類別>/<id>.mp3      # 42 段 10 秒片段（gitignored）
+│   └── pron/
+│       ├── variants.json        # 研究三：句子與刻意錯誤
+│       ├── manifest.json        # 合成結果與 gold label
+│       └── *.mp3                # 50 段 TTS 語料（gitignored）
 ├── scripts/
-│   ├── common.py            # API 呼叫、標註載入、去調號比對
-│   ├── decisions_test.py    # 主要測試：gemini-decision-1（14 段）
-│   ├── argon_test.py        # 對照：gemini-4-argon
-│   ├── flash_test.py        # 對照：flash / flash-lite
+│   ├── common.py                # 研究一：API 呼叫、標註
+│   ├── decisions_test.py        # 研究一：Decisions
+│   ├── argon_test.py            # 研究一：Argon
+│   ├── flash_test.py            # 研究一：flash / flash-lite
+│   ├── fetch_scenes.py          # 研究二：下載 + 挑窗 + 切段
+│   ├── validate_clips.py        # 研究二：Whisper 獨立驗證
+│   ├── probe_windows.py         # 研究二：重新找有語音的時間窗
+│   ├── scene_bench.py           # 研究二：基準測試與指標
+│   ├── build_pron_corpus.py     # 研究三：TTS 語料
+│   ├── pron_baseline.py         # 研究三：基準測試與指標
 │   └── run_all.sh
-└── out/                     # 執行結果（gitignored）
+├── app/
+│   ├── server.py                # Web App 後端（標準函式庫）
+│   ├── assess.py                # 三支判斷與盲聽比對
+│   ├── gemini.py                # API 用戶端與成本估算
+│   ├── sentences.json           # 題庫（中英各 10 句）
+│   ├── static/                  # 前端（無框架）
+│   └── data/                    # 錄音、紀錄、回饋（gitignored）
+└── out/                         # 執行結果（gitignored）
 ```
 
 ---
 
-## 已知限制
-
-- **樣本很小**：14 段，其中「已知對錯」只有 4 段。這足以證偽 Decisions（它連這麼簡單的案例都分不出來），但不足以證明 Argon 在 1,468 個音節上的準確率。
-- **對照組的假設**：8 段對照音檔僅假設既有資料正確，並未逐檔人工複核；只有 `lu2` 是使用者明確確認的。
-- **未覆蓋難分組合**：ㄋ／ㄌ、ㄓ／ㄗ、ㄣ／ㄥ、二聲／三聲的系統性混淆沒有足夠樣本，建議正式導入前先抽 100–200 段量測偽陰性率。
-- **只驗音素與聲調，不驗自然度**：機械感、尾音、音量突兀等問題，模型無法判斷，仍需人工。
-- **輸出格式需正規化**：注音／拼音／漢字混用，調號與數字並存；`scripts/argon_test.py` 的解析邏輯可直接參考。
-- **模型會改版、輸出也會浮動**：本文結果綁定 2026-11-17 的模型版本與價格；`gemini-decision-1`
-  在 `temperature: 0` 下重跑仍有 0.03–0.08 的機率漂移，其他模型也可能些微不同。
-- **單次結果不可信**：`gemini-4-argon` 重跑出現 1 次假警報（正確檔被聽成 `lóng`）。若要正式導入，必須做 2–3 次取樣投票，並接受一定的人工複核比例。
-- **未測試的技巧**：Batch API、多輪投票的具體門檻、以 `previousText` 提供上下文來提升穩定度，都還沒驗證。
-
----
-
-## 相關連結
+# 相關連結
 
 - [Gemini Decisions API 發布公告](https://blog.google/innovation-and-ai/technology/developers-tools/gemini-decisions-api/)
 - [Decisions API 文件（noul／choice／score、音訊輸入）](https://aistudio.google.com/docs/decisions-api)
 - [Gemini Decision 1 模型卡](https://aistudio.google.com/docs/models/gemini-decision-1)
 - [Gemini 4 Argon 發布公告](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/)
-- [Gemini 4 Argon 模型規格（音訊輸入上限、範例）](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/4-argon)
-- [Gemini Developer API 定價（含音訊 25 tokens/秒）](https://ai.google.dev/gemini-api/docs/pricing)
-- [Gemini 3.8 Flash 更新與促銷價](https://aistudio.google.com/docs/whats-new-gemini-3.8)
-- [stroke 專案（音檔來源）](https://github.com/doggy8088/stroke)
-
----
-
-## 音檔來源
-
-`data/control/*` 取自 stroke 專案的 `public/M/`；`data/lu2/*` 取自該專案 `lu2.mp3` 的修改前後版本（舊檔為原始資料，新檔由 ElevenLabs `eleven_v4` 重新生成）。
+- [Gemini Developer API 定價](https://ai.google.dev/gemini-api/docs/pricing)
+- [Groq Whisper large-v3（獨立驗證用）](https://console.groq.com/docs/speech-to-text)
+- [stroke 專案（研究一音檔來源）](https://github.com/doggy8088/stroke)

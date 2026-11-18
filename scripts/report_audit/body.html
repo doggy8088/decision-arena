@@ -1,0 +1,284 @@
+<div class="bar-progress" id="prog"></div>
+
+<nav>
+  <div class="inner">
+    <div class="mark">注音稽核 <b>·</b> flash-lite</div>
+    <ul id="navlist">
+      <li><a href="#verdict">結論</a></li>
+      <li><a href="#tone">聲調</a></li>
+      <li><a href="#syllable">音節</a></li>
+      <li><a href="#who">誰對誰錯</a></li>
+      <li><a href="#list">完整清單</a></li>
+      <li><a href="#cost">成本</a></li>
+      <li><a href="#method">方法</a></li>
+    </ul>
+    <button class="theme" id="themeBtn">深色</button>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <div class="kicker">稽核報告 · 2026-11-17 · stroke 專案</div>
+    <h1>注音音檔稽核<br><em>flash-lite 只對了一半</em></h1>
+    <p class="standfirst">
+      把 stroke 專案的 <b>2,934 個注音音檔</b>全部假設為正確讀音，逐一丟給
+      <b class="nowrap">gemini-3.1-flash-lite</b> 辨識。它對 <b>1,721 個</b>檔案給出與檔名完全相同的答案；
+      其餘 <b>1,184 個</b>，它認為有錯。
+    </p>
+    <div class="stats">
+      <div class="stat">
+        <div class="v">2,934</div>
+        <div class="k">檔案總數</div>
+        <div class="s">男聲 M 1,467 · 女聲 F 1,467</div>
+      </div>
+      <div class="stat bad">
+        <div class="v" data-f="pct">58.7<small>%</small></div>
+        <div class="k">一致率</div>
+        <div class="s">音節與聲調都與檔名相同</div>
+      </div>
+      <div class="stat bad">
+        <div class="v">1,184</div>
+        <div class="k">被標記的檔案</div>
+        <div class="s">757 個不同音節（全站 1,468 個）</div>
+      </div>
+      <div class="stat">
+        <div class="v"><span class="cur">US$</span><span data-f="cost">0.095</span></div>
+        <div class="k">全部跑完的成本</div>
+        <div class="s">273,028 tokens · 2,955 次呼叫</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ─────────── 01 結論 ─────────── -->
+<section id="verdict">
+  <div class="wrap">
+    <div class="sec-label">01 — 結論</div>
+    <h2>它不是在驗收，是在猜</h2>
+    <p class="lead">
+      每 10 個檔案就有 4 個被標記為「不對」。而且錯誤不是隨機散布，是集中在特定聲調與特定韻尾上——
+      這代表它有一套自己的猜法，只是跟中文的實際讀音對不上。
+    </p>
+
+    <div class="stack" id="stack"></div>
+    <div class="stack-key" id="stackKey"></div>
+
+    <div class="callout">
+      <b>這個數字要怎麼讀：</b>如果模型真的在辨識，一致率應該在 95% 以上，錯誤應該是零星且分散的。
+      58.7% 加上高度集中的錯誤型態，結論只有一個——<b>它沒有在做可靠的音節辨識</b>。
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── 02 聲調 ─────────── -->
+<section id="tone">
+  <div class="wrap">
+    <div class="sec-label">02 — 聲調</div>
+    <h2>四聲還行，輕聲幾乎全滅</h2>
+    <p class="lead">
+      音節本體對了、只有聲調不同的情況有 720 個。把期望聲調與模型判定的聲調交叉列表，
+      混淆的形狀非常清楚。
+    </p>
+
+    <div class="card">
+      <h3>各聲調的一致率</h3>
+      <div id="toneRows"></div>
+    </div>
+
+    <div class="card">
+      <h3>聲調混淆矩陣</h3>
+      <p class="lead" style="font-size:13px;margin:-6px 0 18px">
+        列＝檔名標示的聲調，欄＝模型判定的聲調。綠色框是對角線（答對）。滑過去看細節。
+      </p>
+      <div class="mx" id="mx"></div>
+    </div>
+
+    <div class="callout">
+      <b>三個結構性問題：</b>
+      一聲被聽成二聲（180 個）、三聲被聽成二聲或四聲（287 個）、
+      輕聲 98 個裡只有 6 個對——輕聲在孤立音檔中本來就沒有明顯調型，這一段比較像任務本身的限制。
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── 03 音節 ─────────── -->
+<section id="syllable">
+  <div class="wrap">
+    <div class="sec-label">03 — 音節</div>
+    <h2>翹舌、平舌與 n／ng</h2>
+    <p class="lead">
+      有 464 個檔案的聲母或韻母整個被聽錯。把這些配對分類後，兩個經典難點佔了三分之一以上。
+    </p>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>錯誤型態</h3>
+        <div id="typeRows"></div>
+        <p class="count" style="margin-top:18px;line-height:1.7">
+          分類順序：先看韻尾 <code>n</code>／<code>ng</code>，再看翹舌與平舌（<code>zh-z</code>、<code>ch-c</code>、<code>sh-s</code>），
+          接著比對 <code>ü</code>／<code>u</code>，最後才歸到「其他」。
+        </p>
+      </div>
+      <div class="card">
+        <h3>最常出現的配對</h3>
+        <table id="pairTable">
+          <thead><tr><th>檔名音節</th><th>模型聽成</th><th style="text-align:right">次數</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="callout">
+      <b>注意：</b>「n／ng」只有 15% 是因為我把「beng → bang」這類韻母替換歸在「其他」。
+      真正的韻尾混淆要看右表——<code>pin→ping</code>、<code>bin→bing</code>、<code>xin→xing</code>、<code>sheng→shang</code> 都是同一族。
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── 04 誰對誰錯 ─────────── -->
+<section id="who">
+  <div class="wrap">
+    <div class="sec-label">04 — 仲裁</div>
+    <h2>一半是它自己聽錯</h2>
+    <p class="lead">
+      被標記不等於音檔有問題。我從 1,184 個被標記的檔案隨機抽 150 個，
+      再請 <span class="mono nowrap">gemini-4-argon</span> 聽一次當仲裁。
+    </p>
+
+    <div class="split" id="split"></div>
+    <div class="stack-key" id="splitKey"></div>
+
+    <div class="card">
+      <h3>抽樣對照（前 12 筆）</h3>
+      <table id="arbTable">
+        <thead><tr><th>檔案</th><th>檔名</th><th>flash-lite</th><th>Argon</th><th>判定</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <p class="count" id="arbNote"></p>
+    </div>
+
+    <div class="callout moss">
+      <b>好消息：</b>你的音檔大致是對的。換算全量，約 <b>647 個</b>是 flash-lite 的誤判，
+      約 <b>536 個</b>連 Argon 都覺得不對——後者才是真正值得人工抽查的清單。
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── 05 清單 ─────────── -->
+<section id="list">
+  <div class="wrap">
+    <div class="sec-label">05 — 完整清單</div>
+    <h2>1,184 個被標記的檔案</h2>
+    <p class="lead">
+      這是模型認為有錯的全部清單。可以搜尋、篩選、排序；最後一欄只有抽樣過的檔案才有 Argon 的答案。
+    </p>
+
+    <div class="tools">
+      <input class="search" id="q" placeholder="搜尋檔名或音節，例如 xing、bin、a5…">
+      <div class="seg" id="fStatus">
+        <button class="on" data-v="all">全部</button>
+        <button data-v="tone">聲調</button>
+        <button data-v="syllable">音節</button>
+      </div>
+      <div class="seg" id="fVoice">
+        <button class="on" data-v="all">M+F</button>
+        <button data-v="M">男聲</button>
+        <button data-v="F">女聲</button>
+      </div>
+      <button class="btn" id="dl">下載 CSV</button>
+    </div>
+
+    <div class="tbl-wrap">
+      <table id="flagTable">
+        <thead>
+          <tr>
+            <th data-sort="0">檔案</th>
+            <th data-sort="1">期望</th>
+            <th data-sort="2">模型聽到</th>
+            <th data-sort="3">差異</th>
+            <th data-sort="4">Argon 仲裁</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="count" id="flagCount"></p>
+  </div>
+</section>
+
+<!-- ─────────── 06 成本 ─────────── -->
+<section id="cost">
+  <div class="wrap">
+    <div class="sec-label">06 — 成本</div>
+    <h2>全部跑完，US$0.095</h2>
+    <p class="lead">用 flash-lite 做這種大量篩檢非常便宜，問題從來不是錢，是準不準。</p>
+
+    <div class="card">
+      <table class="cost-table">
+        <thead><tr><th>項目</th><th>數量</th><th>Tokens</th><th>成本</th></tr></thead>
+        <tbody>
+          <tr><td>文字輸入（提示詞）</td><td class="num">2,955 次呼叫</td><td class="num" id="tkText"></td><td class="num" id="csText"></td></tr>
+          <tr><td>音訊輸入（每個檔約 25 tokens ≈ 1 秒）</td><td class="num">2,934 個檔案</td><td class="num" id="tkAudio"></td><td class="num" id="csAudio"></td></tr>
+          <tr><td>模型輸出</td><td class="num">—</td><td class="num" id="tkOut"></td><td class="num" id="csOut"></td></tr>
+          <tr><td><b>合計</b></td><td class="num"></td><td class="num"><b id="tkAll"></b></td><td class="num"><b id="csAll"></b></td></tr>
+          <tr><td>Argon 抽樣仲裁（另計）</td><td class="num">150 次</td><td class="num">約 13,000</td><td class="num">約 US$0.036</td></tr>
+        </tbody>
+      </table>
+      <p class="count">
+        牌價：文字輸入 $0.25／1M、音訊輸入 $0.50／1M、輸出 $1.50／1M。
+        平均每個檔案 US$0.000033——全部 2,934 個檔案不到新台幣 3 元。
+      </p>
+    </div>
+
+    <div class="callout">
+      <b>反過來說：</b>如果改用 <span class="mono nowrap">gemini-4-argon</span> 做同樣的全量檢查（每個檔案約 US$0.0008），
+      成本大約是 <b>US$2.4</b>——還是很便宜，而且準得多。真正該計較的是人工複查的時間，不是 API 費用。
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── 07 方法 ─────────── -->
+<section id="method">
+  <div class="wrap">
+    <div class="sec-label">07 — 方法與限制</div>
+    <h2>怎麼做的，以及這份報告不能證明什麼</h2>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>做法</h3>
+        <ul class="plain">
+          <li><b>輸入</b>：每個 mp3 單獨送出，<code>temperature: 0</code>，要求只回「拼音＋聲調數字」。</li>
+          <li><b>比對</b>：檔名去掉 <code>.mp3</code> 即為期望值（無數字視為一聲）；模型輸出正規化後比對音節本體與聲調。</li>
+          <li><b>排除</b>：8 個非標準拼音檔名（<code>lvan2</code>、<code>nui2</code> 等）不列入統計；21 個呼叫失敗重試後仍空白。</li>
+          <li><b>仲裁</b>：從被標記的檔案隨機抽 150 個，用 <code>gemini-4-argon</code> 再聽一次。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>限制</h3>
+        <ul class="plain">
+          <li>音檔是<b>按注音共用</b>的，不是逐字；這份表是音節層級，同一音節的所有字都會受影響。</li>
+          <li>只跑<b>單次</b>。單次結果本身有噪聲，所以第 4 節才需要仲裁。</li>
+          <li>TTS 合成音在孤立音節上的調型本來就比較模糊，尤其輕聲與開口韻（a、ai、ao）。</li>
+          <li>Argon 也不是完美裁判（抽樣中它自己也出現過 <code>ri4 → yi4</code>）。45% 那個數字是<b>上限</b>。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div style="color:var(--ink2);margin-bottom:4px">注音音檔稽核 · gemini-3.1-flash-lite</div>
+      <div>2,934 個檔案 · 2,955 次呼叫 · <span id="fTok">273,028</span> tokens · US$<span id="fCost">0.095</span></div>
+    </div>
+    <div style="text-align:right">
+      <div>完整數據：<span class="mono">out/audit-report.md</span>、<span class="mono">out/audit-flags.csv</span></div>
+      <div style="margin-top:4px">原始紀錄：<span class="mono">data/audit/*.jsonl</span></div>
+    </div>
+  </div>
+</footer>

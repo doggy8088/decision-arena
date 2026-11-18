@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>注音音檔稽核 · gemini-3.1-flash-lite</title>
+<style>
+:root{
+  --paper:#f8f5ef; --card:#fffdf9; --ink:#1b1815; --ink2:#6b6357; --ink3:#948a7b;
+  --rule:#e4ddd1; --rule2:#d3c9b8;
+  --rust:#a8431a; --moss:#2f6f5e; --amber:#a9761a;
+  --rust-bg:rgba(168,67,26,.09); --moss-bg:rgba(47,111,94,.10);
+  --serif:"Songti TC","Noto Serif TC","Source Han Serif TC",Georgia,"Times New Roman",serif;
+  --sans:-apple-system,"SF Pro TC","PingFang TC","Noto Sans TC",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+}
+html[data-theme="dark"]{
+  --paper:#141210; --card:#1b1815; --ink:#ece7de; --ink2:#a89e8f; --ink3:#7d7365;
+  --rule:#2e2922; --rule2:#3d362d;
+  --rust:#e07a4b; --moss:#63b79b; --amber:#d6a03c;
+  --rust-bg:rgba(224,122,75,.12); --moss-bg:rgba(99,183,155,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font:17px/1.85 var(--sans);-webkit-font-smoothing:antialiased;
+  transition:background .3s,color .3s;
+}
+::selection{background:var(--rust);color:#fff}
+.wrap{max-width:1020px;margin:0 auto;padding:0 28px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+code{font-family:var(--mono);font-size:.86em;background:rgba(127,120,105,.10);
+     padding:.08em .38em;border-radius:3px;border:1px solid var(--rule);white-space:nowrap}
+.nowrap{white-space:nowrap}
+.num{font-variant-numeric:tabular-nums}
+a{color:inherit}
+
+/* ---------- 進度與導覽 ---------- */
+.bar-progress{position:fixed;top:0;left:0;height:2px;background:var(--rust);width:0;z-index:60}
+nav{
+  position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);
+}
+nav .inner{max-width:1020px;margin:0 auto;padding:11px 28px;display:flex;align-items:center;gap:22px}
+nav .mark{font:600 13px/1 var(--sans);letter-spacing:.02em;white-space:nowrap}
+nav .mark b{color:var(--rust);font-weight:700}
+nav ul{display:flex;gap:2px;list-style:none;margin:0;padding:0;overflow-x:auto;flex:1;min-width:0;scrollbar-width:none}
+nav ul::-webkit-scrollbar{display:none}
+nav a{font-size:12.5px;color:var(--ink2);text-decoration:none;padding:5px 10px;border-radius:6px;white-space:nowrap}
+nav a:hover{color:var(--ink);background:var(--card)}
+nav a.on{color:var(--ink);box-shadow:inset 0 -2px 0 var(--rust)}
+.theme{
+  margin-left:auto;background:none;border:1px solid var(--rule2);color:var(--ink2);
+  font:inherit;font-size:12px;padding:5px 11px;border-radius:99px;cursor:pointer;white-space:nowrap
+}
+.theme:hover{color:var(--ink);border-color:var(--ink3)}
+
+/* ---------- 封面 ---------- */
+header{padding:92px 0 0;border-bottom:1px solid var(--rule)}
+.kicker{
+  display:flex;align-items:center;gap:12px;font-size:11px;letter-spacing:.20em;
+  text-transform:uppercase;color:var(--ink3);margin-bottom:26px
+}
+.kicker::after{content:"";flex:1;height:1px;background:var(--rule)}
+h1{
+  font-family:var(--serif);font-weight:600;letter-spacing:-.015em;line-height:1.14;
+  font-size:clamp(34px,5.2vw,58px);margin:0 0 8px
+}
+h1 em{font-style:normal;color:var(--rust)}
+.standfirst{
+  font-size:19px;line-height:1.8;color:var(--ink2);max-width:680px;margin:22px 0 0
+}
+.standfirst b{color:var(--ink);font-weight:600}
+.stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:52px 0 0;
+  border-top:1px solid var(--rule)
+}
+.stat{padding:22px 26px 26px 0;border-right:1px solid var(--rule)}
+.stat:last-child{border-right:0}
+.stat .v{font-family:var(--serif);font-size:38px;font-weight:600;line-height:1.1;letter-spacing:-.02em}
+.stat .v small{font-size:16px;color:var(--ink3);font-weight:400;margin-left:2px}
+.stat .v .cur{font-size:17px;color:var(--ink3);font-weight:400;margin-right:2px;letter-spacing:.02em}
+.stat .k{font-size:11.5px;color:var(--ink3);letter-spacing:.06em;margin-top:6px}
+.stat .s{font-size:12px;color:var(--ink3);margin-top:2px}
+.stat.bad .v{color:var(--rust)}
+
+/* ---------- 區塊 ---------- */
+main{padding:0 0 40px}
+section{padding:80px 0 0}
+.sec-label{
+  font-size:11px;letter-spacing:.20em;text-transform:uppercase;color:var(--rust);
+  display:flex;align-items:center;gap:12px;margin-bottom:14px
+}
+.sec-label::after{content:"";flex:1;height:1px;background:var(--rule)}
+h2{
+  font-family:var(--serif);font-weight:600;letter-spacing:-.01em;line-height:1.3;
+  font-size:clamp(24px,3.2vw,32px);margin:0 0 14px
+}
+.lead{color:var(--ink2);max-width:720px;font-size:16px;margin:0 0 34px}
+h3{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);
+   font-weight:600;margin:0 0 14px}
+
+.card{background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:30px 32px;margin-top:22px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:22px;align-items:start}
+.grid2 .card{margin-top:0}
+
+/* ---------- 堆疊條 ---------- */
+.stack{display:flex;height:58px;border-radius:3px;overflow:hidden;margin:6px 0 0;border:1px solid var(--rule)}
+.stack div{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;
+  color:#fff;transition:flex .4s;white-space:nowrap;overflow:hidden}
+.stack .ok{background:var(--moss)}
+.stack .tone{background:var(--amber)}
+.stack .syllable{background:var(--rust)}
+.stack .err{background:var(--ink3)}
+.stack-key{display:flex;flex-wrap:wrap;gap:22px;margin-top:16px;font-size:12.5px;color:var(--ink2)}
+.stack-key i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:7px}
+
+/* ---------- 聲調列 ---------- */
+.tone-row{display:grid;grid-template-columns:76px 1fr 74px;gap:16px;align-items:center;
+  padding:13px 0;border-bottom:1px solid var(--rule)}
+.tone-row:last-child{border-bottom:0}
+.tone-row .tl{font-family:var(--serif);font-size:17px}
+.tone-row .tl small{display:block;font-family:var(--sans);font-size:11px;color:var(--ink3);letter-spacing:.04em}
+.tbar{height:9px;background:var(--rule);border-radius:99px;overflow:hidden}
+.tbar span{display:block;height:100%;background:var(--moss);border-radius:99px}
+.tbar span.low{background:var(--rust)}
+.tbar span.mid{background:var(--amber)}
+.tone-row .tp{text-align:right;font-size:15px;font-variant-numeric:tabular-nums}
+.tone-note{font-size:12px;color:var(--ink3);margin-top:3px}
+
+/* ---------- 混淆矩陣 ---------- */
+.mx{display:grid;grid-template-columns:104px repeat(5,1fr);gap:5px;margin-top:4px}
+.mx .h{display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--ink3);
+  letter-spacing:.06em;padding:4px}
+.mx .h.row{justify-content:flex-end}
+.mx .c{aspect-ratio:2.1;display:flex;align-items:center;justify-content:center;border-radius:3px;
+  font-size:14px;font-variant-numeric:tabular-nums;cursor:default;transition:.15s}
+.mx .c:hover{outline:1.5px solid var(--ink3)}
+.mx .c.diag{box-shadow:inset 0 0 0 1.5px var(--moss)}
+.mx .c.zero{color:var(--ink3);background:transparent!important;box-shadow:none}
+
+/* ---------- 錯誤型態 ---------- */
+.type-row{display:grid;grid-template-columns:230px 1fr 86px;gap:16px;align-items:center;padding:10px 0}
+.type-row .tn{font-size:14px}
+.tybar{height:8px;background:var(--rule);border-radius:99px;overflow:hidden}
+.tybar span{display:block;height:100%;background:var(--rust);border-radius:99px}
+.type-row .tv{text-align:right;font-size:13px;color:var(--ink2);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* ---------- 表格 ---------- */
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{font-size:10.5px;letter-spacing:.10em;text-transform:uppercase;color:var(--ink3);
+   text-align:left;padding:0 12px 10px;border-bottom:1px solid var(--rule2);font-weight:600}
+td{padding:9px 12px;border-bottom:1px solid var(--rule);font-variant-numeric:tabular-nums}
+tbody tr:hover{background:var(--rust-bg)}
+td.file{font-family:var(--mono);font-size:12.5px}
+.tag{display:inline-block;font-size:11px;padding:1px 8px;border-radius:99px;font-weight:600}
+.tag.tone{background:rgba(169,118,26,.14);color:var(--amber)}
+.tag.syllable{background:var(--rust-bg);color:var(--rust)}
+.tag.ok{background:var(--moss-bg);color:var(--moss)}
+.tag.bad{background:var(--rust-bg);color:var(--rust)}
+
+/* ---------- 仲裁 ---------- */
+.split{display:flex;height:54px;border-radius:3px;overflow:hidden;border:1px solid var(--rule)}
+.split div{display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff}
+.split .a{background:var(--rust)}
+.split .b{background:var(--moss)}
+
+/* ---------- 清單工具列 ---------- */
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:22px 0 16px}
+.search{
+  flex:1;min-width:190px;background:var(--card);border:1px solid var(--rule2);border-radius:4px;
+  padding:9px 13px;font:inherit;font-size:13.5px;color:var(--ink)
+}
+.search:focus{outline:none;border-color:var(--ink3)}
+.seg{display:inline-flex;border:1px solid var(--rule2);border-radius:4px;overflow:hidden}
+.seg button{background:none;border:0;border-right:1px solid var(--rule2);color:var(--ink2);
+  font:inherit;font-size:12.5px;padding:8px 13px;cursor:pointer;white-space:nowrap}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--ink);color:var(--paper)}
+.btn{background:none;border:1px solid var(--rule2);border-radius:4px;color:var(--ink2);
+  font:inherit;font-size:12.5px;padding:8px 13px;cursor:pointer}
+.btn:hover{color:var(--ink);border-color:var(--ink3)}
+.tbl-wrap{max-height:620px;overflow:auto;border:1px solid var(--rule);border-radius:4px;background:var(--card)}
+.tbl-wrap thead th{position:sticky;top:0;background:var(--card);padding-top:12px;z-index:2;cursor:pointer;user-select:none}
+.tbl-wrap thead th:hover{color:var(--ink)}
+.count{font-size:12.5px;color:var(--ink3);margin-top:10px}
+mark{background:rgba(168,67,26,.22);color:inherit;padding:0 2px;border-radius:2px}
+
+/* ---------- 成本 ---------- */
+.cost-table td:last-child,.cost-table th:last-child{text-align:right}
+.callout{
+  border-left:2px solid var(--rust);background:var(--rust-bg);padding:18px 22px;margin-top:24px;
+  font-size:14.5px;color:var(--ink2);border-radius:0 4px 4px 0
+}
+.callout b{color:var(--ink)}
+.callout.moss{border-left-color:var(--moss);background:var(--moss-bg)}
+
+ul.plain{padding-left:0;list-style:none;margin:0}
+ul.plain li{padding:9px 0 9px 20px;position:relative;border-bottom:1px solid var(--rule);font-size:14.5px;color:var(--ink2)}
+ul.plain li:last-child{border-bottom:0}
+ul.plain li::before{content:"—";position:absolute;left:0;color:var(--rust)}
+ul.plain li b{color:var(--ink)}
+
+footer{margin-top:90px;border-top:1px solid var(--rule);padding:34px 0 60px;color:var(--ink3);font-size:12.5px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+@media(max-width:760px){
+  .wrap{padding:0 18px}
+  nav .inner{padding:10px 18px;gap:12px}
+  header{padding-top:56px}
+  .stats{grid-template-columns:1fr 1fr}
+  .stat{border-right:0;border-bottom:1px solid var(--rule);padding:18px 0}
+  .stat:nth-child(odd){border-right:1px solid var(--rule);padding-right:18px}
+  .grid2{grid-template-columns:1fr}
+  .card{padding:22px 18px}
+  .mx{grid-template-columns:66px repeat(5,1fr);gap:3px}
+  .mx .c{font-size:11px}
+  .tone-row{grid-template-columns:64px 1fr 60px;gap:10px}
+  .type-row{grid-template-columns:1fr;gap:6px}
+  .type-row .tv{text-align:left}
+  section{padding-top:56px}
+}
+@media print{
+  nav,.bar-progress,.theme,.tools{display:none}
+  body{background:#fff}
+  .card{break-inside:avoid;border-color:#ddd}
+  .tbl-wrap{max-height:none;overflow:visible}
+}
+</style>
+</head>
+
+<body>
+<div class="bar-progress" id="prog"></div>
+
+<nav>
+  <div class="inner">
+    <div class="mark">注音稽核 <b>·</b> flash-lite</div>
+    <ul id="navlist">
+      <li><a href="#verdict">結論</a></li>
+      <li><a href="#tone">聲調</a></li>
+      <li><a href="#syllable">音節</a></li>
+      <li><a href="#who">誰對誰錯</a></li>
+      <li><a href="#list">完整清單</a></li>
+      <li><a href="#cost">成本</a></li>
+      <li><a href="#method">方法</a></li>
+    </ul>
+    <button class="theme" id="themeBtn">深色</button>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <div class="kicker">稽核報告 · 2026-11-17 · stroke 專案</div>
+    <h1>注音音檔稽核<br><em>flash-lite 只對了一半</em></h1>
+    <p class="standfirst">
+      把 stroke 專案的 <b>2,934 個注音音檔</b>全部假設為正確讀音，逐一丟給
+      <b class="nowrap">gemini-3.1-flash-lite</b> 辨識。它對 <b>1,721 個</b>檔案給出與檔名完全相同的答案；
+      其餘 <b>1,184 個</b>，它認為有錯。
+    </p>
+    <div class="stats">
+      <div class="stat">
+        <div class="v">2,934</div>
+        <div class="k">檔案總數</div>
+        <div class="s">男聲 M 1,467 · 女聲 F 1,467</div>
+      </div>
+      <div class="stat bad">
+        <div class="v" data-f="pct">58.7<small>%</small></div>
+        <div class="k">一致率</div>
+        <div class="s">音節與聲調都與檔名相同</div>
+      </div>
+      <div class="stat bad">
+        <div class="v">1,184</div>
+        <div class="k">被標記的檔案</div>
+        <div class="s">757 個不同音節（全站 1,468 個）</div>
+      </div>
+      <div class="stat">
+        <div class="v"><span class="cur">US$</span><span data-f="cost">0.095</span></div>
+        <div class="k">全部跑完的成本</div>
+        <div class="s">273,028 tokens · 2,955 次呼叫</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ─────────── 01 結論 ─────────── -->
+<section id="verdict">
+  <div class="wrap">
+    <div class="sec-label">01 — 結論</div>
+    <h2>它不是在驗收，是在猜</h2>
+    <p class="lead">
+      每 10 個檔案就有 4 個被標記為「不對」。而且錯誤不是隨機散布，是集中在特定聲調與特定韻尾上——
+      這代表它有一套自己的猜法，只是跟中文的實際讀音對不上。
+    </p>
+
+    <div class="stack" id="stack"></div>
+    <div class="stack-key" id="stackKey"></div>
+
+    <div class="callout">
+      <b>這個數字要怎麼讀：</b>如果模型真的在辨識，一致率應該在 95% 以上，錯誤應該是零星且分散的。
+      58.7% 加上高度集中的錯誤型態，結論只有一個——<b>它沒有在做可靠的音節辨識</b>。
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── 02 聲調 ─────────── -->
+<section id="tone">
+  <div class="wrap">
+    <div class="sec-label">02 — 聲調</div>
+    <h2>四聲還行，輕聲幾乎全滅</h2>
+    <p class="lead">
+      音節本體對了、只有聲調不同的情況有 720 個。把期望聲調與模型判定的聲調交叉列表，
+      混淆的形狀非常清楚。
+    </p>
+
+    <div class="card">
+      <h3>各聲調的一致率</h3>
+      <div id="toneRows"></div>
+    </div>
+
+    <div class="card">
+      <h3>聲調混淆矩陣</h3>
+      <p class="lead" style="font-size:13px;margin:-6px 0 18px">
+        列＝檔名標示的聲調，欄＝模型判定的聲調。綠色框是對角線（答對）。滑過去看細節。
+      </p>
+      <div class="mx" id="mx"></div>
+    </div>
+
+    <div class="callout">
+      <b>三個結構性問題：</b>
+      一聲被聽成二聲（180 個）、三聲被聽成二聲或四聲（287 個）、
+      輕聲 98 個裡只有 6 個對——輕聲在孤立音檔中本來就沒有明顯調型，這一段比較像任務本身的限制。
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── 03 音節 ─────────── -->
+<section id="syllable">
+  <div class="wrap">
+    <div class="sec-label">03 — 音節</div>
+    <h2>翹舌、平舌與 n／ng</h2>
+    <p class="lead">
+      有 464 個檔案的聲母或韻母整個被聽錯。把這些配對分類後，兩個經典難點佔了三分之一以上。
+    </p>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>錯誤型態</h3>
+        <div id="typeRows"></div>
+        <p class="count" style="margin-top:18px;line-height:1.7">
+          分類順序：先看韻尾 <code>n</code>／<code>ng</code>，再看翹舌與平舌（<code>zh-z</code>、<code>ch-c</code>、<code>sh-s</code>），
+          接著比對 <code>ü</code>／<code>u</code>，最後才歸到「其他」。
+        </p>
+      </div>
+      <div class="card">
+        <h3>最常出現的配對</h3>
+        <table id="pairTable">
+          <thead><tr><th>檔名音節</th><th>模型聽成</th><th style="text-align:right">次數</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="callout">
+      <b>注意：</b>「n／ng」只有 15% 是因為我把「beng → bang」這類韻母替換歸在「其他」。
+      真正的韻尾混淆要看右表——<code>pin→ping</code>、<code>bin→bing</code>、<code>xin→xing</code>、<code>sheng→shang</code> 都是同一族。
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── 04 誰對誰錯 ─────────── -->
+<section id="who">
+  <div class="wrap">
+    <div class="sec-label">04 — 仲裁</div>
+    <h2>一半是它自己聽錯</h2>
+    <p class="lead">
+      被標記不等於音檔有問題。我從 1,184 個被標記的檔案隨機抽 150 個，
+      再請 <span class="mono nowrap">gemini-4-argon</span> 聽一次當仲裁。
+    </p>
+
+    <div class="split" id="split"></div>
+    <div class="stack-key" id="splitKey"></div>
+
+    <div class="card">
+      <h3>抽樣對照（前 12 筆）</h3>
+      <table id="arbTable">
+        <thead><tr><th>檔案</th><th>檔名</th><th>flash-lite</th><th>Argon</th><th>判定</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <p class="count" id="arbNote"></p>
+    </div>
+
+    <div class="callout moss">
+      <b>好消息：</b>你的音檔大致是對的。換算全量，約 <b>647 個</b>是 flash-lite 的誤判，
+      約 <b>536 個</b>連 Argon 都覺得不對——後者才是真正值得人工抽查的清單。
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── 05 清單 ─────────── -->
+<section id="list">
+  <div class="wrap">
+    <div class="sec-label">05 — 完整清單</div>
+    <h2>1,184 個被標記的檔案</h2>
+    <p class="lead">
+      這是模型認為有錯的全部清單。可以搜尋、篩選、排序；最後一欄只有抽樣過的檔案才有 Argon 的答案。
+    </p>
+
+    <div class="tools">
+      <input class="search" id="q" placeholder="搜尋檔名或音節，例如 xing、bin、a5…">
+      <div class="seg" id="fStatus">
+        <button class="on" data-v="all">全部</button>
+        <button data-v="tone">聲調</button>
+        <button data-v="syllable">音節</button>
+      </div>
+      <div class="seg" id="fVoice">
+        <button class="on" data-v="all">M+F</button>
+        <button data-v="M">男聲</button>
+        <button data-v="F">女聲</button>
+      </div>
+      <button class="btn" id="dl">下載 CSV</button>
+    </div>
+
+    <div class="tbl-wrap">
+      <table id="flagTable">
+        <thead>
+          <tr>
+            <th data-sort="0">檔案</th>
+            <th data-sort="1">期望</th>
+            <th data-sort="2">模型聽到</th>
+            <th data-sort="3">差異</th>
+            <th data-sort="4">Argon 仲裁</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="count" id="flagCount"></p>
+  </div>
+</section>
+
+<!-- ─────────── 06 成本 ─────────── -->
+<section id="cost">
+  <div class="wrap">
+    <div class="sec-label">06 — 成本</div>
+    <h2>全部跑完，US$0.095</h2>
+    <p class="lead">用 flash-lite 做這種大量篩檢非常便宜，問題從來不是錢，是準不準。</p>
+
+    <div class="card">
+      <table class="cost-table">
+        <thead><tr><th>項目</th><th>數量</th><th>Tokens</th><th>成本</th></tr></thead>
+        <tbody>
+          <tr><td>文字輸入（提示詞）</td><td class="num">2,955 次呼叫</td><td class="num" id="tkText"></td><td class="num" id="csText"></td></tr>
+          <tr><td>音訊輸入（每個檔約 25 tokens ≈ 1 秒）</td><td class="num">2,934 個檔案</td><td class="num" id="tkAudio"></td><td class="num" id="csAudio"></td></tr>
+          <tr><td>模型輸出</td><td class="num">—</td><td class="num" id="tkOut"></td><td class="num" id="csOut"></td></tr>
+          <tr><td><b>合計</b></td><td class="num"></td><td class="num"><b id="tkAll"></b></td><td class="num"><b id="csAll"></b></td></tr>
+          <tr><td>Argon 抽樣仲裁（另計）</td><td class="num">150 次</td><td class="num">約 13,000</td><td class="num">約 US$0.036</td></tr>
+        </tbody>
+      </table>
+      <p class="count">
+        牌價：文字輸入 $0.25／1M、音訊輸入 $0.50／1M、輸出 $1.50／1M。
+        平均每個檔案 US$0.000033——全部 2,934 個檔案不到新台幣 3 元。
+      </p>
+    </div>
+
+    <div class="callout">
+      <b>反過來說：</b>如果改用 <span class="mono nowrap">gemini-4-argon</span> 做同樣的全量檢查（每個檔案約 US$0.0008），
+      成本大約是 <b>US$2.4</b>——還是很便宜，而且準得多。真正該計較的是人工複查的時間，不是 API 費用。
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── 07 方法 ─────────── -->
+<section id="method">
+  <div class="wrap">
+    <div class="sec-label">07 — 方法與限制</div>
+    <h2>怎麼做的，以及這份報告不能證明什麼</h2>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>做法</h3>
+        <ul class="plain">
+          <li><b>輸入</b>：每個 mp3 單獨送出，<code>temperature: 0</code>，要求只回「拼音＋聲調數字」。</li>
+          <li><b>比對</b>：檔名去掉 <code>.mp3</code> 即為期望值（無數字視為一聲）；模型輸出正規化後比對音節本體與聲調。</li>
+          <li><b>排除</b>：8 個非標準拼音檔名（<code>lvan2</code>、<code>nui2</code> 等）不列入統計；21 個呼叫失敗重試後仍空白。</li>
+          <li><b>仲裁</b>：從被標記的檔案隨機抽 150 個，用 <code>gemini-4-argon</code> 再聽一次。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>限制</h3>
+        <ul class="plain">
+          <li>音檔是<b>按注音共用</b>的，不是逐字；這份表是音節層級，同一音節的所有字都會受影響。</li>
+          <li>只跑<b>單次</b>。單次結果本身有噪聲，所以第 4 節才需要仲裁。</li>
+          <li>TTS 合成音在孤立音節上的調型本來就比較模糊，尤其輕聲與開口韻（a、ai、ao）。</li>
+          <li>Argon 也不是完美裁判（抽樣中它自己也出現過 <code>ri4 → yi4</code>）。45% 那個數字是<b>上限</b>。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div style="color:var(--ink2);margin-bottom:4px">注音音檔稽核 · gemini-3.1-flash-lite</div>
+      <div>2,934 個檔案 · 2,955 次呼叫 · <span id="fTok">273,028</span> tokens · US$<span id="fCost">0.095</span></div>
+    </div>
+    <div style="text-align:right">
+      <div>完整數據：<span class="mono">out/audit-report.md</span>、<span class="mono">out/audit-flags.csv</span></div>
+      <div style="margin-top:4px">原始紀錄：<span class="mono">data/audit/*.jsonl</span></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const D = {"meta":{"date":"2026-11-17","files":2934,"calls":2955,"tokens":{"text":193876,"audio":72395,"out":6757},"cost":0.0948,"costArb":0.036,"arbN":150},"dist":{"ok":1721,"tone":720,"syllable":464,"nonstandard":8,"error":21},"voices":{"M":{"tone":354,"ok":854,"syllable":253,"nonstandard":4,"error":2},"F":{"ok":867,"tone":366,"syllable":211,"nonstandard":4,"error":19}},"tones":[{"t":1,"name":"一聲","n":714,"ok":443,"rate":62.0,"worst":{"name":"二聲","n":164}},{"t":2,"name":"二聲","n":596,"ok":362,"rate":60.7,"worst":{"name":"三聲","n":122}},{"t":3,"name":"三聲","n":750,"ok":342,"rate":45.6,"worst":{"name":"二聲","n":123}},{"t":4,"name":"四聲","n":776,"ok":568,"rate":73.2,"worst":{"name":"三聲","n":28}},{"t":5,"name":"輕聲","n":98,"ok":6,"rate":6.1,"worst":{"name":"四聲","n":45}}],"matrix":[[485,180,21,26,0],[9,432,148,6,0],[15,151,440,136,0],[31,34,35,666,1],[16,10,9,56,6]],"toneNames":["一聲","二聲","三聲","四聲","輕聲"],"types":[{"k":"其他（聲母或韻母不同）","n":273,"pct":59},{"k":"翹舌／平舌","n":91,"pct":20},{"k":"n／ng 韻尾","n":71,"pct":15},{"k":"其他韻尾","n":15,"pct":3},{"k":"ü／u","n":14,"pct":3}],"pairs":[{"a":"beng","b":"bang","n":6},{"a":"miu","b":"miao","n":6},{"a":"pin","b":"ping","n":6},{"a":"sheng","b":"shang","n":6},{"a":"bin","b":"bing","n":5},{"a":"ca","b":"cha","n":5},{"a":"cou","b":"cao","n":5},{"a":"cuan","b":"chuan","n":5},{"a":"e","b":"er","n":5},{"a":"eh","b":"e","n":5},{"a":"mou","b":"mao","n":5},{"a":"qin","b":"qing","n":5},{"a":"tou","b":"tao","n":5},{"a":"xin","b":"xing","n":5},{"a":"xiu","b":"xiao","n":5},{"a":"cang","b":"chang","n":4},{"a":"feng","b":"fang","n":4},{"a":"jiong","b":"zhong","n":4}],"arb":{"n":150,"ok":82,"bad":68,"rows":[{"f":"F/niang4","e":"niang4","f1":"nian4","f2":"nie4","who":"兩邊都說不對"},{"f":"F/zhai4","e":"zhai4","f1":"chai4","f2":"zhai4","who":"flash-lite 錯"},{"f":"F/nve4","e":"nve4","f1":"nue4","f2":"nüe4","who":"flash-lite 錯"},{"f":"F/nian3","e":"nian3","f1":"nian2","f2":"nian3","who":"flash-lite 錯"},{"f":"F/shu2","e":"shu2","f1":"shu3","f2":"shu2","who":"flash-lite 錯"},{"f":"M/qi3","e":"qi3","f1":"qi4","f2":"qi3","who":"flash-lite 錯"},{"f":"M/ping","e":"ping1","f1":"ping2","f2":"ping1","who":"flash-lite 錯"},{"f":"F/song2","e":"song2","f1":"song4","f2":"song2","who":"flash-lite 錯"},{"f":"F/pin3","e":"pin3","f1":"pi2","f2":"pi4","who":"兩邊都說不對"},{"f":"M/ping4","e":"ping4","f1":"ping1","f2":"pin4","who":"兩邊都說不對"},{"f":"M/jue3","e":"jue3","f1":"jue2","f2":"jue2","who":"兩邊都說不對"},{"f":"F/nang3","e":"nang3","f1":"nang2","f2":"nang3","who":"flash-lite 錯"},{"f":"F/beng2","e":"beng2","f1":"bang3","f2":"bang3","who":"兩邊都說不對"},{"f":"M/mian","e":"mian1","f1":"mian2","f2":"mian1","who":"flash-lite 錯"},{"f":"M/jiu","e":"jiu1","f1":"jiu2","f2":"jiu1","who":"flash-lite 錯"},{"f":"F/xin2","e":"xin2","f1":"xing2","f2":"xing2","who":"兩邊都說不對"},{"f":"M/cuo","e":"cuo1","f1":"cuo4","f2":"cuo1","who":"flash-lite 錯"},{"f":"F/ku2","e":"ku2","f1":"ku3","f2":"ku3","who":"兩邊都說不對"},{"f":"F/niao4","e":"niao4","f1":"niao3","f2":"niao4","who":"flash-lite 錯"},{"f":"M/neng3","e":"neng3","f1":"nao2","f2":"nao3","who":"兩邊都說不對"},{"f":"M/bo3","e":"bo3","f1":"wo3","f2":"bo3","who":"flash-lite 錯"},{"f":"F/wa4","e":"wa4","f1":"wa1","f2":"wa4","who":"flash-lite 錯"},{"f":"M/fu","e":"fu1","f1":"fu2","f2":"fu1","who":"flash-lite 錯"},{"f":"M/er5","e":"er5","f1":"er4","f2":"er4","who":"兩邊都說不對"},{"f":"M/cou3","e":"cou3","f1":"cao3","f2":"cao3","who":"兩邊都說不對"},{"f":"M/qia2","e":"qia2","f1":"qiao2","f2":"qia2","who":"flash-lite 錯"},{"f":"M/tong3","e":"tong3","f1":"tong2","f2":"tong3","who":"flash-lite 錯"},{"f":"M/chu3","e":"chu3","f1":"chu4","f2":"chu3","who":"flash-lite 錯"},{"f":"F/nv4","e":"nv4","f1":"nei4","f2":"nv4","who":"flash-lite 錯"},{"f":"F/ci2","e":"ci2","f1":"si4","f2":"si3","who":"兩邊都說不對"},{"f":"F/mu2","e":"mu2","f1":"mu3","f2":"mu3","who":"兩邊都說不對"},{"f":"M/qin3","e":"qin3","f1":"qing3","f2":"qi3","who":"兩邊都說不對"},{"f":"F/tao3","e":"tao3","f1":"hao3","f2":"tao3","who":"flash-lite 錯"},{"f":"M/sui3","e":"sui3","f1":"shui3","f2":"swei2","who":"兩邊都說不對"},{"f":"M/zun4","e":"zun4","f1":"zhun3","f2":"zhun4","who":"兩邊都說不對"},{"f":"F/seng4","e":"seng4","f1":"sheng4","f2":"seng4","who":"flash-lite 錯"},{"f":"M/bai5","e":"bai5","f1":"bai4","f2":"pai4","who":"兩邊都說不對"},{"f":"M/huang5","e":"huang5","f1":"hua4","f2":"huo4","who":"兩邊都說不對"},{"f":"F/niu4","e":"niu4","f1":"niu2","f2":"niao3","who":"兩邊都說不對"},{"f":"M/zeng4","e":"zeng4","f1":"zheng4","f2":"zong4","who":"兩邊都說不對"},{"f":"F/leng4","e":"leng4","f1":"leng3","f2":"la4","who":"兩邊都說不對"},{"f":"F/yong","e":"yong1","f1":"yong2","f2":"yong1","who":"flash-lite 錯"},{"f":"M/hua3","e":"hua3","f1":"hua4","f2":"hua3","who":"flash-lite 錯"},{"f":"M/xia3","e":"xia3","f1":"xia4","f2":"xia2","who":"兩邊都說不對"},{"f":"F/cao4","e":"cao4","f1":"chao3","f2":"cao4","who":"flash-lite 錯"},{"f":"M/song2","e":"song2","f1":"song1","f2":"song2","who":"flash-lite 錯"},{"f":"F/su3","e":"su3","f1":"su4","f2":"suo3","who":"兩邊都說不對"},{"f":"M/zong","e":"zong1","f1":"zhong1","f2":"zong1","who":"flash-lite 錯"},{"f":"M/chou2","e":"chou2","f1":"chao2","f2":"chou2","who":"flash-lite 錯"},{"f":"M/gui3","e":"gui3","f1":"gui4","f2":"gui3","who":"flash-lite 錯"},{"f":"F/zhen3","e":"zhen3","f1":"zhen4","f2":"jian3","who":"兩邊都說不對"},{"f":"M/lan3","e":"lan3","f1":"lan2","f2":"lan3","who":"flash-lite 錯"},{"f":"F/lan3","e":"lan3","f1":"lan2","f2":"lan3","who":"flash-lite 錯"},{"f":"M/lai4","e":"lai4","f1":"lai2","f2":"lai4","who":"flash-lite 錯"},{"f":"M/zu","e":"zu1","f1":"zhu1","f2":"zu1","who":"flash-lite 錯"},{"f":"F/jiang2","e":"jiang2","f1":"jiang3","f2":"jiang3","who":"兩邊都說不對"},{"f":"M/gen3","e":"gen3","f1":"gen1","f2":"gen3","who":"flash-lite 錯"},{"f":"M/cang2","e":"cang2","f1":"chang2","f2":"cang2","who":"flash-lite 錯"},{"f":"M/a4","e":"a4","f1":"a1","f2":"a4","who":"flash-lite 錯"},{"f":"M/sen3","e":"sen3","f1":"san3","f2":"san3","who":"兩邊都說不對"},{"f":"M/sai4","e":"sai4","f1":"zai4","f2":"sai4","who":"flash-lite 錯"},{"f":"M/duo5","e":"duo5","f1":"duo4","f2":"duo4","who":"兩邊都說不對"},{"f":"F/pao2","e":"pao2","f1":"pao3","f2":"pao3","who":"兩邊都說不對"},{"f":"F/he3","e":"he3","f1":"he1","f2":"he3","who":"flash-lite 錯"},{"f":"F/kuai","e":"kuai1","f1":"kuai4","f2":"kuan1","who":"兩邊都說不對"},{"f":"F/lu","e":"lu1","f1":"lv4","f2":"li1","who":"兩邊都說不對"},{"f":"M/hai","e":"hai1","f1":"hai2","f2":"hai1","who":"flash-lite 錯"},{"f":"F/zhou2","e":"zhou2","f1":"zhao3","f2":"jiao3","who":"兩邊都說不對"},{"f":"M/qiu3","e":"qiu3","f1":"qiu2","f2":"qiu2","who":"兩邊都說不對"},{"f":"M/yong3","e":"yong3","f1":"you3","f2":"you3","who":"兩邊都說不對"},{"f":"F/deng3","e":"deng3","f1":"dang3","f2":"dang3","who":"兩邊都說不對"},{"f":"M/hun2","e":"hun2","f1":"huan2","f2":"huan2","who":"兩邊都說不對"},{"f":"F/ca3","e":"ca3","f1":"cha3","f2":"ca3","who":"flash-lite 錯"},{"f":"F/dai3","e":"dai3","f1":"dai4","f2":"dai3","who":"flash-lite 錯"},{"f":"M/cai","e":"cai1","f1":"cai4","f2":"cai1","who":"flash-lite 錯"},{"f":"F/liao4","e":"liao4","f1":"liu4","f2":"liao4","who":"flash-lite 錯"},{"f":"M/lin2","e":"lin2","f1":"ling2","f2":"ling2","who":"兩邊都說不對"},{"f":"M/man","e":"man1","f1":"man2","f2":"man1","who":"flash-lite 錯"},{"f":"M/wa5","e":"wa5","f1":"wa3","f2":"wa4","who":"兩邊都說不對"},{"f":"M/kua3","e":"kua3","f1":"kua4","f2":"kua3","who":"flash-lite 錯"},{"f":"M/bin4","e":"bin4","f1":"bing4","f2":"bing4","who":"兩邊都說不對"},{"f":"M/fang3","e":"fang3","f1":"fang2","f2":"fang2","who":"兩邊都說不對"},{"f":"F/o3","e":"o3","f1":"o1","f2":"o3","who":"flash-lite 錯"},{"f":"F/quan3","e":"quan3","f1":"quan2","f2":"quan3","who":"flash-lite 錯"},{"f":"M/pan3","e":"pan3","f1":"pan2","f2":"pan2","who":"兩邊都說不對"},{"f":"F/zhai","e":"zhai1","f1":"chai1","f2":"zhai1","who":"flash-lite 錯"},{"f":"M/pou3","e":"pou3","f1":"pao3","f2":"pao3","who":"兩邊都說不對"},{"f":"F/nang5","e":"nang5","f1":"nang2","f2":"nang4","who":"兩邊都說不對"},{"f":"F/shuang2","e":"shuang2","f1":"shuang1","f2":"shuang2","who":"flash-lite 錯"},{"f":"M/qia","e":"qia1","f1":"qia2","f2":"qia1","who":"flash-lite 錯"},{"f":"M/lve","e":"lve1","f1":"lue4","f2":"lue1","who":"兩邊都說不對"},{"f":"F/lou5","e":"lou5","f1":"luo4","f2":"luo4","who":"兩邊都說不對"},{"f":"F/hui3","e":"hui3","f1":"hui4","f2":"hui3","who":"flash-lite 錯"},{"f":"M/liao","e":"liao1","f1":"liao2","f2":"liao1","who":"flash-lite 錯"},{"f":"F/kang4","e":"kang4","f1":"kan4","f2":"kang1","who":"兩邊都說不對"},{"f":"F/lun","e":"lun1","f1":"lun2","f2":"lun1","who":"flash-lite 錯"},{"f":"M/se","e":"se1","f1":"ce4","f2":"se1","who":"flash-lite 錯"},{"f":"M/a","e":"a1","f1":"a2","f2":"a1","who":"flash-lite 錯"},{"f":"F/beng3","e":"beng3","f1":"bang4","f2":"beng3","who":"flash-lite 錯"},{"f":"M/cao2","e":"cao2","f1":"cao3","f2":"cao2","who":"flash-lite 錯"},{"f":"M/sang4","e":"sang4","f1":"shang4","f2":"sao4","who":"兩邊都說不對"},{"f":"M/po3","e":"po3","f1":"po2","f2":"po3","who":"flash-lite 錯"},{"f":"F/kang3","e":"kang3","f1":"kang1","f2":"kang3","who":"flash-lite 錯"},{"f":"F/zuo","e":"zuo1","f1":"zuo4","f2":"zuo1","who":"flash-lite 錯"},{"f":"M/kou3","e":"kou3","f1":"kao3","f2":"kou3","who":"flash-lite 錯"},{"f":"M/da","e":"da1","f1":"da2","f2":"da1","who":"flash-lite 錯"},{"f":"M/miu4","e":"miu4","f1":"miao2","f2":"miao4","who":"兩邊都說不對"},{"f":"M/seng","e":"seng1","f1":"sheng1","f2":"seng1","who":"flash-lite 錯"},{"f":"F/mou2","e":"mou2","f1":"mao2","f2":"mao2","who":"兩邊都說不對"},{"f":"M/xiu","e":"xiu1","f1":"xiao1","f2":"xiu1","who":"flash-lite 錯"},{"f":"M/bin","e":"bin1","f1":"bing1","f2":"bing1","who":"兩邊都說不對"},{"f":"F/cou3","e":"cou3","f1":"cao3","f2":"cao3","who":"兩邊都說不對"},{"f":"M/zuo5","e":"zuo5","f1":"zuo4","f2":"zuo4","who":"兩邊都說不對"},{"f":"F/jia3","e":"jia3","f1":"jie3","f2":"jia3","who":"flash-lite 錯"},{"f":"M/han","e":"han1","f1":"han2","f2":"han1","who":"flash-lite 錯"},{"f":"M/han3","e":"han3","f1":"han2","f2":"han2","who":"兩邊都說不對"},{"f":"M/jin4","e":"jin4","f1":"jing4","f2":"ji4","who":"兩邊都說不對"},{"f":"M/sa5","e":"sa5","f1":"sa4","f2":"sa4","who":"兩邊都說不對"},{"f":"M/tou3","e":"tou3","f1":"tao3","f2":"tou3","who":"flash-lite 錯"},{"f":"F/guai3","e":"guai3","f1":"guai4","f2":"guai3","who":"flash-lite 錯"},{"f":"F/hai4","e":"hai4","f1":"hai2","f2":"hai1","who":"兩邊都說不對"},{"f":"F/nin","e":"nin1","f1":"nin2","f2":"nin1","who":"flash-lite 錯"},{"f":"M/lun3","e":"lun3","f1":"luan2","f2":"lun3","who":"flash-lite 錯"},{"f":"F/qin4","e":"qin4","f1":"xing4","f2":"qing1","who":"兩邊都說不對"},{"f":"F/zou4","e":"zou4","f1":"zou3","f2":"sou4","who":"兩邊都說不對"},{"f":"M/mang4","e":"mang4","f1":"mang2","f2":"mang4","who":"flash-lite 錯"},{"f":"M/pian2","e":"pian2","f1":"pian3","f2":"pian2","who":"flash-lite 錯"},{"f":"M/nan3","e":"nan3","f1":"nan2","f2":"nan3","who":"flash-lite 錯"},{"f":"F/bu","e":"bu1","f1":"bu4","f2":"bu1","who":"flash-lite 錯"},{"f":"M/shun3","e":"shun3","f1":"shuan3","f2":"shuan3","who":"兩邊都說不對"},{"f":"M/wei","e":"wei1","f1":"wei2","f2":"wei1","who":"flash-lite 錯"},{"f":"M/nian","e":"nian1","f1":"nian2","f2":"nie1","who":"兩邊都說不對"},{"f":"F/yue3","e":"yue3","f1":"yue4","f2":"yue3","who":"flash-lite 錯"},{"f":"M/qiu4","e":"qiu4","f1":"tiao4","f2":"qiu1","who":"兩邊都說不對"},{"f":"F/jie5","e":"jie5","f1":"jie4","f2":"jie4","who":"兩邊都說不對"},{"f":"F/qin3","e":"qin3","f1":"qi3","f2":"qi3","who":"兩邊都說不對"},{"f":"M/hang4","e":"hang4","f1":"hang2","f2":"ha4","who":"兩邊都說不對"},{"f":"F/lv","e":"lv1","f1":"lv4","f2":"li2","who":"兩邊都說不對"},{"f":"M/die3","e":"die3","f1":"dian4","f2":"die2","who":"兩邊都說不對"},{"f":"M/kuang2","e":"kuang2","f1":"huang2","f2":"kuang2","who":"flash-lite 錯"},{"f":"M/lang3","e":"lang3","f1":"lang2","f2":"lang3","who":"flash-lite 錯"},{"f":"M/cuan4","e":"cuan4","f1":"chuan4","f2":"chuan4","who":"兩邊都說不對"},{"f":"F/su2","e":"su2","f1":"zu3","f2":"su2","who":"flash-lite 錯"},{"f":"M/xiang2","e":"xiang2","f1":"xiang3","f2":"xiang2","who":"flash-lite 錯"},{"f":"M/teng4","e":"teng4","f1":"teng2","f2":"teng4","who":"flash-lite 錯"},{"f":"F/jue4","e":"jue4","f1":"que4","f2":"jue2","who":"兩邊都說不對"},{"f":"M/xin3","e":"xin3","f1":"xing3","f2":"xi3","who":"兩邊都說不對"},{"f":"F/ren3","e":"ren3","f1":"ren2","f2":"ren3","who":"flash-lite 錯"},{"f":"M/zu4","e":"zu4","f1":"zhu4","f2":"zu4","who":"flash-lite 錯"},{"f":"F/teng4","e":"teng4","f1":"teng2","f2":"ke4","who":"兩邊都說不對"}]},"flags":[{"v":"F","n":"a5","e":"a5","g":"a1","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"ai2","e":"ai2","g":"ai1","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"an3","e":"an3","g":"an1","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"ang3","e":"ang3","g":"ang2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"ao2","e":"ao2","g":"ao3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"ba5","e":"ba5","g":"ba1","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"bai","e":"bai1","g":"bai2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"bai2","e":"bai2","g":"bai3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"bai5","e":"bai5","g":"bai3","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"ban4","e":"ban4","g":"fan4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"bang3","e":"bang3","g":"bang4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"bao2","e":"bao2","g":"bao3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"bei5","e":"bei5","g":"bei4","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"beng","e":"beng1","g":"bang1","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"beng2","e":"beng2","g":"bang3","t":2,"s":"syllable","a":"bang3","as":"syllable"},{"v":"F","n":"beng3","e":"beng3","g":"bang4","t":3,"s":"syllable","a":"beng3","as":"ok"},{"v":"F","n":"beng4","e":"beng4","g":"bang4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"bi2","e":"bi2","g":"bi3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"bian2","e":"bian2","g":"bian3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"biao4","e":"biao4","g":"biao3","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"bie3","e":"bie3","g":"bie4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"bie4","e":"bie4","g":"bian4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"bin","e":"bin1","g":"bing1","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"bin3","e":"bin3","g":"bi4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"bin4","e":"bin4","g":"bing4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"bo3","e":"bo3","g":"bo2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"bo4","e":"bo4","g":"bo1","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"bo5","e":"bo5","g":"bo4","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"bu","e":"bu1","g":"bu4","t":1,"s":"tone","a":"bu1","as":"ok"},{"v":"F","n":"bu2","e":"bu2","g":"bu3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"bu3","e":"bu3","g":"bu4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"ca3","e":"ca3","g":"cha3","t":3,"s":"syllable","a":"ca3","as":"ok"},{"v":"F","n":"ca4","e":"ca4","g":"cha4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"cai","e":"cai1","g":"cai3","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"can2","e":"can2","g":"can3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"cang3","e":"cang3","g":"cang2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"cang4","e":"cang4","g":"chang4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"cao2","e":"cao2","g":"cao3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"cao4","e":"cao4","g":"chao3","t":4,"s":"syllable","a":"cao4","as":"ok"},{"v":"F","n":"cen","e":"cen1","g":"can1","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"cen2","e":"cen2","g":"can2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"ceng","e":"ceng1","g":"ceng2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"ceng2","e":"ceng2","g":"chang2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"ceng3","e":"ceng3","g":"ceng2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"chan2","e":"chan2","g":"chan3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"chang3","e":"chang3","g":"chang2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"che","e":"che1","g":"che2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"chen3","e":"chen3","g":"chen2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"chen5","e":"chen5","g":"chen4","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"cheng3","e":"cheng3","g":"cheng2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"cheng4","e":"cheng4","g":"cheng2","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"chi2","e":"chi2","g":"chi3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"chi3","e":"chi3","g":"qu4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"chong3","e":"chong3","g":"chong2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"chu2","e":"chu2","g":"chu3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"chua3","e":"chua3","g":"cuo4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"chuan3","e":"chuan3","g":"chuan2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"chuang3","e":"chuang3","g":"chuang2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"chui3","e":"chui3","g":"chui2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"chun3","e":"chun3","g":"chuan3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"chuo4","e":"chuo4","g":"cuo4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"ci","e":"ci1","g":"ci4","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"ci2","e":"ci2","g":"si4","t":2,"s":"syllable","a":"si3","as":"syllable"},{"v":"F","n":"ci3","e":"ci3","g":"si4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"cong3","e":"cong3","g":"cong2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"cou2","e":"cou2","g":"cao3","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"cou3","e":"cou3","g":"cao3","t":3,"s":"syllable","a":"cao3","as":"syllable"},{"v":"F","n":"cu3","e":"cu3","g":"cu4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"cuan2","e":"cuan2","g":"chuan2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"cun3","e":"cun3","g":"cun2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"cuo","e":"cuo1","g":"cuo4","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"cuo2","e":"cuo2","g":"cuo4","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"cuo3","e":"cuo3","g":"cuo4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"da5","e":"da5","g":"da4","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"dai3","e":"dai3","g":"dai4","t":3,"s":"tone","a":"dai3","as":"ok"},{"v":"F","n":"dan4","e":"dan4","g":"zan4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"dang","e":"dang1","g":"ang1","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"dao2","e":"dao2","g":"dao3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"dao3","e":"dao3","g":"dao4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"de","e":"de1","g":"te2","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"dei3","e":"dei3","g":"bei3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"den4","e":"den4","g":"deng4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"deng3","e":"deng3","g":"dang3","t":3,"s":"syllable","a":"dang3","as":"syllable"},{"v":"F","n":"di2","e":"di2","g":"di3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"di3","e":"di3","g":"di4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"dia3","e":"dia3","g":"dian3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"dian2","e":"dian2","g":"dian3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"diao","e":"diao1","g":"diao4","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"diao3","e":"diao3","g":"diao4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"die","e":"die1","g":"die2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"die3","e":"die3","g":"die4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"ding2","e":"ding2","g":"ding3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"ding3","e":"ding3","g":"ding4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"diu","e":"diu1","g":"diao4","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"dou2","e":"dou2","g":"dao3","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"dou3","e":"dou3","g":"dou4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"du","e":"du1","g":"tu2","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"du3","e":"du3","g":"du4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"dui3","e":"dui3","g":"dui4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"dun3","e":"dun3","g":"duan3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"duo","e":"duo1","g":"duo2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"duo3","e":"duo3","g":"duo4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"duo5","e":"duo5","g":"duo1","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"e","e":"e1","g":"er2","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"e2","e":"e2","g":"er2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"e3","e":"e3","g":"er4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"e4","e":"e4","g":"er4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"eh2","e":"eh2","g":"e2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"eh3","e":"eh3","g":"e4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"eh4","e":"eh4","g":"e4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"eh5","e":"eh5","g":"e4","t":5,"s":"syllable","a":null,"as":null},{"v":"F","n":"ei4","e":"ei4","g":"ei1","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"en","e":"en1","g":"en2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"en3","e":"en3","g":"en2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"en4","e":"en4","g":"en1","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"en5","e":"en5","g":"en4","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"eng4","e":"eng4","g":"eng1","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"er","e":"er1","g":"er2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"er3","e":"er3","g":"er4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"er5","e":"er5","g":"er4","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"fan","e":"fan1","g":"ban1","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"fan3","e":"fan3","g":"fan4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"fang3","e":"fang3","g":"fang2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"fang4","e":"fang4","g":"wang4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"fen2","e":"fen2","g":"fen3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"fen3","e":"fen3","g":"fan4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"fen5","e":"fen5","g":"san1","t":5,"s":"syllable","a":null,"as":null},{"v":"F","n":"feng2","e":"feng2","g":"fang2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"feng3","e":"feng3","g":"fang2","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"feng4","e":"feng4","g":"fang4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"fou","e":"fou1","g":"feng1","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"fou3","e":"fou3","g":"fo4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"fu","e":"fu1","g":"fu2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"fu3","e":"fu3","g":"fu4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"ga2","e":"ga2","g":"ga3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"ga4","e":"ga4","g":"ga1","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"ga5","e":"ga5","g":"ga3","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"ge3","e":"ge3","g":"ge2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"ge5","e":"ge5","g":"ge4","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"gen2","e":"gen2","g":"gan3","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"gen3","e":"gen3","g":"gan3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"geng3","e":"geng3","g":"gan1","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"geng4","e":"geng4","g":"gong4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"gong2","e":"gong2","g":"gong1","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"gong3","e":"gong3","g":"gong1","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"gou3","e":"gou3","g":"gao3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"gu2","e":"gu2","g":"gu3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"gua3","e":"gua3","g":"gua4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"guai3","e":"guai3","g":"guai4","t":3,"s":"tone","a":"guai3","as":"ok"},{"v":"F","n":"guan3","e":"guan3","g":"guo4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"gue2","e":"gue2","g":"guo2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"gun3","e":"gun3","g":"gui3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"guo2","e":"guo2","g":"guo3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"hai","e":"hai1","g":"hai2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"hai4","e":"hai4","g":"hai2","t":4,"s":"tone","a":"hai1","as":"tone"},{"v":"F","n":"han","e":"han1","g":"han2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"han3","e":"han3","g":"han4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"hang3","e":"hang3","g":"ha4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"hao","e":"hao1","g":"hao2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"hao2","e":"hao2","g":"hao3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"he","e":"he1","g":"he2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"he3","e":"he3","g":"he1","t":3,"s":"tone","a":"he3","as":"ok"},{"v":"F","n":"he4","e":"he4","g":"heng2","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"hei3","e":"hei3","g":"hei2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"hen","e":"hen1","g":"hen2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"heng","e":"heng1","g":"heng2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"heng4","e":"heng4","g":"heng2","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"hong","e":"hong1","g":"hong2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"hong3","e":"hong3","g":"hong2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"hong4","e":"hong4","g":"hong2","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"hou","e":"hou1","g":"hou2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"hu3","e":"hu3","g":"hu4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"hua3","e":"hua3","g":"huo4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"huai4","e":"huai4","g":"kuai4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"huan3","e":"huan3","g":"huan2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"huang3","e":"huang3","g":"huang2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"huang4","e":"huang4","g":"huang2","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"huang5","e":"huang5","g":"kuang4","t":5,"s":"syllable","a":null,"as":null},{"v":"F","n":"hui3","e":"hui3","g":"hui4","t":3,"s":"tone","a":"hui3","as":"ok"},{"v":"F","n":"hun3","e":"hun3","g":"hun4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"huo","e":"huo1","g":"huo2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"huo2","e":"huo2","g":"huo3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"huo5","e":"huo5","g":"huo1","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"jia3","e":"jia3","g":"jie3","t":3,"s":"syllable","a":"jia3","as":"ok"},{"v":"F","n":"jiang2","e":"jiang2","g":"jiang3","t":2,"s":"tone","a":"jiang3","as":"tone"},{"v":"F","n":"jiang4","e":"jiang4","g":"qiang4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"jiao2","e":"jiao2","g":"jiao3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"jie5","e":"jie5","g":"jie4","t":5,"s":"tone","a":"jie4","as":"tone"},{"v":"F","n":"jin3","e":"jin3","g":"ji3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"jing3","e":"jing3","g":"ji4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"jiong","e":"jiong1","g":"zhong1","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"jiong4","e":"jiong4","g":"zhong4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"ju2","e":"ju2","g":"ju3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"ju3","e":"ju3","g":"ju4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"jue","e":"jue1","g":"jue2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"jue3","e":"jue3","g":"jue4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"jue4","e":"jue4","g":"que4","t":4,"s":"syllable","a":"jue2","as":"tone"},{"v":"F","n":"jun2","e":"jun2","g":"jing3","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"jun3","e":"jun3","g":"ju4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"ka4","e":"ka4","g":"ka3","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"kang3","e":"kang3","g":"kang1","t":3,"s":"tone","a":"kang3","as":"ok"},{"v":"F","n":"kang4","e":"kang4","g":"kan4","t":4,"s":"syllable","a":"kang1","as":"tone"},{"v":"F","n":"keng3","e":"keng3","g":"kang1","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"kong3","e":"kong3","g":"kong1","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"kou","e":"kou1","g":"kou3","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"ku2","e":"ku2","g":"ku3","t":2,"s":"tone","a":"ku3","as":"tone"},{"v":"F","n":"kuai","e":"kuai1","g":"kuai4","t":1,"s":"tone","a":"kuan1","as":"syllable"},{"v":"F","n":"kuai3","e":"kuai3","g":"kuai4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"kuang3","e":"kuang3","g":"kuang4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"kui","e":"kui1","g":"kui2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"kun3","e":"kun3","g":"kuo4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"la5","e":"la5","g":"la3","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"lai3","e":"lai3","g":"lai2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"lan3","e":"lan3","g":"lan2","t":3,"s":"tone","a":"lan3","as":"ok"},{"v":"F","n":"lang","e":"lang1","g":"lang2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"lang3","e":"lang3","g":"lang2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"lao","e":"lao1","g":"lao2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"lao2","e":"lao2","g":"lao3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"le","e":"le1","g":"le2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"le4","e":"le4","g":"le5","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"lei","e":"lei1","g":"lei2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"lei5","e":"lei5","g":"le4","t":5,"s":"syllable","a":null,"as":null},{"v":"F","n":"leng","e":"leng1","g":"leng2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"leng2","e":"leng2","g":"leng3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"leng4","e":"leng4","g":"leng3","t":4,"s":"tone","a":"la4","as":"syllable"},{"v":"F","n":"li","e":"li1","g":"li2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"li3","e":"li3","g":"li4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"li5","e":"li5","g":"li4","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"lian","e":"lian1","g":"lian2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"lian3","e":"lian3","g":"lian4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"liang3","e":"liang3","g":"liang2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"liao","e":"liao1","g":"liao2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"liao4","e":"liao4","g":"liu4","t":4,"s":"syllable","a":"liao4","as":"ok"},{"v":"F","n":"lie","e":"lie1","g":"li2","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"lie2","e":"lie2","g":"lie3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"lie3","e":"lie3","g":"lie4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"lin3","e":"lin3","g":"li4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"lin4","e":"lin4","g":"ling4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"ling","e":"ling1","g":"ling2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"ling3","e":"ling3","g":"ling2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"liu","e":"liu1","g":"liu2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"liu2","e":"liu2","g":"liao2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"liu3","e":"liu3","g":"liao3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"lo","e":"lo1","g":"luo2","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"lo5","e":"lo5","g":"luo2","t":5,"s":"syllable","a":null,"as":null},{"v":"F","n":"long","e":"long1","g":"long2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"long3","e":"long3","g":"long2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"lou","e":"lou1","g":"lou2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"lou2","e":"lou2","g":"lao3","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"lou3","e":"lou3","g":"lao3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"lou5","e":"lou5","g":"luo4","t":5,"s":"syllable","a":"luo4","as":"syllable"},{"v":"F","n":"lu","e":"lu1","g":"lv4","t":1,"s":"syllable","a":"li1","as":"syllable"},{"v":"F","n":"lu3","e":"lu3","g":"lv4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"luan3","e":"luan3","g":"lv4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"lun","e":"lun1","g":"lun2","t":1,"s":"tone","a":"lun1","as":"ok"},{"v":"F","n":"lun3","e":"lun3","g":"luo4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"luo","e":"luo1","g":"luo2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"luo3","e":"luo3","g":"luo4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"luo5","e":"luo5","g":"luo4","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"lv","e":"lv1","g":"lv4","t":1,"s":"tone","a":"li2","as":"syllable"},{"v":"F","n":"lv2","e":"lv2","g":"lv4","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"lv3","e":"lv3","g":"lv4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"lve","e":"lve1","g":"lve4","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"lve3","e":"lve3","g":"lve4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"lve4","e":"lve4","g":"lü4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"ma2","e":"ma2","g":"ma3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"ma5","e":"ma5","g":"ma1","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"mai2","e":"mai2","g":"mai3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"man","e":"man1","g":"man2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"man2","e":"man2","g":"man3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"mang","e":"mang1","g":"mang2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"mang3","e":"mang3","g":"mang2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"mao4","e":"mao4","g":"mao1","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"me","e":"me1","g":"me2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"men","e":"men1","g":"men2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"men3","e":"men3","g":"men2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"men5","e":"men5","g":"men4","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"meng","e":"meng1","g":"mang2","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"meng2","e":"meng2","g":"mang2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"meng3","e":"meng3","g":"mang2","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"mi","e":"mi1","g":"mi2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"mi2","e":"mi2","g":"mi3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"mian","e":"mian1","g":"mian2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"miao","e":"miao1","g":"miao2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"mie2","e":"mie2","g":"mian3","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"min","e":"min1","g":"min2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"min2","e":"min2","g":"min3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"min3","e":"min3","g":"mi3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"ming3","e":"ming3","g":"ming2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"miu2","e":"miu2","g":"miao2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"miu3","e":"miu3","g":"miao3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"miu4","e":"miu4","g":"miao2","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"mo3","e":"mo3","g":"mo2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"mo5","e":"mo5","g":"mao2","t":5,"s":"syllable","a":null,"as":null},{"v":"F","n":"mou2","e":"mou2","g":"mao2","t":2,"s":"syllable","a":"mao2","as":"syllable"},{"v":"F","n":"mou3","e":"mou3","g":"mao2","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"mou4","e":"mou4","g":"meng4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"mu2","e":"mu2","g":"mu3","t":2,"s":"tone","a":"mu3","as":"tone"},{"v":"F","n":"mu3","e":"mu3","g":"mu4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"mu4","e":"mu4","g":"meng4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"na","e":"na1","g":"na2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"na5","e":"na5","g":"na4","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"nai2","e":"nai2","g":"nai3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"nan","e":"nan1","g":"nan2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"nan3","e":"nan3","g":"nan2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"nang","e":"nang1","g":"nang2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"nang3","e":"nang3","g":"nang2","t":3,"s":"tone","a":"nang3","as":"ok"},{"v":"F","n":"nang4","e":"nang4","g":"nang2","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"nang5","e":"nang5","g":"nang2","t":5,"s":"tone","a":"nang4","as":"tone"},{"v":"F","n":"nao","e":"nao1","g":"nao2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"nao2","e":"nao2","g":"nao3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"nao4","e":"nao4","g":"nao3","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"ne5","e":"ne5","g":"neng2","t":5,"s":"syllable","a":null,"as":null},{"v":"F","n":"nen3","e":"nen3","g":"nen2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"neng3","e":"neng3","g":"neng2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"ni","e":"ni1","g":"ni2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"ni2","e":"ni2","g":"ni3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"nian","e":"nian1","g":"nian2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"nian3","e":"nian3","g":"nian2","t":3,"s":"tone","a":"nian3","as":"ok"},{"v":"F","n":"niang4","e":"niang4","g":"nian4","t":4,"s":"syllable","a":"nie4","as":"syllable"},{"v":"F","n":"niao4","e":"niao4","g":"niao3","t":4,"s":"tone","a":"niao4","as":"ok"},{"v":"F","n":"nie2","e":"nie2","g":"ni3","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"nin","e":"nin1","g":"nin2","t":1,"s":"tone","a":"nin1","as":"ok"},{"v":"F","n":"nin3","e":"nin3","g":"nin2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"nin4","e":"nin4","g":"ni4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"ning2","e":"ning2","g":"nin2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"ning3","e":"ning3","g":"nin2","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"ning4","e":"ning4","g":"ning2","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"niu","e":"niu1","g":"niu2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"niu3","e":"niu3","g":"niao3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"niu4","e":"niu4","g":"niu2","t":4,"s":"tone","a":"niao3","as":"syllable"},{"v":"F","n":"nong3","e":"nong3","g":"nong2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"nong4","e":"nong4","g":"nong2","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"nou2","e":"nou2","g":"nao3","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"nou3","e":"nou3","g":"nao3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"nou4","e":"nou4","g":"nou2","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"nu2","e":"nu2","g":"nv3","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"nu3","e":"nu3","g":"nv3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"nu4","e":"nu4","g":"nei4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"nuan2","e":"nuan2","g":"nuan3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"nuan3","e":"nuan3","g":"nuo4 an1","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"nun2","e":"nun2","g":"nuan2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"nuo3","e":"nuo3","g":"nuo4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"nv2","e":"nv2","g":"nv3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"nv4","e":"nv4","g":"nei4","t":4,"s":"syllable","a":"nv4","as":"ok"},{"v":"F","n":"nve4","e":"nve4","g":"nue4","t":4,"s":"syllable","a":"nüe4","as":"ok"},{"v":"F","n":"o3","e":"o3","g":"o1","t":3,"s":"tone","a":"o3","as":"ok"},{"v":"F","n":"ou3","e":"ou3","g":"ao2","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"ou4","e":"ou4","g":"ou2","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"ou5","e":"ou5","g":"ou3","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"pa3","e":"pa3","g":"pa4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"pa5","e":"pa5","g":"pa4","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"pan3","e":"pan3","g":"pan2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"pang2","e":"pang2","g":"tang2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"pang3","e":"pang3","g":"pang2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"pao2","e":"pao2","g":"pao3","t":2,"s":"tone","a":"pao3","as":"tone"},{"v":"F","n":"pei","e":"pei1","g":"pei2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"pei3","e":"pei3","g":"pei2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"pen","e":"pen1","g":"teng2","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"peng3","e":"peng3","g":"peng2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"peng4","e":"peng4","g":"peng1","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"pi4","e":"pi4","g":"pi1","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"pian2","e":"pian2","g":"pian3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"pian3","e":"pian3","g":"pian1","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"piao2","e":"piao2","g":"piao3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"pie4","e":"pie4","g":"pian4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"pin2","e":"pin2","g":"ping2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"pin3","e":"pin3","g":"pi2","t":3,"s":"syllable","a":"pi4","as":"syllable"},{"v":"F","n":"pin4","e":"pin4","g":"ping1","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"ping3","e":"ping3","g":"ping2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"ping4","e":"ping4","g":"pin1","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"po3","e":"po3","g":"po4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"po4","e":"po4","g":"huo4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"pou","e":"pou1","g":"pou2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"pou2","e":"pou2","g":"pao3","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"pu2","e":"pu2","g":"pu3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"qi2","e":"qi2","g":"xi2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"qian3","e":"qian3","g":"qian2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"qie2","e":"qie2","g":"xie2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"qie3","e":"qie3","g":"jie3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"qin2","e":"qin2","g":"qing3","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"qin3","e":"qin3","g":"qi3","t":3,"s":"syllable","a":"qi3","as":"syllable"},{"v":"F","n":"qin4","e":"qin4","g":"xing4","t":4,"s":"syllable","a":"qing1","as":"syllable"},{"v":"F","n":"qing2","e":"qing2","g":"qing3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"qing3","e":"qing3","g":"qi4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"qiong","e":"qiong1","g":"chong1","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"qiong3","e":"qiong3","g":"qiong2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"qiu3","e":"qiu3","g":"qiu2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"qu2","e":"qu2","g":"qu3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"qu3","e":"qu3","g":"qu4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"quan","e":"quan1","g":"quan2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"quan3","e":"quan3","g":"quan2","t":3,"s":"tone","a":"quan3","as":"ok"},{"v":"F","n":"que","e":"que1","g":"que4","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"qun3","e":"qun3","g":"qu3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"ran2","e":"ran2","g":"lan2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"rang","e":"rang1","g":"rang2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"rang3","e":"rang3","g":"rang2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"re3","e":"re3","g":"re4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"ren3","e":"ren3","g":"ren2","t":3,"s":"tone","a":"ren3","as":"ok"},{"v":"F","n":"reng","e":"reng1","g":"reng2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"reng3","e":"reng3","g":"ren2","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"rong3","e":"rong3","g":"rong2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"rong4","e":"rong4","g":"rong2","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"rou3","e":"rou3","g":"rao3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"ruan2","e":"ruan2","g":"ruan3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"ruan4","e":"ruan4","g":"ruan3","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"rui3","e":"rui3","g":"rui4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"run2","e":"run2","g":"ruan3","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"run3","e":"run3","g":"ruan3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"sa5","e":"sa5","g":"sa4","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"sai2","e":"sai2","g":"sai3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"sang4","e":"sang4","g":"shang4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"sao","e":"sao1","g":"cao1","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"se","e":"se1","g":"se4","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"sen3","e":"sen3","g":"san1","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"seng","e":"seng1","g":"sheng1","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"seng4","e":"seng4","g":"sheng4","t":4,"s":"syllable","a":"seng4","as":"ok"},{"v":"F","n":"sha3","e":"sha3","g":"sha4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"sha5","e":"sha5","g":"sha4","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"shan2","e":"shan2","g":"shan3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"shang3","e":"shang3","g":"shang4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"shang5","e":"shang5","g":"shang4","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"shao2","e":"shao2","g":"shao3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"she3","e":"she3","g":"she2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"shen3","e":"shen3","g":"shen2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"shen4","e":"shen4","g":"shan4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"sheng2","e":"sheng2","g":"shang2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"sheng3","e":"sheng3","g":"shang4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"shi3","e":"shi3","g":"shi4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"shi5","e":"shi5","g":"shi2","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"shou2","e":"shou2","g":"shou3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"shou3","e":"shou3","g":"shao3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"shu2","e":"shu2","g":"shu3","t":2,"s":"tone","a":"shu2","as":"ok"},{"v":"F","n":"shu3","e":"shu3","g":"shu4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"shua3","e":"shua3","g":"shuo3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"shuang2","e":"shuang2","g":"shuang1","t":2,"s":"tone","a":"shuang2","as":"ok"},{"v":"F","n":"shui","e":"shui1","g":"shui3","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"shui2","e":"shui2","g":"shui3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"shun3","e":"shun3","g":"xuan3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"si","e":"si1","g":"si4","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"si3","e":"si3","g":"si4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"song2","e":"song2","g":"song4","t":2,"s":"tone","a":"song2","as":"ok"},{"v":"F","n":"su2","e":"su2","g":"zu3","t":2,"s":"syllable","a":"su2","as":"ok"},{"v":"F","n":"su3","e":"su3","g":"su4","t":3,"s":"tone","a":"suo3","as":"syllable"},{"v":"F","n":"suan3","e":"suan3","g":"suan4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"sun3","e":"sun3","g":"suan1","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"suo2","e":"suo2","g":"suo3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"suo4","e":"suo4","g":"zuo4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"ta","e":"ta1","g":"pa1","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"ta3","e":"ta3","g":"pa3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"ta4","e":"ta4","g":"pa4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"tai","e":"tai1","g":"kai1","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"tai3","e":"tai3","g":"tai2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"tai5","e":"tai5","g":"tai4","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"tang2","e":"tang2","g":"chang2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"tang3","e":"tang3","g":"tang2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"tao3","e":"tao3","g":"hao3","t":3,"s":"syllable","a":"tao3","as":"ok"},{"v":"F","n":"tao5","e":"tao5","g":"ta1","t":5,"s":"syllable","a":null,"as":null},{"v":"F","n":"teng4","e":"teng4","g":"teng2","t":4,"s":"tone","a":"ke4","as":"syllable"},{"v":"F","n":"ti2","e":"ti2","g":"ti3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"tian3","e":"tian3","g":"tian2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"tian4","e":"tian4","g":"pian4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"tiao","e":"tiao1","g":"tiao2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"tie2","e":"tie2","g":"tie3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"ting3","e":"ting3","g":"ting2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"ting4","e":"ting4","g":"ting1","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"tou2","e":"tou2","g":"tao2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"tou3","e":"tou3","g":"tao2","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"tou4","e":"tou4","g":"tao4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"tou5","e":"tou5","g":"tuo1","t":5,"s":"syllable","a":null,"as":null},{"v":"F","n":"tu","e":"tu1","g":"tu2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"tu4","e":"tu4","g":"tong4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"tuan3","e":"tuan3","g":"tuo2","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"tun3","e":"tun3","g":"tuan2","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"tuo4","e":"tuo4","g":"tuo1","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"wa4","e":"wa4","g":"wa1","t":4,"s":"tone","a":"wa4","as":"ok"},{"v":"F","n":"wa5","e":"wa5","g":"wa4","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"wai","e":"wai1","g":"wai2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"wai3","e":"wai3","g":"wai4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"wan2","e":"wan2","g":"wan3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"wei3","e":"wei3","g":"wei4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"wen3","e":"wen3","g":"wan3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"weng3","e":"weng3","g":"wang3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"weng4","e":"weng4","g":"wang4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"wo","e":"wo1","g":"wo3","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"wo4","e":"wo4","g":"wo3","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"wu2","e":"wu2","g":"wu3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"wu4","e":"wu4","g":"wu3","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"xi2","e":"xi2","g":"xi3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"xia","e":"xia1","g":"xia4","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"xia3","e":"xia3","g":"xia4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"xian2","e":"xian2","g":"xian3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"xian3","e":"xian3","g":"xian4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"xiang2","e":"xiang2","g":"xiang3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"xiao2","e":"xiao2","g":"xiao3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"xie3","e":"xie3","g":"xie4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"xin2","e":"xin2","g":"xing2","t":2,"s":"syllable","a":"xing2","as":"syllable"},{"v":"F","n":"xin4","e":"xin4","g":"xing4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"xing","e":"xing1","g":"xin1","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"xiong3","e":"xiong3","g":"xiong2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"xiu2","e":"xiu2","g":"xiao3","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"xiu3","e":"xiu3","g":"jiu3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"xu2","e":"xu2","g":"xu3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"xu3","e":"xu3","g":"xu4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"xuan2","e":"xuan2","g":"xuan3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"xue3","e":"xue3","g":"xue4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"ya","e":"ya1","g":"ya2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"ya5","e":"ya5","g":"ya3","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"yai2","e":"yai2","g":"ya2","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"yang","e":"yang1","g":"yang2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"yang3","e":"yang3","g":"yang2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"yao","e":"yao1","g":"yao2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"yao2","e":"yao2","g":"yao3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"ye5","e":"ye5","g":"ye4","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"yi3","e":"yi3","g":"yi1","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"yin2","e":"yin2","g":"yin3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"yin3","e":"yin3","g":"yin1","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"ying3","e":"ying3","g":"ying2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"yo","e":"yo1","g":"yo2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"yo5","e":"yo5","g":"you3","t":5,"s":"syllable","a":null,"as":null},{"v":"F","n":"yong","e":"yong1","g":"yong2","t":1,"s":"tone","a":"yong1","as":"ok"},{"v":"F","n":"yong2","e":"yong2","g":"yong3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"you","e":"you1","g":"you2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"yu","e":"yu1","g":"yu2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"yu3","e":"yu3","g":"yu4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"yuan","e":"yuan1","g":"yuan2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"yue","e":"yue1","g":"yue2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"yue3","e":"yue3","g":"yue4","t":3,"s":"tone","a":"yue3","as":"ok"},{"v":"F","n":"zai3","e":"zai3","g":"zai4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"zan","e":"zan1","g":"san1","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"zan2","e":"zan2","g":"zan3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"zan4","e":"zan4","g":"fan4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"zao2","e":"zao2","g":"zao3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"zei2","e":"zei2","g":"zei3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"zen3","e":"zen3","g":"zan3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"zeng3","e":"zeng3","g":"zang3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"zeng4","e":"zeng4","g":"zang4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"zhai","e":"zhai1","g":"chai1","t":1,"s":"syllable","a":"zhai1","as":"ok"},{"v":"F","n":"zhai2","e":"zhai2","g":"zhai3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"zhai4","e":"zhai4","g":"chai4","t":4,"s":"syllable","a":"zhai4","as":"ok"},{"v":"F","n":"zhao","e":"zhao1","g":"jiao1","t":1,"s":"syllable","a":null,"as":null},{"v":"F","n":"zhao2","e":"zhao2","g":"zhao3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"zhe","e":"zhe1","g":"zhe2","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"zhe3","e":"zhe3","g":"zhe2","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"zhe5","e":"zhe5","g":"zhe4","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"zhei4","e":"zhei4","g":"jie4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"zhen2","e":"zhen2","g":"zhen3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"zhen3","e":"zhen3","g":"zhen4","t":3,"s":"tone","a":"jian3","as":"syllable"},{"v":"F","n":"zheng3","e":"zheng3","g":"zhe3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"zhi2","e":"zhi2","g":"zhi3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"zhi3","e":"zhi3","g":"zhi4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"zhong3","e":"zhong3","g":"zhong4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"zhou2","e":"zhou2","g":"zhao3","t":2,"s":"syllable","a":"jiao3","as":"syllable"},{"v":"F","n":"zhou3","e":"zhou3","g":"zhao3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"zhu2","e":"zhu2","g":"zhu3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"zhu3","e":"zhu3","g":"zhu4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"zhua3","e":"zhua3","g":"zuo4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"zhuai4","e":"zhuai4","g":"zhuai3","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"zhuang3","e":"zhuang3","g":"zhuang4","t":3,"s":"tone","a":null,"as":null},{"v":"F","n":"zhui3","e":"zhui3","g":"zui3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"zhun3","e":"zhun3","g":"zhuan3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"zhun4","e":"zhun4","g":"zhun3","t":4,"s":"tone","a":null,"as":null},{"v":"F","n":"zhuo2","e":"zhuo2","g":"zuo3","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"zhuo4","e":"zhuo4","g":"zuo4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"zi2","e":"zi2","g":"zhi3","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"zi3","e":"zi3","g":"fu4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"zi5","e":"zi5","g":"zi4","t":5,"s":"tone","a":null,"as":null},{"v":"F","n":"zou","e":"zou1","g":"zou3","t":1,"s":"tone","a":null,"as":null},{"v":"F","n":"zou3","e":"zou3","g":"zao3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"zou4","e":"zou4","g":"zou3","t":4,"s":"tone","a":"sou4","as":"syllable"},{"v":"F","n":"zu2","e":"zu2","g":"wu3","t":2,"s":"syllable","a":null,"as":null},{"v":"F","n":"zuan3","e":"zuan3","g":"zuo4","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"zuan4","e":"zuan4","g":"suan4","t":4,"s":"syllable","a":null,"as":null},{"v":"F","n":"zun3","e":"zun3","g":"zuo3","t":3,"s":"syllable","a":null,"as":null},{"v":"F","n":"zuo","e":"zuo1","g":"zuo4","t":1,"s":"tone","a":"zuo1","as":"ok"},{"v":"F","n":"zuo2","e":"zuo2","g":"zuo3","t":2,"s":"tone","a":null,"as":null},{"v":"F","n":"zuo5","e":"zuo5","g":"zuo4","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"a","e":"a1","g":"a2","t":1,"s":"tone","a":"a1","as":"ok"},{"v":"M","n":"a4","e":"a4","g":"a1","t":4,"s":"tone","a":"a4","as":"ok"},{"v":"M","n":"a5","e":"a5","g":"a1","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"ai","e":"ai1","g":"ai2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"ang3","e":"ang3","g":"ang2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"ang4","e":"ang4","g":"an2","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"ao","e":"ao1","g":"ao2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"ba5","e":"ba5","g":"fa4","t":5,"s":"syllable","a":null,"as":null},{"v":"M","n":"bai","e":"bai1","g":"bai2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"bai5","e":"bai5","g":"bai4","t":5,"s":"tone","a":"pai4","as":"syllable"},{"v":"M","n":"bao2","e":"bao2","g":"bao3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"bei5","e":"bei5","g":"bei4","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"ben","e":"ben1","g":"ben3","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"ben4","e":"ben4","g":"ben3","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"beng","e":"beng1","g":"bang1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"beng2","e":"beng2","g":"bang1","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"bi2","e":"bi2","g":"bi3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"bian2","e":"bian2","g":"bian3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"biao4","e":"biao4","g":"biao3","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"bie4","e":"bie4","g":"bian4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"bin","e":"bin1","g":"bing1","t":1,"s":"syllable","a":"bing1","as":"syllable"},{"v":"M","n":"bin3","e":"bin3","g":"bing3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"bin4","e":"bin4","g":"bing4","t":4,"s":"syllable","a":"bing4","as":"syllable"},{"v":"M","n":"bo3","e":"bo3","g":"wo3","t":3,"s":"syllable","a":"bo3","as":"ok"},{"v":"M","n":"bo4","e":"bo4","g":"bo1","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"bo5","e":"bo5","g":"bo1","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"bu","e":"bu1","g":"pu1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"bu2","e":"bu2","g":"bu3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"bu3","e":"bu3","g":"bu4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"ca","e":"ca1","g":"cha2","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"ca3","e":"ca3","g":"cha2","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"ca4","e":"ca4","g":"cha4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"cai","e":"cai1","g":"cai4","t":1,"s":"tone","a":"cai1","as":"ok"},{"v":"M","n":"can3","e":"can3","g":"chan3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"cang2","e":"cang2","g":"chang2","t":2,"s":"syllable","a":"cang2","as":"ok"},{"v":"M","n":"cang3","e":"cang3","g":"chang2","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"cang4","e":"cang4","g":"chang4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"cao","e":"cao1","g":"cao3","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"cao2","e":"cao2","g":"cao3","t":2,"s":"tone","a":"cao2","as":"ok"},{"v":"M","n":"cao4","e":"cao4","g":"cao3","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"cen","e":"cen1","g":"chen1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"cen2","e":"cen2","g":"chen2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"ceng","e":"ceng1","g":"ceng2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"ceng2","e":"ceng2","g":"cheng2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"ceng3","e":"ceng3","g":"ceng2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"ceng4","e":"ceng4","g":"cheng2","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"cha3","e":"cha3","g":"cha2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"chai2","e":"chai2","g":"tai2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"chai4","e":"chai4","g":"cai4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"chao","e":"chao1","g":"chao2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"chao2","e":"chao2","g":"chao3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"chen","e":"chen1","g":"chen2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"chen3","e":"chen3","g":"chen2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"chen5","e":"chen5","g":"chen4","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"cheng","e":"cheng1","g":"cheng2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"cheng3","e":"cheng3","g":"cheng2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"cheng4","e":"cheng4","g":"cheng2","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"chi2","e":"chi2","g":"zhi2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"chong3","e":"chong3","g":"chong2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"chou","e":"chou1","g":"tao2","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"chou2","e":"chou2","g":"chao2","t":2,"s":"syllable","a":"chou2","as":"ok"},{"v":"M","n":"chu3","e":"chu3","g":"chu4","t":3,"s":"tone","a":"chu3","as":"ok"},{"v":"M","n":"chua3","e":"chua3","g":"chuai3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"chuang3","e":"chuang3","g":"chuang2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"chui4","e":"chui4","g":"cui4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"chun2","e":"chun2","g":"chuan2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"chun3","e":"chun3","g":"chuan3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"chuo4","e":"chuo4","g":"cuo4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"cong","e":"cong1","g":"cong2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"cong3","e":"cong3","g":"cuo4","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"cou","e":"cou1","g":"cao3","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"cou2","e":"cou2","g":"cao3","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"cou3","e":"cou3","g":"cao3","t":3,"s":"syllable","a":"cao3","as":"syllable"},{"v":"M","n":"cu","e":"cu1","g":"chu1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"cu2","e":"cu2","g":"chu2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"cu3","e":"cu3","g":"cu4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"cuan","e":"cuan1","g":"chuan1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"cuan2","e":"cuan2","g":"chuan2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"cuan3","e":"cuan3","g":"chuan3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"cuan4","e":"cuan4","g":"chuan4","t":4,"s":"syllable","a":"chuan4","as":"syllable"},{"v":"M","n":"cui","e":"cui1","g":"chui1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"cui3","e":"cui3","g":"chui2","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"cui4","e":"cui4","g":"tui4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"cun2","e":"cun2","g":"chun2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"cun3","e":"cun3","g":"chuan3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"cuo","e":"cuo1","g":"cuo4","t":1,"s":"tone","a":"cuo1","as":"ok"},{"v":"M","n":"cuo2","e":"cuo2","g":"cuo4","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"cuo3","e":"cuo3","g":"cuo4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"da","e":"da1","g":"da2","t":1,"s":"tone","a":"da1","as":"ok"},{"v":"M","n":"da5","e":"da5","g":"da4","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"dao2","e":"dao2","g":"dao3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"de","e":"de1","g":"de2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"den4","e":"den4","g":"deng4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"deng4","e":"deng4","g":"deng3","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"di3","e":"di3","g":"di4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"dian","e":"dian1","g":"dian3","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"dian2","e":"dian2","g":"dian3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"diao","e":"diao1","g":"diao4","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"die","e":"die1","g":"die2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"die3","e":"die3","g":"dian4","t":3,"s":"syllable","a":"die2","as":"tone"},{"v":"M","n":"die4","e":"die4","g":"dian4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"ding2","e":"ding2","g":"ding3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"dou2","e":"dou2","g":"dou3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"dou3","e":"dou3","g":"dao3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"dui3","e":"dui3","g":"dui4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"dun3","e":"dun3","g":"duan3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"duo5","e":"duo5","g":"duo4","t":5,"s":"tone","a":"duo4","as":"tone"},{"v":"M","n":"e","e":"e1","g":"e2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"e3","e":"e3","g":"e2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"e4","e":"e4","g":"er4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"eh2","e":"eh2","g":"ai2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"eh3","e":"eh3","g":"ai4","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"eh4","e":"eh4","g":"ai1","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"eh5","e":"eh5","g":"e4","t":5,"s":"syllable","a":null,"as":null},{"v":"M","n":"ei4","e":"ei4","g":"ei1","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"en3","e":"en3","g":"en2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"en5","e":"en5","g":"en2","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"eng4","e":"eng4","g":"eng1","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"er","e":"er1","g":"er4","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"er3","e":"er3","g":"er4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"er5","e":"er5","g":"er4","t":5,"s":"tone","a":"er4","as":"tone"},{"v":"M","n":"fa","e":"fa1","g":"fa2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"fang3","e":"fang3","g":"fang2","t":3,"s":"tone","a":"fang2","as":"tone"},{"v":"M","n":"fen2","e":"fen2","g":"fen3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"fen3","e":"fen3","g":"fen4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"fen5","e":"fen5","g":"fen4","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"feng2","e":"feng2","g":"fang2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"feng3","e":"feng3","g":"feng2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"fou","e":"fou1","g":"fou2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"fu","e":"fu1","g":"fu2","t":1,"s":"tone","a":"fu1","as":"ok"},{"v":"M","n":"fu3","e":"fu3","g":"fu4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"ga2","e":"ga2","g":"ga3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"ga5","e":"ga5","g":"ka1","t":5,"s":"syllable","a":null,"as":null},{"v":"M","n":"ge5","e":"ge5","g":"ge4","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"gen2","e":"gen2","g":"gen1","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"gen3","e":"gen3","g":"gen1","t":3,"s":"tone","a":"gen3","as":"ok"},{"v":"M","n":"geng3","e":"geng3","g":"ge2","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"gong2","e":"gong2","g":"gong1","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"gou","e":"gou1","g":"gao1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"gu2","e":"gu2","g":"gu3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"guai3","e":"guai3","g":"guai4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"guang4","e":"guang4","g":"wang4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"gue2","e":"gue2","g":"guo2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"gui3","e":"gui3","g":"gui4","t":3,"s":"tone","a":"gui3","as":"ok"},{"v":"M","n":"gun3","e":"gun3","g":"guan3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"guo","e":"guo1","g":"guo2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"guo2","e":"guo2","g":"wo3","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"ha","e":"ha1","g":"hao2","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"hai","e":"hai1","g":"hai2","t":1,"s":"tone","a":"hai1","as":"ok"},{"v":"M","n":"hai2","e":"hai2","g":"hai3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"hai4","e":"hai4","g":"hai1","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"han","e":"han1","g":"han2","t":1,"s":"tone","a":"han1","as":"ok"},{"v":"M","n":"han3","e":"han3","g":"han2","t":3,"s":"tone","a":"han2","as":"tone"},{"v":"M","n":"hang","e":"hang1","g":"hang2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"hang3","e":"hang3","g":"hang2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"hang4","e":"hang4","g":"hang2","t":4,"s":"tone","a":"ha4","as":"syllable"},{"v":"M","n":"hao","e":"hao1","g":"hao3","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"hao2","e":"hao2","g":"hao3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"hao4","e":"hao4","g":"hao3","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"he","e":"he1","g":"he2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"he3","e":"he3","g":"he2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"hei3","e":"hei3","g":"hei2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"hen","e":"hen1","g":"hen2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"heng","e":"heng1","g":"heng2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"heng2","e":"heng2","g":"hang2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"heng4","e":"heng4","g":"heng2","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"hong","e":"hong1","g":"hong2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"hong3","e":"hong3","g":"hao2","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"hong4","e":"hong4","g":"hong2","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"hou","e":"hou1","g":"hou2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"hua3","e":"hua3","g":"hua4","t":3,"s":"tone","a":"hua3","as":"ok"},{"v":"M","n":"huai4","e":"huai4","g":"kuai4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"huan3","e":"huan3","g":"huan2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"huang3","e":"huang3","g":"huang2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"huang5","e":"huang5","g":"hua4","t":5,"s":"syllable","a":"huo4","as":"syllable"},{"v":"M","n":"hun2","e":"hun2","g":"huan2","t":2,"s":"syllable","a":"huan2","as":"syllable"},{"v":"M","n":"hun3","e":"hun3","g":"huan3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"hun4","e":"hun4","g":"huan4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"huo5","e":"huo5","g":"huo1","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"jiang2","e":"jiang2","g":"jiang3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"jiao2","e":"jiao2","g":"jiao3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"jie5","e":"jie5","g":"jie4","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"jin","e":"jin1","g":"jing1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"jin3","e":"jin3","g":"ji3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"jin4","e":"jin4","g":"jing4","t":4,"s":"syllable","a":"ji4","as":"syllable"},{"v":"M","n":"jiong","e":"jiong1","g":"zhong1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"jiong3","e":"jiong3","g":"jiu3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"jiong4","e":"jiong4","g":"zhong4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"jiu","e":"jiu1","g":"jiu2","t":1,"s":"tone","a":"jiu1","as":"ok"},{"v":"M","n":"ju2","e":"ju2","g":"ju3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"ju3","e":"ju3","g":"ju4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"jue","e":"jue1","g":"jue2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"jue3","e":"jue3","g":"jue2","t":3,"s":"tone","a":"jue2","as":"tone"},{"v":"M","n":"jun2","e":"jun2","g":"jun3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"jun3","e":"jun3","g":"jun4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"ka","e":"ka1","g":"ka2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"kang3","e":"kang3","g":"kang2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"kao","e":"kao1","g":"kao2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"kao4","e":"kao4","g":"kao3","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"ken4","e":"ken4","g":"kan4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"keng","e":"keng1","g":"kong1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"keng3","e":"keng3","g":"ke2","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"kong3","e":"kong3","g":"ke3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"kou","e":"kou1","g":"kou3","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"kou3","e":"kou3","g":"kao3","t":3,"s":"syllable","a":"kou3","as":"ok"},{"v":"M","n":"ku2","e":"ku2","g":"ku3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"kua","e":"kua1","g":"hua1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"kua3","e":"kua3","g":"kua4","t":3,"s":"tone","a":"kua3","as":"ok"},{"v":"M","n":"kuai","e":"kuai1","g":"kuai4","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"kuai3","e":"kuai3","g":"kuai4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"kuan","e":"kuan1","g":"huan1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"kuang","e":"kuang1","g":"huang2","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"kuang2","e":"kuang2","g":"huang2","t":2,"s":"syllable","a":"kuang2","as":"ok"},{"v":"M","n":"kuang3","e":"kuang3","g":"kuang2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"kui","e":"kui1","g":"kui2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"kui3","e":"kui3","g":"hui2","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"kun3","e":"kun3","g":"kuan3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"la","e":"la1","g":"la2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"la5","e":"la5","g":"la4","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"lai3","e":"lai3","g":"lai2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"lai4","e":"lai4","g":"lai2","t":4,"s":"tone","a":"lai4","as":"ok"},{"v":"M","n":"lan3","e":"lan3","g":"lan2","t":3,"s":"tone","a":"lan3","as":"ok"},{"v":"M","n":"lang","e":"lang1","g":"lang2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"lang3","e":"lang3","g":"lang2","t":3,"s":"tone","a":"lang3","as":"ok"},{"v":"M","n":"lao","e":"lao1","g":"lao2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"lao4","e":"lao4","g":"lao3","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"le","e":"le1","g":"le2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"lei","e":"lei1","g":"lei2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"lei5","e":"lei5","g":"le4","t":5,"s":"syllable","a":null,"as":null},{"v":"M","n":"leng","e":"leng1","g":"leng2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"leng2","e":"leng2","g":"long2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"leng4","e":"leng4","g":"leng3","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"li","e":"li1","g":"li2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"li5","e":"li5","g":"li4","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"lia3","e":"lia3","g":"lie3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"lian","e":"lian1","g":"lian2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"liang3","e":"liang3","g":"liang2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"liao","e":"liao1","g":"liao2","t":1,"s":"tone","a":"liao1","as":"ok"},{"v":"M","n":"liao4","e":"liao4","g":"liao2","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"lie","e":"lie1","g":"die2","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"lie3","e":"lie3","g":"lie4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"lin2","e":"lin2","g":"ling2","t":2,"s":"syllable","a":"ling2","as":"syllable"},{"v":"M","n":"lin3","e":"lin3","g":"li3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"lin4","e":"lin4","g":"ling4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"ling","e":"ling1","g":"ling2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"ling3","e":"ling3","g":"ling2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"liu","e":"liu1","g":"liu2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"liu3","e":"liu3","g":"liu2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"lo","e":"lo1","g":"luo2","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"lo5","e":"lo5","g":"luo4","t":5,"s":"syllable","a":null,"as":null},{"v":"M","n":"long","e":"long1","g":"long2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"long3","e":"long3","g":"long2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"long4","e":"long4","g":"long2","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"lou","e":"lou1","g":"lou2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"lou3","e":"lou3","g":"lao3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"lou5","e":"lou5","g":"luo4","t":5,"s":"syllable","a":null,"as":null},{"v":"M","n":"lu","e":"lu1","g":"lv4","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"lu3","e":"lu3","g":"lv3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"luan2","e":"luan2","g":"yuan2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"luan3","e":"luan3","g":"lve4","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"lun","e":"lun1","g":"lun2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"lun3","e":"lun3","g":"luan2","t":3,"s":"syllable","a":"lun3","as":"ok"},{"v":"M","n":"luo","e":"luo1","g":"luo2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"luo3","e":"luo3","g":"luo2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"luo5","e":"luo5","g":"luo4","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"lv","e":"lv1","g":"lv4","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"lve","e":"lve1","g":"lue4","t":1,"s":"syllable","a":"lue1","as":"syllable"},{"v":"M","n":"lve3","e":"lve3","g":"lve4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"ma","e":"ma1","g":"ma2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"ma2","e":"ma2","g":"ma3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"ma5","e":"ma5","g":"ma3","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"mai","e":"mai1","g":"mai3","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"mai2","e":"mai2","g":"mai3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"man","e":"man1","g":"man2","t":1,"s":"tone","a":"man1","as":"ok"},{"v":"M","n":"man2","e":"man2","g":"man3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"mang","e":"mang1","g":"mang2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"mang3","e":"mang3","g":"mang2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"mang4","e":"mang4","g":"mang2","t":4,"s":"tone","a":"mang4","as":"ok"},{"v":"M","n":"mao","e":"mao1","g":"mao2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"mao4","e":"mao4","g":"mao2","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"me","e":"me1","g":"mo2","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"me4","e":"me4","g":"mo4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"me5","e":"me5","g":"ma1","t":5,"s":"syllable","a":null,"as":null},{"v":"M","n":"mei2","e":"mei2","g":"mei3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"men","e":"men1","g":"men2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"men3","e":"men3","g":"man3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"men4","e":"men4","g":"men2","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"meng","e":"meng1","g":"meng2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"meng3","e":"meng3","g":"mang2","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"mi","e":"mi1","g":"mi2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"mian","e":"mian1","g":"mian2","t":1,"s":"tone","a":"mian1","as":"ok"},{"v":"M","n":"miao","e":"miao1","g":"miao2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"mie","e":"mie1","g":"mian2","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"mie2","e":"mie2","g":"mian2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"min","e":"min1","g":"min2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"min2","e":"min2","g":"ming2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"min3","e":"min3","g":"mi3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"ming3","e":"ming3","g":"ming2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"miu2","e":"miu2","g":"miao2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"miu3","e":"miu3","g":"miao2","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"miu4","e":"miu4","g":"miao2","t":4,"s":"syllable","a":"miao4","as":"syllable"},{"v":"M","n":"mo","e":"mo1","g":"mo2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"mo3","e":"mo3","g":"mo2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"mo5","e":"mo5","g":"mo4","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"mou2","e":"mou2","g":"mao2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"mou3","e":"mou3","g":"mao3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"mou4","e":"mou4","g":"mao4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"mu2","e":"mu2","g":"mo2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"na","e":"na1","g":"na2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"na5","e":"na5","g":"na3","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"nai2","e":"nai2","g":"nai3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"nan","e":"nan1","g":"nan2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"nan3","e":"nan3","g":"nan2","t":3,"s":"tone","a":"nan3","as":"ok"},{"v":"M","n":"nang","e":"nang1","g":"nang2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"nang3","e":"nang3","g":"na2","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"nang4","e":"nang4","g":"nang2","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"nang5","e":"nang5","g":"nang2","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"nao","e":"nao1","g":"nao2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"nao4","e":"nao4","g":"nao3","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"ne4","e":"ne4","g":"ne2","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"ne5","e":"ne5","g":"na2","t":5,"s":"syllable","a":null,"as":null},{"v":"M","n":"nen3","e":"nen3","g":"nan2","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"neng3","e":"neng3","g":"nao2","t":3,"s":"syllable","a":"nao3","as":"syllable"},{"v":"M","n":"ni","e":"ni1","g":"ni3","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"ni2","e":"ni2","g":"ni3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"nian","e":"nian1","g":"nian2","t":1,"s":"tone","a":"nie1","as":"syllable"},{"v":"M","n":"nian3","e":"nian3","g":"nian2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"niang2","e":"niang2","g":"niao2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"niang3","e":"niang3","g":"niao2","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"niang4","e":"niang4","g":"niao3","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"niao4","e":"niao4","g":"niao3","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"nie","e":"nie1","g":"nie2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"nie2","e":"nie2","g":"nian2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"nie4","e":"nie4","g":"ni3","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"nin","e":"nin1","g":"nin2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"nin3","e":"nin3","g":"ni3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"nin4","e":"nin4","g":"ning2","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"ning2","e":"ning2","g":"nin2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"ning3","e":"ning3","g":"nin2","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"ning4","e":"ning4","g":"ning2","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"niu","e":"niu1","g":"niu2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"niu3","e":"niu3","g":"niao3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"niu4","e":"niu4","g":"niu2","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"nong3","e":"nong3","g":"nong2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"nou2","e":"nou2","g":"nao2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"nou3","e":"nou3","g":"nao3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"nu2","e":"nu2","g":"nv3","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"nu3","e":"nu3","g":"nv3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"nu4","e":"nu4","g":"ni3","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"nuan2","e":"nuan2","g":"nuan3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"nuan4","e":"nuan4","g":"nuan3","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"nun2","e":"nun2","g":"lun2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"nv2","e":"nv2","g":"nv3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"nv4","e":"nv4","g":"ni3","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"nve4","e":"nve4","g":"nü3","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"o","e":"o1","g":"o2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"o3","e":"o3","g":"o2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"ou2","e":"ou2","g":"ao2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"ou5","e":"ou5","g":"o2","t":5,"s":"syllable","a":null,"as":null},{"v":"M","n":"pa","e":"pa1","g":"pa2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"pa3","e":"pa3","g":"pa2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"pa5","e":"pa5","g":"pa4","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"pai3","e":"pai3","g":"pai2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"pan3","e":"pan3","g":"pan2","t":3,"s":"tone","a":"pan2","as":"tone"},{"v":"M","n":"pang3","e":"pang3","g":"pang2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"pao","e":"pao1","g":"pao2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"pao2","e":"pao2","g":"pao3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"pei","e":"pei1","g":"pei2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"pei3","e":"pei3","g":"pei2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"pen3","e":"pen3","g":"pen2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"pen4","e":"pen4","g":"pen1","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"peng3","e":"peng3","g":"peng2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"pi4","e":"pi4","g":"pi1","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"pian2","e":"pian2","g":"pian3","t":2,"s":"tone","a":"pian2","as":"ok"},{"v":"M","n":"piao2","e":"piao2","g":"piao3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"piao3","e":"piao3","g":"piao4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"pin","e":"pin1","g":"ping2","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"pin2","e":"pin2","g":"ping2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"pin3","e":"pin3","g":"ping2","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"pin4","e":"pin4","g":"ping1","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"ping","e":"ping1","g":"ping2","t":1,"s":"tone","a":"ping1","as":"ok"},{"v":"M","n":"ping3","e":"ping3","g":"ping2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"ping4","e":"ping4","g":"ping1","t":4,"s":"tone","a":"pin4","as":"syllable"},{"v":"M","n":"po3","e":"po3","g":"po2","t":3,"s":"tone","a":"po3","as":"ok"},{"v":"M","n":"pou","e":"pou1","g":"pou2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"pou2","e":"pou2","g":"pao2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"pou3","e":"pou3","g":"pao3","t":3,"s":"syllable","a":"pao3","as":"syllable"},{"v":"M","n":"pou4","e":"pou4","g":"pao4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"qi3","e":"qi3","g":"qi4","t":3,"s":"tone","a":"qi3","as":"ok"},{"v":"M","n":"qia","e":"qia1","g":"qia2","t":1,"s":"tone","a":"qia1","as":"ok"},{"v":"M","n":"qia2","e":"qia2","g":"qiao2","t":2,"s":"syllable","a":"qia2","as":"ok"},{"v":"M","n":"qian3","e":"qian3","g":"qian4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"qiang3","e":"qiang3","g":"qiang2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"qiao4","e":"qiao4","g":"tiao4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"qie3","e":"qie3","g":"xie3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"qin","e":"qin1","g":"qing1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"qin2","e":"qin2","g":"qing2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"qin3","e":"qin3","g":"qing3","t":3,"s":"syllable","a":"qi3","as":"syllable"},{"v":"M","n":"qin4","e":"qin4","g":"qing4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"qing4","e":"qing4","g":"qing3","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"qiong","e":"qiong1","g":"qiong2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"qiong3","e":"qiong3","g":"qiong2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"qiu","e":"qiu1","g":"qiao1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"qiu2","e":"qiu2","g":"qiao2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"qiu3","e":"qiu3","g":"qiu2","t":3,"s":"tone","a":"qiu2","as":"tone"},{"v":"M","n":"qiu4","e":"qiu4","g":"tiao4","t":4,"s":"syllable","a":"qiu1","as":"tone"},{"v":"M","n":"qu2","e":"qu2","g":"qu3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"quan","e":"quan1","g":"quan2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"quan3","e":"quan3","g":"quan4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"qun","e":"qun1","g":"xun1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"qun3","e":"qun3","g":"qun2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"qun4","e":"qun4","g":"qu4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"ran3","e":"ran3","g":"ran2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"rang","e":"rang1","g":"rang2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"rang3","e":"rang3","g":"rang2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"re3","e":"re3","g":"re4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"ren3","e":"ren3","g":"ren2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"reng","e":"reng1","g":"reng2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"reng3","e":"reng3","g":"reng2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"ri4","e":"ri4","g":"yi1","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"rong3","e":"rong3","g":"rong2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"rou2","e":"rou2","g":"rao2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"rou3","e":"rou3","g":"rao2","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"ruan4","e":"ruan4","g":"ruan3","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"rui3","e":"rui3","g":"rui4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"run2","e":"run2","g":"ren2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"run3","e":"run3","g":"ruan3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"sa5","e":"sa5","g":"sa4","t":5,"s":"tone","a":"sa4","as":"tone"},{"v":"M","n":"sai2","e":"sai2","g":"cai3","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"sai4","e":"sai4","g":"zai4","t":4,"s":"syllable","a":"sai4","as":"ok"},{"v":"M","n":"san4","e":"san4","g":"zan4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"sang4","e":"sang4","g":"shang4","t":4,"s":"syllable","a":"sao4","as":"syllable"},{"v":"M","n":"sao","e":"sao1","g":"cao3","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"sao4","e":"sao4","g":"zao4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"se","e":"se1","g":"ce4","t":1,"s":"syllable","a":"se1","as":"ok"},{"v":"M","n":"sen","e":"sen1","g":"san1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"sen3","e":"sen3","g":"san3","t":3,"s":"syllable","a":"san3","as":"syllable"},{"v":"M","n":"seng","e":"seng1","g":"sheng1","t":1,"s":"syllable","a":"seng1","as":"ok"},{"v":"M","n":"seng4","e":"seng4","g":"sheng4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"sha2","e":"sha2","g":"sha1","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"sha4","e":"sha4","g":"xia4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"sha5","e":"sha5","g":"sha4","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"shai3","e":"shai3","g":"xia4","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"shan2","e":"shan2","g":"shan3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"shan3","e":"shan3","g":"san3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"shang3","e":"shang3","g":"shang4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"shang5","e":"shang5","g":"shang4","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"shao2","e":"shao2","g":"shao3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"she","e":"she1","g":"she2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"she3","e":"she3","g":"she4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"shen3","e":"shen3","g":"shan3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"sheng","e":"sheng1","g":"shang1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"sheng2","e":"sheng2","g":"shang2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"sheng3","e":"sheng3","g":"shang4","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"sheng4","e":"sheng4","g":"shang4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"shi3","e":"shi3","g":"shi2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"shi5","e":"shi5","g":"shi4","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"shou","e":"shou1","g":"shao1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"shou2","e":"shou2","g":"shou3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"shou3","e":"shou3","g":"shao3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"shu2","e":"shu2","g":"shi2wu3","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"shua3","e":"shua3","g":"shua4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"shuai","e":"shuai1","g":"shuai4","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"shuang2","e":"shuang2","g":"shuang1","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"shuang4","e":"shuang4","g":"zhuang4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"shui","e":"shui1","g":"shui3","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"shui2","e":"shui2","g":"shui3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"shun3","e":"shun3","g":"shuan3","t":3,"s":"syllable","a":"shuan3","as":"syllable"},{"v":"M","n":"shuo4","e":"shuo4","g":"shuo1","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"si3","e":"si3","g":"si4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"song2","e":"song2","g":"song1","t":2,"s":"tone","a":"song2","as":"ok"},{"v":"M","n":"song3","e":"song3","g":"song2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"sou3","e":"sou3","g":"zou3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"su2","e":"su2","g":"su4","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"su3","e":"su3","g":"si4","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"su4","e":"su4","g":"shu4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"suan3","e":"suan3","g":"suo3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"sui3","e":"sui3","g":"shui3","t":3,"s":"syllable","a":"swei2","as":"syllable"},{"v":"M","n":"sun","e":"sun1","g":"suan1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"sun3","e":"sun3","g":"suan3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"suo2","e":"suo2","g":"suo3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"ta4","e":"ta4","g":"ta1","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"tai3","e":"tai3","g":"tai2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"tai5","e":"tai5","g":"tai4","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"tan3","e":"tan3","g":"tan2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"tang3","e":"tang3","g":"tang2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"tao","e":"tao1","g":"tao2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"teng","e":"teng1","g":"teng2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"teng4","e":"teng4","g":"teng2","t":4,"s":"tone","a":"teng4","as":"ok"},{"v":"M","n":"tian3","e":"tian3","g":"tian2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"tian4","e":"tian4","g":"tian1","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"tiao","e":"tiao1","g":"tiao2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"tie4","e":"tie4","g":"tie3","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"ting3","e":"ting3","g":"ting2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"ting4","e":"ting4","g":"ting1","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"tong3","e":"tong3","g":"tong2","t":3,"s":"tone","a":"tong3","as":"ok"},{"v":"M","n":"tou","e":"tou1","g":"tou2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"tou3","e":"tou3","g":"tao3","t":3,"s":"syllable","a":"tou3","as":"ok"},{"v":"M","n":"tou4","e":"tou4","g":"tao4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"tou5","e":"tou5","g":"tu2","t":5,"s":"syllable","a":null,"as":null},{"v":"M","n":"tu","e":"tu1","g":"tu2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"tun2","e":"tun2","g":"tuan2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"tun3","e":"tun3","g":"tuan2","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"tun4","e":"tun4","g":"tun1","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"wa4","e":"wa4","g":"wa1","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"wa5","e":"wa5","g":"wa3","t":5,"s":"tone","a":"wa4","as":"tone"},{"v":"M","n":"wai","e":"wai1","g":"wai2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"wai3","e":"wai3","g":"wai4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"wan","e":"wan1","g":"wan3","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"wang","e":"wang1","g":"wang2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"wang3","e":"wang3","g":"wang2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"wei","e":"wei1","g":"wei2","t":1,"s":"tone","a":"wei1","as":"ok"},{"v":"M","n":"wen3","e":"wen3","g":"wan3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"weng","e":"weng1","g":"weng2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"weng3","e":"weng3","g":"wo3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"weng4","e":"weng4","g":"wang4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"wo","e":"wo1","g":"wo3","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"wo4","e":"wo4","g":"wo3","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"wu","e":"wu1","g":"wu3","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"wu2","e":"wu2","g":"wu3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"xia3","e":"xia3","g":"xia4","t":3,"s":"tone","a":"xia2","as":"tone"},{"v":"M","n":"xian3","e":"xian3","g":"xian4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"xiang2","e":"xiang2","g":"xiang3","t":2,"s":"tone","a":"xiang2","as":"ok"},{"v":"M","n":"xiao2","e":"xiao2","g":"xiao3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"xie3","e":"xie3","g":"xie4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"xin2","e":"xin2","g":"xing2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"xin3","e":"xin3","g":"xing3","t":3,"s":"syllable","a":"xi3","as":"syllable"},{"v":"M","n":"xin4","e":"xin4","g":"xing4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"xiong3","e":"xiong3","g":"xiong2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"xiu","e":"xiu1","g":"xiao1","t":1,"s":"syllable","a":"xiu1","as":"ok"},{"v":"M","n":"xiu2","e":"xiu2","g":"xiao3","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"xiu3","e":"xiu3","g":"xiao3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"xiu4","e":"xiu4","g":"xiao4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"xu3","e":"xu3","g":"xu4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"xuan2","e":"xuan2","g":"xuan3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"xue","e":"xue1","g":"xue2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"ya","e":"ya1","g":"ya2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"ya5","e":"ya5","g":"ya1","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"yai2","e":"yai2","g":"ya2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"yan","e":"yan1","g":"yan2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"yan4","e":"yan4","g":"yan3","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"yang","e":"yang1","g":"yang2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"yang3","e":"yang3","g":"yang2","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"yao","e":"yao1","g":"yao2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"ye","e":"ye1","g":"ye2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"ye5","e":"ye5","g":"ye4","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"yin3","e":"yin3","g":"ying3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"yin4","e":"yin4","g":"ying4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"ying4","e":"ying4","g":"ying1","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"yo","e":"yo1","g":"you3","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"yo5","e":"yo5","g":"you4","t":5,"s":"syllable","a":null,"as":null},{"v":"M","n":"yong","e":"yong1","g":"yong2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"yong3","e":"yong3","g":"you3","t":3,"s":"syllable","a":"you3","as":"syllable"},{"v":"M","n":"you","e":"you1","g":"you2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"yu","e":"yu1","g":"yu2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"yuan","e":"yuan1","g":"yuan2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"yue3","e":"yue3","g":"yue4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"yun","e":"yun1","g":"yun2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"za3","e":"za3","g":"zao3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"zai3","e":"zai3","g":"zai4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"zang3","e":"zang3","g":"zao3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"zao2","e":"zao2","g":"zao3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"ze3","e":"ze3","g":"zi3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"ze4","e":"ze4","g":"zhe4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"zei2","e":"zei2","g":"zei3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"zen","e":"zen1","g":"zhen1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"zen4","e":"zen4","g":"zhen4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"zeng","e":"zeng1","g":"zang1","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"zeng3","e":"zeng3","g":"zong3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"zeng4","e":"zeng4","g":"zheng4","t":4,"s":"syllable","a":"zong4","as":"syllable"},{"v":"M","n":"zha3","e":"zha3","g":"zha4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"zhai2","e":"zhai2","g":"zhai3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"zhai3","e":"zhai3","g":"zai4","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"zhai4","e":"zhai4","g":"zai4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"zhe","e":"zhe1","g":"zhe2","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"zhe3","e":"zhe3","g":"zhe4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"zhe5","e":"zhe5","g":"zhe4","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"zhei4","e":"zhei4","g":"zhe4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"zhen2","e":"zhen2","g":"zhan3","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"zhi2","e":"zhi2","g":"ju2","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"zhong3","e":"zhong3","g":"zhong4","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"zhou2","e":"zhou2","g":"zhao3","t":2,"s":"syllable","a":null,"as":null},{"v":"M","n":"zhou3","e":"zhou3","g":"zou3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"zhu2","e":"zhu2","g":"zhu3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"zhu4","e":"zhu4","g":"zu4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"zhuai3","e":"zhuai3","g":"zhuan3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"zhuang3","e":"zhuang3","g":"zhuang1","t":3,"s":"tone","a":null,"as":null},{"v":"M","n":"zhui3","e":"zhui3","g":"zui3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"zhun3","e":"zhun3","g":"zhuan3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"zhun4","e":"zhun4","g":"zhun3","t":4,"s":"tone","a":null,"as":null},{"v":"M","n":"zhuo4","e":"zhuo4","g":"zuo4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"zi2","e":"zi2","g":"zi3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"zi5","e":"zi5","g":"zi4","t":5,"s":"tone","a":null,"as":null},{"v":"M","n":"zong","e":"zong1","g":"zhong1","t":1,"s":"syllable","a":"zong1","as":"ok"},{"v":"M","n":"zou","e":"zou1","g":"zao3","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"zou4","e":"zou4","g":"zao4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"zu","e":"zu1","g":"zhu1","t":1,"s":"syllable","a":"zu1","as":"ok"},{"v":"M","n":"zu4","e":"zu4","g":"zhu4","t":4,"s":"syllable","a":"zu4","as":"ok"},{"v":"M","n":"zuan3","e":"zuan3","g":"zhuan3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"zuan4","e":"zuan4","g":"zhuan4","t":4,"s":"syllable","a":null,"as":null},{"v":"M","n":"zui","e":"zui1","g":"zui4","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"zun","e":"zun1","g":"zhun3","t":1,"s":"syllable","a":null,"as":null},{"v":"M","n":"zun3","e":"zun3","g":"zhuan3","t":3,"s":"syllable","a":null,"as":null},{"v":"M","n":"zun4","e":"zun4","g":"zhun3","t":4,"s":"syllable","a":"zhun4","as":"syllable"},{"v":"M","n":"zuo","e":"zuo1","g":"zuo4","t":1,"s":"tone","a":null,"as":null},{"v":"M","n":"zuo2","e":"zuo2","g":"zuo3","t":2,"s":"tone","a":null,"as":null},{"v":"M","n":"zuo5","e":"zuo5","g":"zuo4","t":5,"s":"tone","a":"zuo4","as":"tone"}]};
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const nf = (v) => Number(v).toLocaleString('en-US');
+
+function fill(el, v) { if (el) el.innerHTML = v; }
+
+/* ---------- 01 堆疊條 ---------- */
+(function stack() {
+  const order = [
+    ['ok', '一致', 'var(--moss)'],
+    ['tone', '只有聲調不同', 'var(--amber)'],
+    ['syllable', '音節不同', 'var(--rust)'],
+    ['nonstandard', '檔名非標準', 'var(--ink3)'],
+    ['error', '呼叫失敗', 'var(--rule2)'],
+  ];
+  const total = order.reduce((a, [k]) => a + (D.dist[k] || 0), 0);
+  $('#stack').innerHTML = order.filter(([k]) => D.dist[k]).map(([k, label, color]) => {
+    const n = D.dist[k];
+    const pct = n / total * 100;
+    return `<div style="flex:${pct};background:${color}" title="${label}：${nf(n)}（${pct.toFixed(1)}%）">
+      ${pct > 9 ? nf(n) : ''}</div>`;
+  }).join('');
+  $('#stackKey').innerHTML = order.filter(([k]) => D.dist[k]).map(([k, label, color]) =>
+    `<span><i style="background:${color}"></i>${label}　<b class="num">${nf(D.dist[k])}</b>
+      <span style="color:var(--ink3)">（${(D.dist[k] / total * 100).toFixed(1)}%）</span></span>`
+  ).join('');
+})();
+
+/* ---------- 02 聲調列 ---------- */
+(function toneRows() {
+  $('#toneRows').innerHTML = D.tones.map((t) => {
+    const cls = t.rate >= 70 ? '' : t.rate >= 50 ? 'mid' : 'low';
+    const worst = t.worst ? `最常被聽成${t.worst.name}（${t.worst.n} 個）` : '—';
+    return `<div class="tone-row">
+      <div class="tl">${t.name}<small>${nf(t.n)} 個檔案</small></div>
+      <div>
+        <div class="tbar"><span class="${cls}" style="width:${t.rate}%"></span></div>
+        <div class="tone-note">${worst}</div>
+      </div>
+      <div class="tp">${t.rate}%</div>
+    </div>`;
+  }).join('');
+})();
+
+/* ---------- 02 混淆矩陣 ---------- */
+(function matrix() {
+  const m = D.matrix;
+  const max = Math.max(...m.flat());
+  let html = '<div class="h"></div>';
+  D.toneNames.forEach((n) => { html += `<div class="h">${n}</div>`; });
+  m.forEach((row, i) => {
+    html += `<div class="h row">${D.toneNames[i]}</div>`;
+    row.forEach((v, j) => {
+      const diag = i === j;
+      const a = v ? 0.08 + (v / max) * 0.72 : 0;
+      const bg = v ? (diag ? `rgba(47,111,94,${a})` : `rgba(168,67,26,${a})`) : 'transparent';
+      const color = v && a > 0.45 ? '#fff' : 'inherit';
+      html += `<div class="c ${diag ? 'diag' : ''} ${v ? '' : 'zero'}"
+        style="background:${bg};color:${color}"
+        title="檔名 ${D.toneNames[i]} → 模型 ${D.toneNames[j]}：${nf(v)} 個">${v || '·'}</div>`;
+    });
+  });
+  $('#mx').innerHTML = html;
+})();
+
+/* ---------- 03 錯誤型態 ---------- */
+(function types() {
+  const max = Math.max(...D.types.map((t) => t.n));
+  $('#typeRows').innerHTML = D.types.map((t) => `
+    <div class="type-row">
+      <div class="tn">${t.k}</div>
+      <div class="tybar"><span style="width:${(t.n / max) * 100}%"></span></div>
+      <div class="tv">${t.n}　<span style="color:var(--ink3)">${t.pct}%</span></div>
+    </div>`).join('');
+})();
+
+(function pairs() {
+  const tb = $('#pairTable tbody');
+  tb.innerHTML = D.pairs.map((p) => `
+    <tr><td class="mono">${p.a}</td><td class="mono">${p.b}</td>
+    <td class="num" style="text-align:right">${p.n}</td></tr>`).join('');
+})();
+
+/* ---------- 04 仲裁 ---------- */
+(function arb() {
+  const { n, ok, bad } = D.arb;
+  if (!n) { $('#split').innerHTML = '<div style="flex:1;background:var(--rule2)">沒有仲裁資料</div>'; return; }
+  const a = ok / n * 100;
+  $('#split').innerHTML = `
+    <div style="flex:${a};background:var(--rust)">flash-lite 自己聽錯　${ok}（${a.toFixed(0)}%）</div>
+    <div style="flex:${100 - a};background:var(--amber)">兩邊都說不對　${bad}（${(100 - a).toFixed(0)}%）</div>`;
+  $('#splitKey').innerHTML = `
+    <span><i style="background:var(--rust)"></i>Argon 與檔名相同 → 音檔沒問題，是 flash-lite 錯</span>
+    <span><i style="background:var(--amber)"></i>Argon 也不同意檔名 → 音檔值得人工複查</span>`;
+
+  $('#arbTable tbody').innerHTML = D.arb.rows.slice(0, 12).map((r) => `
+    <tr>
+      <td class="file">${r.f}</td>
+      <td class="mono">${r.e}</td>
+      <td class="mono">${r.f1}</td>
+      <td class="mono">${r.f2}</td>
+      <td><span class="tag ${r.who === 'flash-lite 錯' ? 'syllable' : 'tone'}">${r.who}</span></td>
+    </tr>`).join('');
+  $('#arbNote').textContent =
+    `抽樣 ${n} 個；換算全量，flash-lite 標記的 ${nf(D.flags.length)} 個裡面約 ${nf(Math.round(D.flags.length * ok / n))} 個是它自己聽錯，約 ${nf(Math.round(D.flags.length * bad / n))} 個連 Argon 都覺得不對。`;
+})();
+
+/* ---------- 05 清單 ---------- */
+const state = { q: '', status: 'all', voice: 'all', sort: 0, asc: true };
+const TAGS = { tone: '聲調', syllable: '音節' };
+
+function currentRows() {
+  const q = state.q.trim().toLowerCase();
+  let rows = D.flags;
+  if (state.status !== 'all') rows = rows.filter((r) => r.s === state.status);
+  if (state.voice !== 'all') rows = rows.filter((r) => r.v === state.voice);
+  if (q) {
+    rows = rows.filter((r) =>
+      (r.v + '/' + r.n).toLowerCase().includes(q) ||
+      r.e.toLowerCase().includes(q) || r.g.toLowerCase().includes(q));
+  }
+  const key = ['0', '1', '2', '3', '4'][state.sort];
+  rows = rows.slice().sort((a, b) => {
+    let x, y;
+    if (state.sort === 3) { x = a.s; y = b.s; }
+    else if (state.sort === 4) { x = a.a || 'zzz'; y = b.a || 'zzz'; }
+    else { x = [a.v + '/' + a.n, a.e, a.g][state.sort]; y = [b.v + '/' + b.n, b.e, b.g][state.sort]; }
+    return (x > y ? 1 : x < y ? -1 : 0) * (state.asc ? 1 : -1);
+  });
+  return rows;
+}
+
+function highlight(text, q) {
+  if (!q) return text;
+  const i = text.toLowerCase().indexOf(q);
+  if (i < 0) return text;
+  return `${text.slice(0, i)}<mark>${text.slice(i, i + q.length)}</mark>${text.slice(i + q.length)}`;
+}
+
+function renderTable() {
+  const rows = currentRows();
+  const q = state.q.trim().toLowerCase();
+  const tbody = $('#flagTable tbody');
+  tbody.innerHTML = rows.slice(0, 1200).map((r) => {
+    const argon = r.as
+      ? `<span class="tag ${r.as === 'ok' ? 'ok' : 'bad'}">${r.a}　${r.as === 'ok' ? '正確' : '也不對'}</span>`
+      : '<span style="color:var(--ink3)">—</span>';
+    return `<tr>
+      <td class="file">${highlight(r.v + '/' + r.n, q)}</td>
+      <td class="mono">${highlight(r.e, q)}</td>
+      <td class="mono">${highlight(r.g, q)}</td>
+      <td><span class="tag ${r.s}">${TAGS[r.s]}</span></td>
+      <td>${argon}</td>
+    </tr>`;
+  }).join('');
+  $('#flagCount').textContent = `顯示 ${nf(rows.length)} 筆 / 全部 ${nf(D.flags.length)} 筆`;
+}
+
+$('#q').addEventListener('input', (e) => { state.q = e.target.value; renderTable(); });
+$('#fStatus').addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b) return;
+  state.status = b.dataset.v;
+  $$('#fStatus button').forEach((x) => x.classList.toggle('on', x === b));
+  renderTable();
+});
+$('#fVoice').addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b) return;
+  state.voice = b.dataset.v;
+  $$('#fVoice button').forEach((x) => x.classList.toggle('on', x === b));
+  renderTable();
+});
+$$('#flagTable thead th').forEach((th) => {
+  th.addEventListener('click', () => {
+    const s = Number(th.dataset.sort);
+    state.asc = state.sort === s ? !state.asc : true;
+    state.sort = s;
+    renderTable();
+  });
+});
+
+$('#dl').addEventListener('click', () => {
+  const rows = currentRows();
+  const head = 'voice,name,expected,heard,status,argon,argon_status\n';
+  const body = rows.map((r) =>
+    [r.v, r.n, r.e, r.g, r.s, r.a || '', r.as || ''].map((v) => `"${String(v).replace(/"/g, '""')}"`).join(',')
+  ).join('\n');
+  const blob = new Blob(['\ufeff' + head + body], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'flash-lite-audit-flags.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+renderTable();
+
+/* ---------- 06 成本 ---------- */
+(function cost() {
+  const t = D.meta.tokens;
+  const cText = t.text * 0.25 / 1e6;
+  const cAudio = t.audio * 0.50 / 1e6;
+  const cOut = t.out * 1.50 / 1e6;
+  const total = cText + cAudio + cOut;
+  fill($('#tkText'), nf(t.text)); fill($('#csText'), 'US$' + cText.toFixed(4));
+  fill($('#tkAudio'), nf(t.audio)); fill($('#csAudio'), 'US$' + cAudio.toFixed(4));
+  fill($('#tkOut'), nf(t.out)); fill($('#csOut'), 'US$' + cOut.toFixed(4));
+  fill($('#tkAll'), nf(t.text + t.audio + t.out));
+  fill($('#csAll'), 'US$' + total.toFixed(4));
+  $$('[data-f="cost"]').forEach((el) => { el.textContent = total.toFixed(3); });
+  fill($('#fTok'), nf(t.text + t.audio + t.out));
+  fill($('#fCost'), total.toFixed(3));
+})();
+
+/* ---------- 主題 ---------- */
+const root = document.documentElement;
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* ignore */ } }
+const saved = lsGet('audit-theme');
+if (saved) root.dataset.theme = saved;
+const btn = $('#themeBtn');
+function syncBtn() { btn.textContent = root.dataset.theme === 'dark' ? '淺色' : '深色'; }
+syncBtn();
+btn.addEventListener('click', () => {
+  root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+  lsSet('audit-theme', root.dataset.theme);
+  syncBtn();
+});
+
+/* ---------- 捲動 ---------- */
+const prog = $('#prog');
+const links = $$('#navlist a');
+const secs = ['verdict', 'tone', 'syllable', 'who', 'list', 'cost', 'method']
+  .map((id) => document.getElementById(id)).filter(Boolean);
+function onScroll() {
+  const h = document.documentElement;
+  prog.style.width = (h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight) * 100) + '%';
+  let cur = secs[0];
+  secs.forEach((s) => { if (s.getBoundingClientRect().top <= 120) cur = s; });
+  links.forEach((a) => a.classList.toggle('on', a.getAttribute('href') === '#' + cur.id));
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+
+</script>
+</body>
+</html>
