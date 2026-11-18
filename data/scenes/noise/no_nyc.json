@@ -1,0 +1,17 @@
+{
+ "video": "eZcTP-XynnA",
+ "url": "https://www.youtube.com/watch?v=eZcTP-XynnA",
+ "title": "New York City Night Sounds – 5+ Hours of Traffic, Sirens & Horns – Relaxing City Ambience 4K",
+ "uploader": "Footsteps to Nowhere",
+ "video_duration": 19800.0,
+ "clip_start_in_video": 900.0,
+ "clip_seconds": 10.0,
+ "window_method": "manual",
+ "note": "紐約夜間交通＋警笛",
+ "astats": {
+  "RMS_level_dB": "-29.885508",
+  "Peak_level_dB": "-17.081197",
+  "Flat_factor": "0.000000",
+  "Noise_floor_dB": "-24.318554"
+ }
+}

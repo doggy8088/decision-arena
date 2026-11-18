@@ -1,0 +1,17 @@
+{
+ "video": "nMfPqeZjc2c",
+ "url": "https://www.youtube.com/watch?v=nMfPqeZjc2c",
+ "title": "White Noise Black Screen | Sleep, Study, Focus | 10 Hours",
+ "uploader": "Relaxing White Noise",
+ "video_duration": 36000.0,
+ "clip_start_in_video": 1200.0,
+ "clip_seconds": 10.0,
+ "window_method": "manual",
+ "note": "白噪音",
+ "astats": {
+  "RMS_level_dB": "-26.129498",
+  "Peak_level_dB": "-12.908799",
+  "Flat_factor": "0.000000",
+  "Noise_floor_dB": "-19.451643"
+ }
+}

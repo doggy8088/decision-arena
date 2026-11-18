@@ -1,0 +1,17 @@
+{
+ "video": "5Wq0xbZ4TQU",
+ "url": "https://www.youtube.com/watch?v=5Wq0xbZ4TQU",
+ "title": "Multiple Speakers | Panel discussion: Foundation of causal inference",
+ "uploader": "INI Seminar Room 1",
+ "video_duration": 3360.0,
+ "clip_start_in_video": 600.0,
+ "clip_seconds": 10.0,
+ "window_method": "manual",
+ "note": "座談會（因果推論）",
+ "astats": {
+  "RMS_level_dB": "-35.260096",
+  "Peak_level_dB": "-13.726302",
+  "Flat_factor": "0.000000",
+  "Noise_floor_dB": "-55.922789"
+ }
+}

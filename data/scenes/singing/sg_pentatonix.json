@@ -1,0 +1,17 @@
+{
+ "video": "LRP8d7hhpoQ",
+ "url": "https://www.youtube.com/watch?v=LRP8d7hhpoQ",
+ "title": "Pentatonix - Hallelujah (Official Video)",
+ "uploader": "Pentatonix",
+ "video_duration": 305.0,
+ "clip_start_in_video": 30.0,
+ "clip_seconds": 10.0,
+ "window_method": "manual",
+ "note": "Pentatonix Hallelujah，純人聲",
+ "astats": {
+  "RMS_level_dB": "-16.533941",
+  "Peak_level_dB": "-1.603015",
+  "Flat_factor": "0.000000",
+  "Noise_floor_dB": "-27.145456"
+ }
+}

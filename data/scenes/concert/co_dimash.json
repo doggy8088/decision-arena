@@ -1,0 +1,17 @@
+{
+ "video": "1eHw_pBKgZo",
+ "url": "https://www.youtube.com/watch?v=1eHw_pBKgZo",
+ "title": "SCREAMING - Dimash live at Almaty Concert 23.09.22 (fancam)",
+ "uploader": "DiDiB Downunder",
+ "video_duration": 350.0,
+ "clip_start_in_video": 60.0,
+ "clip_seconds": 10.0,
+ "window_method": "manual",
+ "note": "Dimash 現場 fancam",
+ "astats": {
+  "RMS_level_dB": "-16.810619",
+  "Peak_level_dB": "-1.841592",
+  "Flat_factor": "0.000000",
+  "Noise_floor_dB": "-15.031450"
+ }
+}

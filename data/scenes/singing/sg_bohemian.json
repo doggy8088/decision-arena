@@ -1,0 +1,17 @@
+{
+ "video": "fJ9rUzIMcZQ",
+ "url": "https://www.youtube.com/watch?v=fJ9rUzIMcZQ",
+ "title": "Queen – Bohemian Rhapsody (Official Video Remastered)",
+ "uploader": "Queen Official",
+ "video_duration": 359.0,
+ "clip_start_in_video": 40.0,
+ "clip_seconds": 10.0,
+ "window_method": "manual",
+ "note": "Bohemian Rhapsody 官方 MV",
+ "astats": {
+  "RMS_level_dB": "-22.908606",
+  "Peak_level_dB": "-6.565111",
+  "Flat_factor": "0.000000",
+  "Noise_floor_dB": "-38.285142"
+ }
+}

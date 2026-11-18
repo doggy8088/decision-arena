@@ -1,0 +1,17 @@
+{
+ "video": "arj7oStGLkU",
+ "url": "https://www.youtube.com/watch?v=arj7oStGLkU",
+ "title": "Inside the Mind of a Master Procrastinator | Tim Urban | TED",
+ "uploader": "TED",
+ "video_duration": 844.0,
+ "clip_start_in_video": 200.0,
+ "clip_seconds": 10.0,
+ "window_method": "manual",
+ "note": "TED Tim Urban",
+ "astats": {
+  "RMS_level_dB": "-20.707265",
+  "Peak_level_dB": "-2.384170",
+  "Flat_factor": "0.000000",
+  "Noise_floor_dB": "-47.725310"
+ }
+}

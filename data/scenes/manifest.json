@@ -1,0 +1,859 @@
+{
+ "clip_seconds": 10.0,
+ "categories": {
+  "speech": "單人說話、無背景音樂（演講、旁白、有聲書）",
+  "singing": "人聲唱歌（含伴奏或純人聲）",
+  "music": "純器樂，無人聲",
+  "noise": "環境噪音（雨、交通、白噪音、工地）",
+  "concert": "演唱會現場（擴音、觀眾、合唱）",
+  "multi_speech": "多人同時或輪流說話（podcast、座談、訪談）",
+  "speech_music": "有人聲說話但疊了背景音樂（廣告、vlog、教學影片）"
+ },
+ "clips": [
+  {
+   "id": "co_bohemian_l",
+   "cat": "concert",
+   "file": "data/scenes/concert/co_bohemian_l.mp3",
+   "video": "vbvyNnw8Qjg",
+   "url": "https://www.youtube.com/watch?v=vbvyNnw8Qjg",
+   "title": "Queen - Bohemian Rhapsody (Live Aid 1985)",
+   "uploader": "Live Aid",
+   "video_duration": 165.0,
+   "clip_start_in_video": 40.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "Bohemian Rhapsody Live Aid",
+   "astats": {
+    "RMS_level_dB": "-15.457231",
+    "Peak_level_dB": "-0.956135",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-20.577875"
+   }
+  },
+  {
+   "id": "co_bts",
+   "cat": "concert",
+   "file": "data/scenes/concert/co_bts.mp3",
+   "video": "nK8Fh7J1A-A",
+   "url": "https://www.youtube.com/watch?v=nK8Fh7J1A-A",
+   "title": "[4K] BTS Butter @ 2021 American Music Awards FanCam [with fanchant]",
+   "uploader": "Landon Mark",
+   "video_duration": 228.0,
+   "clip_start_in_video": 30.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "BTS Butter 頒獎典禮 fancam（含 fanchant）",
+   "astats": {
+    "RMS_level_dB": "-18.698711",
+    "Peak_level_dB": "-4.038934",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-20.667996"
+   }
+  },
+  {
+   "id": "co_coldplay",
+   "cat": "concert",
+   "file": "data/scenes/concert/co_coldplay.mp3",
+   "video": "tPUd5iqq7wA",
+   "url": "https://www.youtube.com/watch?v=tPUd5iqq7wA",
+   "title": "Coldplay Live in São Paulo 2017 [Full concert DVD]",
+   "uploader": "DavidPozo 2",
+   "video_duration": 7208.0,
+   "clip_start_in_video": 240.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "Coldplay 聖保羅現場",
+   "astats": {
+    "RMS_level_dB": "-31.400361",
+    "Peak_level_dB": "-16.267796",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-29.896892"
+   }
+  },
+  {
+   "id": "co_coldplay2",
+   "cat": "concert",
+   "file": "data/scenes/concert/co_coldplay2.mp3",
+   "video": "SSJCE5-eb4o",
+   "url": "https://www.youtube.com/watch?v=SSJCE5-eb4o",
+   "title": "Coldplay Live In Ahmedabad 26-Jan FULL CONCERT 4K | BIGGEST EVER SHOW",
+   "uploader": "Anupam Adarsh",
+   "video_duration": 7521.0,
+   "clip_start_in_video": 300.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "Coldplay 印度現場",
+   "astats": {
+    "RMS_level_dB": "-25.854862",
+    "Peak_level_dB": "-11.742984",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-20.842803"
+   }
+  },
+  {
+   "id": "co_dimash",
+   "cat": "concert",
+   "file": "data/scenes/concert/co_dimash.mp3",
+   "video": "1eHw_pBKgZo",
+   "url": "https://www.youtube.com/watch?v=1eHw_pBKgZo",
+   "title": "SCREAMING - Dimash live at Almaty Concert 23.09.22 (fancam)",
+   "uploader": "DiDiB Downunder",
+   "video_duration": 350.0,
+   "clip_start_in_video": 60.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "Dimash 現場 fancam",
+   "astats": {
+    "RMS_level_dB": "-16.810619",
+    "Peak_level_dB": "-1.841592",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-15.031450"
+   }
+  },
+  {
+   "id": "co_liveaid",
+   "cat": "concert",
+   "file": "data/scenes/concert/co_liveaid.mp3",
+   "video": "frdBb9Slu1A",
+   "url": "https://www.youtube.com/watch?v=frdBb9Slu1A",
+   "title": "Queen - Live Aid 1985 Full Concert",
+   "uploader": "uploader.JP8",
+   "video_duration": 1265.0,
+   "clip_start_in_video": 120.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "Queen Live Aid 1985 全場",
+   "astats": {
+    "RMS_level_dB": "-14.875861",
+    "Peak_level_dB": "-1.494041",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-10.131659"
+   }
+  },
+  {
+   "id": "ms_causal",
+   "cat": "multi_speech",
+   "file": "data/scenes/multi_speech/ms_causal.mp3",
+   "video": "5Wq0xbZ4TQU",
+   "url": "https://www.youtube.com/watch?v=5Wq0xbZ4TQU",
+   "title": "Multiple Speakers | Panel discussion: Foundation of causal inference",
+   "uploader": "INI Seminar Room 1",
+   "video_duration": 3360.0,
+   "clip_start_in_video": 600.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "座談會（因果推論）",
+   "astats": {
+    "RMS_level_dB": "-35.260096",
+    "Peak_level_dB": "-13.726302",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-55.922789"
+   }
+  },
+  {
+   "id": "ms_ivehadit",
+   "cat": "multi_speech",
+   "file": "data/scenes/multi_speech/ms_ivehadit.mp3",
+   "video": "KtMLxgLHUq4",
+   "url": "https://www.youtube.com/watch?v=KtMLxgLHUq4",
+   "title": "'I've Had It' Podcast Hosts Talk Politics, Defying Stereotypes",
+   "uploader": "The View",
+   "video_duration": 542.0,
+   "clip_start_in_video": 120.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "I've Had It podcast",
+   "astats": {
+    "RMS_level_dB": "-28.326795",
+    "Peak_level_dB": "-9.865474",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-56.338734"
+   }
+  },
+  {
+   "id": "ms_panel",
+   "cat": "multi_speech",
+   "file": "data/scenes/multi_speech/ms_panel.mp3",
+   "video": "6jxRSF9wuoM",
+   "url": "https://www.youtube.com/watch?v=6jxRSF9wuoM",
+   "title": "Multiple Speakers | Panel Discussion",
+   "uploader": "INI Seminar Room 1",
+   "video_duration": 2747.0,
+   "clip_start_in_video": 300.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "座談會多講者",
+   "astats": {
+    "RMS_level_dB": "-16.820562",
+    "Peak_level_dB": "-0.356807",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-39.734278"
+   }
+  },
+  {
+   "id": "ms_panel2",
+   "cat": "multi_speech",
+   "file": "data/scenes/multi_speech/ms_panel2.mp3",
+   "video": "OEjYXl7wARo",
+   "url": "https://www.youtube.com/watch?v=OEjYXl7wARo",
+   "title": "Multiple Speakers | PT1 | TGM127 | Panel Discussion: Introduction & Questions/Discussion",
+   "uploader": "INI Seminar Room 1",
+   "video_duration": 4570.0,
+   "clip_start_in_video": 600.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "座談會多講者（另一場）",
+   "astats": {
+    "RMS_level_dB": "-43.856373",
+    "Peak_level_dB": "-24.462945",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-57.247237"
+   }
+  },
+  {
+   "id": "ms_twohot",
+   "cat": "multi_speech",
+   "file": "data/scenes/multi_speech/ms_twohot.mp3",
+   "video": "Ykbe5hJJjoo",
+   "url": "https://www.youtube.com/watch?v=Ykbe5hJJjoo",
+   "title": "Emotional Whiplash Reddit Stories || Two Hot Takes Podcast",
+   "uploader": "Two Hot Takes",
+   "video_duration": 7935.0,
+   "clip_start_in_video": 600.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "Two Hot Takes podcast 兩位主持人",
+   "astats": {
+    "RMS_level_dB": "-24.746004",
+    "Peak_level_dB": "-6.158992",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-inf"
+   }
+  },
+  {
+   "id": "ms_twoperson",
+   "cat": "multi_speech",
+   "file": "data/scenes/multi_speech/ms_twoperson.mp3",
+   "video": "HvqoMLjV4R4",
+   "url": "https://www.youtube.com/watch?v=HvqoMLjV4R4",
+   "title": "TWO PERSON INTERVIEW (HOW TO FILM IT)",
+   "uploader": "Epic Light Media",
+   "video_duration": 702.0,
+   "clip_start_in_video": 200.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "雙人訪談示範帶",
+   "astats": {
+    "RMS_level_dB": "-32.315148",
+    "Peak_level_dB": "-12.313150",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-57.368549"
+   }
+  },
+  {
+   "id": "mu_canon_cp",
+   "cat": "music",
+   "file": "data/scenes/music/mu_canon_cp.mp3",
+   "cached": true,
+   "video": "Ptk_1Dc2iPY",
+   "url": "https://www.youtube.com/watch?v=Ptk_1Dc2iPY",
+   "title": "Canon in D (Pachelbel's Canon) - Cello & Piano [BEST WEDDING VERSION]",
+   "uploader": "Brooklyn Duo",
+   "video_duration": 302.0,
+   "clip_start_in_video": 30.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "Canon in D 大提琴＋鋼琴",
+   "astats": {
+    "RMS_level_dB": "-22.020914",
+    "Peak_level_dB": "-8.642760",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-20.859176"
+   }
+  },
+  {
+   "id": "mu_canon_o",
+   "cat": "music",
+   "file": "data/scenes/music/mu_canon_o.mp3",
+   "video": "9nX_ReyaetE",
+   "url": "https://www.youtube.com/watch?v=9nX_ReyaetE",
+   "title": "Pachelbel - Canon in D Major (Original Version)",
+   "uploader": "Just Classical",
+   "video_duration": 353.0,
+   "clip_start_in_video": 40.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "Canon in D 原版編制",
+   "astats": {
+    "RMS_level_dB": "-31.225133",
+    "Peak_level_dB": "-17.287622",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-28.845050"
+   }
+  },
+  {
+   "id": "mu_guitar",
+   "cat": "music",
+   "file": "data/scenes/music/mu_guitar.mp3",
+   "video": "m4gJCFPSu-c",
+   "url": "https://www.youtube.com/watch?v=m4gJCFPSu-c",
+   "title": "RELAXING GUITAR MUSIC - Soothing Guitar Melodies to Mend Your Soul - Acoustic Guitar Music",
+   "uploader": "Guitar Melodies",
+   "video_duration": 17667.0,
+   "clip_start_in_video": 120.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "木吉他獨奏",
+   "astats": {
+    "RMS_level_dB": "-19.328788",
+    "Peak_level_dB": "-3.488277",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-22.373521"
+   }
+  },
+  {
+   "id": "mu_jazz",
+   "cat": "music",
+   "file": "data/scenes/music/mu_jazz.mp3",
+   "video": "Qe9v8mdYBlc",
+   "url": "https://www.youtube.com/watch?v=Qe9v8mdYBlc",
+   "title": "Darius Mercado Quartet - Jazz Reflections at Midnight - Red Note Jazz",
+   "uploader": "Red Note Records",
+   "video_duration": 1996.0,
+   "clip_start_in_video": 200.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "爵士四重奏",
+   "astats": {
+    "RMS_level_dB": "-15.047156",
+    "Peak_level_dB": "-1.451648",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-24.080737"
+   }
+  },
+  {
+   "id": "mu_lofi",
+   "cat": "music",
+   "file": "data/scenes/music/mu_lofi.mp3",
+   "video": "n61ULEU7CO0",
+   "url": "https://www.youtube.com/watch?v=n61ULEU7CO0",
+   "title": "Best of lofi hip hop 2021 ✨ [beats to relax/study to]",
+   "uploader": "Lofi Girl",
+   "video_duration": 22258.0,
+   "clip_start_in_video": 900.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "lofi 合輯，無人聲",
+   "astats": {
+    "RMS_level_dB": "-21.287210",
+    "Peak_level_dB": "-4.555577",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-33.899524"
+   }
+  },
+  {
+   "id": "mu_rach",
+   "cat": "music",
+   "file": "data/scenes/music/mu_rach.mp3",
+   "video": "HPbPg7JT0bM",
+   "url": "https://www.youtube.com/watch?v=HPbPg7JT0bM",
+   "title": "Symphony No. 2 / Sergei Rachmaninoff / Vasily Petrenko / Oslo Philharmonic",
+   "uploader": "Oslo Philharmonic",
+   "video_duration": 3681.0,
+   "clip_start_in_video": 240.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "拉赫曼尼諾夫第二號交響曲現場",
+   "astats": {
+    "RMS_level_dB": "-32.840250",
+    "Peak_level_dB": "-18.061744",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-29.710081"
+   }
+  },
+  {
+   "id": "no_build",
+   "cat": "noise",
+   "file": "data/scenes/noise/no_build.mp3",
+   "video": "UZ_RrLxMrEg",
+   "url": "https://www.youtube.com/watch?v=UZ_RrLxMrEg",
+   "title": "CONSTRUCTION SITE SOUND EFFECT/ AMBIENCE DRILLING JACKHAMMER METAL HAMMERING NOISE SOUNDSCAPE ASMR",
+   "uploader": "Nature Sounds And Ambience",
+   "video_duration": 9608.0,
+   "clip_start_in_video": 600.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "工地鑽孔敲打",
+   "astats": {
+    "RMS_level_dB": "-12.284863",
+    "Peak_level_dB": "-0.138955",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-8.041714"
+   }
+  },
+  {
+   "id": "no_nyc",
+   "cat": "noise",
+   "file": "data/scenes/noise/no_nyc.mp3",
+   "video": "eZcTP-XynnA",
+   "url": "https://www.youtube.com/watch?v=eZcTP-XynnA",
+   "title": "New York City Night Sounds – 5+ Hours of Traffic, Sirens & Horns – Relaxing City Ambience 4K",
+   "uploader": "Footsteps to Nowhere",
+   "video_duration": 19800.0,
+   "clip_start_in_video": 900.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "紐約夜間交通＋警笛",
+   "astats": {
+    "RMS_level_dB": "-29.885508",
+    "Peak_level_dB": "-17.081197",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-24.318554"
+   }
+  },
+  {
+   "id": "no_rain",
+   "cat": "noise",
+   "file": "data/scenes/noise/no_rain.mp3",
+   "cached": true,
+   "video": "559a-bGMoR4",
+   "url": "https://www.youtube.com/watch?v=559a-bGMoR4",
+   "title": "Heavy Rain & Thunder - Rain sounds for Sleep - 1 hour rain sounds for sleep",
+   "uploader": "ΣHAANTI - Virtual Environment",
+   "video_duration": 3620.0,
+   "clip_start_in_video": 600.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "大雨＋雷",
+   "astats": {
+    "RMS_level_dB": "-19.856763",
+    "Peak_level_dB": "-3.440264",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-13.650987"
+   }
+  },
+  {
+   "id": "no_traffic",
+   "cat": "noise",
+   "file": "data/scenes/noise/no_traffic.mp3",
+   "video": "fh3EdeGNKus",
+   "url": "https://www.youtube.com/watch?v=fh3EdeGNKus",
+   "title": "City Traffic Sounds for Sleep | Highway Ambience at Night  | 10 Hours ASMR White Noise",
+   "uploader": "Nomadic Ambience",
+   "video_duration": 36038.0,
+   "clip_start_in_video": 900.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "高速公路車流",
+   "astats": {
+    "RMS_level_dB": "-23.960262",
+    "Peak_level_dB": "-7.321038",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-22.382207"
+   }
+  },
+  {
+   "id": "no_white",
+   "cat": "noise",
+   "file": "data/scenes/noise/no_white.mp3",
+   "video": "nMfPqeZjc2c",
+   "url": "https://www.youtube.com/watch?v=nMfPqeZjc2c",
+   "title": "White Noise Black Screen | Sleep, Study, Focus | 10 Hours",
+   "uploader": "Relaxing White Noise",
+   "video_duration": 36000.0,
+   "clip_start_in_video": 1200.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "白噪音",
+   "astats": {
+    "RMS_level_dB": "-26.129498",
+    "Peak_level_dB": "-12.908799",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-19.451643"
+   }
+  },
+  {
+   "id": "no_window",
+   "cat": "noise",
+   "file": "data/scenes/noise/no_window.mp3",
+   "video": "mPZkdNFkNps",
+   "url": "https://www.youtube.com/watch?v=mPZkdNFkNps",
+   "title": "Rain Sound On Window with Thunder SoundsㅣHeavy Rain for Sleep, Study and Relaxation, Meditation",
+   "uploader": "Relaxing Ambience ASMR",
+   "video_duration": 28814.0,
+   "clip_start_in_video": 900.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "窗邊雨聲",
+   "astats": {
+    "RMS_level_dB": "-25.295181",
+    "Peak_level_dB": "-8.117177",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-18.729080"
+   }
+  },
+  {
+   "id": "sg_bohemian",
+   "cat": "singing",
+   "file": "data/scenes/singing/sg_bohemian.mp3",
+   "video": "fJ9rUzIMcZQ",
+   "url": "https://www.youtube.com/watch?v=fJ9rUzIMcZQ",
+   "title": "Queen – Bohemian Rhapsody (Official Video Remastered)",
+   "uploader": "Queen Official",
+   "video_duration": 359.0,
+   "clip_start_in_video": 40.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "Bohemian Rhapsody 官方 MV",
+   "astats": {
+    "RMS_level_dB": "-22.908606",
+    "Peak_level_dB": "-6.565111",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-38.285142"
+   }
+  },
+  {
+   "id": "sg_buzztones",
+   "cat": "singing",
+   "file": "data/scenes/singing/sg_buzztones.mp3",
+   "video": "BQ3VtEDdM5k",
+   "url": "https://www.youtube.com/watch?v=BQ3VtEDdM5k",
+   "title": "Stand By Me | The Buzztones | (Ben E King A Cappella Cover)",
+   "uploader": "The Buzztones",
+   "video_duration": 168.0,
+   "clip_start_in_video": 20.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "The Buzztones 阿卡貝拉",
+   "astats": {
+    "RMS_level_dB": "-20.675686",
+    "Peak_level_dB": "-4.370937",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-44.115406"
+   }
+  },
+  {
+   "id": "sg_despacito",
+   "cat": "singing",
+   "file": "data/scenes/singing/sg_despacito.mp3",
+   "video": "kJQP7kiw5Fk",
+   "url": "https://www.youtube.com/watch?v=kJQP7kiw5Fk",
+   "title": "Luis Fonsi - Despacito ft. Daddy Yankee",
+   "uploader": "Luis Fonsi",
+   "video_duration": 282.0,
+   "clip_start_in_video": 60.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "Despacito 官方 MV",
+   "astats": {
+    "RMS_level_dB": "-15.853616",
+    "Peak_level_dB": "-1.066540",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-33.086093"
+   }
+  },
+  {
+   "id": "sg_pentatonix",
+   "cat": "singing",
+   "file": "data/scenes/singing/sg_pentatonix.mp3",
+   "video": "LRP8d7hhpoQ",
+   "url": "https://www.youtube.com/watch?v=LRP8d7hhpoQ",
+   "title": "Pentatonix - Hallelujah (Official Video)",
+   "uploader": "Pentatonix",
+   "video_duration": 305.0,
+   "clip_start_in_video": 30.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "Pentatonix Hallelujah，純人聲",
+   "astats": {
+    "RMS_level_dB": "-16.533941",
+    "Peak_level_dB": "-1.603015",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-27.145456"
+   }
+  },
+  {
+   "id": "sg_seeyou",
+   "cat": "singing",
+   "file": "data/scenes/singing/sg_seeyou.mp3",
+   "video": "RgKAFK5djSk",
+   "url": "https://www.youtube.com/watch?v=RgKAFK5djSk",
+   "title": "Wiz Khalifa - See You Again ft. Charlie Puth [Official Video] Furious 7 Soundtrack",
+   "uploader": "Wiz Khalifa",
+   "video_duration": 237.0,
+   "clip_start_in_video": 55.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "See You Again 官方 MV",
+   "astats": {
+    "RMS_level_dB": "-9.353339",
+    "Peak_level_dB": "0.545830",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-7.769947"
+   }
+  },
+  {
+   "id": "sg_sugar",
+   "cat": "singing",
+   "file": "data/scenes/singing/sg_sugar.mp3",
+   "video": "09R8_2nJtjg",
+   "url": "https://www.youtube.com/watch?v=09R8_2nJtjg",
+   "title": "Maroon 5 - Sugar (Official Music Video)",
+   "uploader": "Maroon 5",
+   "video_duration": 301.0,
+   "clip_start_in_video": 60.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "Maroon 5 Sugar 官方 MV",
+   "astats": {
+    "RMS_level_dB": "-13.377945",
+    "Peak_level_dB": "-0.208718",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-18.761748"
+   }
+  },
+  {
+   "id": "sp_audiobook",
+   "cat": "speech",
+   "file": "data/scenes/speech/sp_audiobook.mp3",
+   "video": "GnGIpT8cVMs",
+   "url": "https://www.youtube.com/watch?v=GnGIpT8cVMs",
+   "title": "Ravenshaw's Bride | Full-Length Regency Romance Audiobook",
+   "uploader": "Forever & Always Regency Romance Audiobooks",
+   "video_duration": 8959.0,
+   "clip_start_in_video": 600.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "有聲書旁白",
+   "astats": {
+    "RMS_level_dB": "-29.245474",
+    "Peak_level_dB": "-10.847029",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-inf"
+   }
+  },
+  {
+   "id": "sp_jobs",
+   "cat": "speech",
+   "file": "data/scenes/speech/sp_jobs.mp3",
+   "cached": true,
+   "video": "UF8uR6Z6KLc",
+   "url": "https://www.youtube.com/watch?v=UF8uR6Z6KLc",
+   "title": "Steve Jobs' 2005 Stanford Commencement Address",
+   "uploader": "Stanford",
+   "video_duration": 904.0,
+   "clip_start_in_video": 62.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "Steve Jobs 2005 史丹佛畢業演講",
+   "astats": {
+    "RMS_level_dB": "-29.123939",
+    "Peak_level_dB": "-8.494859",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-53.577243"
+   }
+  },
+  {
+   "id": "sp_ted_amy",
+   "cat": "speech",
+   "file": "data/scenes/speech/sp_ted_amy.mp3",
+   "video": "Ks-_Mh1QhMc",
+   "url": "https://www.youtube.com/watch?v=Ks-_Mh1QhMc",
+   "title": "Your Body Language May Shape Who You Are | Amy Cuddy | TED",
+   "uploader": "TED",
+   "video_duration": 1263.0,
+   "clip_start_in_video": 150.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "TED Amy Cuddy",
+   "astats": {
+    "RMS_level_dB": "-22.239087",
+    "Peak_level_dB": "-4.114232",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-44.681304"
+   }
+  },
+  {
+   "id": "sp_ted_ken",
+   "cat": "speech",
+   "file": "data/scenes/speech/sp_ted_ken.mp3",
+   "video": "8S0FDjFBj8o",
+   "url": "https://www.youtube.com/watch?v=8S0FDjFBj8o",
+   "title": "How to sound smart in your TEDx Talk | Will Stephen | TEDxNewYork",
+   "uploader": "TEDx Talks",
+   "video_duration": 356.0,
+   "clip_start_in_video": 120.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "TED Ken Robinson（含觀眾笑聲）",
+   "astats": {
+    "RMS_level_dB": "-22.474605",
+    "Peak_level_dB": "-5.806199",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-52.067358"
+   }
+  },
+  {
+   "id": "sp_ted_tim",
+   "cat": "speech",
+   "file": "data/scenes/speech/sp_ted_tim.mp3",
+   "video": "arj7oStGLkU",
+   "url": "https://www.youtube.com/watch?v=arj7oStGLkU",
+   "title": "Inside the Mind of a Master Procrastinator | Tim Urban | TED",
+   "uploader": "TED",
+   "video_duration": 844.0,
+   "clip_start_in_video": 200.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "TED Tim Urban",
+   "astats": {
+    "RMS_level_dB": "-20.707265",
+    "Peak_level_dB": "-2.384170",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-47.725310"
+   }
+  },
+  {
+   "id": "sp_zoo",
+   "cat": "speech",
+   "file": "data/scenes/speech/sp_zoo.mp3",
+   "cached": true,
+   "video": "jNQXAC9IVRw",
+   "url": "https://www.youtube.com/watch?v=jNQXAC9IVRw",
+   "title": "Me at the zoo",
+   "uploader": "jawed",
+   "video_duration": 19.0,
+   "clip_start_in_video": 2.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "YouTube 第一支影片，戶外單人說話",
+   "astats": {
+    "RMS_level_dB": "-26.806837",
+    "Peak_level_dB": "-7.821898",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-27.194240"
+   }
+  },
+  {
+   "id": "sm_abelcole",
+   "cat": "speech_music",
+   "file": "data/scenes/speech_music/sm_abelcole.mp3",
+   "video": "rYzIOBwyhIU",
+   "url": "https://www.youtube.com/watch?v=rYzIOBwyhIU",
+   "title": "BACK TO BLACK - Official Trailer [HD] - Only In Theaters May 17",
+   "uploader": "Focus Features",
+   "video_duration": 138.0,
+   "clip_start_in_video": 30.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "電影片尾預告，旁白＋配樂",
+   "astats": {
+    "RMS_level_dB": "-15.292881",
+    "Peak_level_dB": "-1.227464",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-28.176899"
+   }
+  },
+  {
+   "id": "sm_nursery",
+   "cat": "speech_music",
+   "file": "data/scenes/speech_music/sm_nursery.mp3",
+   "video": "ojGj7Hpa-OQ",
+   "url": "https://www.youtube.com/watch?v=ojGj7Hpa-OQ",
+   "title": "Coca-Cola | For Everyone :30",
+   "uploader": "Coca-Cola",
+   "video_duration": 30.0,
+   "clip_start_in_video": 3.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "Coca-Cola 30 秒電視廣告，人聲＋配樂",
+   "astats": {
+    "RMS_level_dB": "-27.200961",
+    "Peak_level_dB": "-12.112484",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-40.824023"
+   }
+  },
+  {
+   "id": "sm_siva",
+   "cat": "speech_music",
+   "file": "data/scenes/speech_music/sm_siva.mp3",
+   "video": "JFQcDFhNh4o",
+   "url": "https://www.youtube.com/watch?v=JFQcDFhNh4o",
+   "title": "Heart of the Beast | Official Trailer (2026 Movie) - Brad Pitt, J.K. Simmons, Anna Lambe",
+   "uploader": "Paramount Pictures",
+   "video_duration": 145.0,
+   "clip_start_in_video": 30.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "電影預告，英語旁白＋配樂",
+   "astats": {
+    "RMS_level_dB": "-18.884580",
+    "Peak_level_dB": "-1.742159",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-22.014372"
+   }
+  },
+  {
+   "id": "sm_spotify",
+   "cat": "speech_music",
+   "file": "data/scenes/speech_music/sm_spotify.mp3",
+   "video": "Ccn3c94QLT0",
+   "url": "https://www.youtube.com/watch?v=Ccn3c94QLT0",
+   "title": "Spotify (30 Sec's) Radio Commercial 2020",
+   "uploader": "Arginel Pinoy Ad Productions",
+   "video_duration": 31.0,
+   "clip_start_in_video": 2.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "廣播廣告，人聲＋配樂",
+   "astats": {
+    "RMS_level_dB": "-10.967924",
+    "Peak_level_dB": "-0.954640",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-41.264064"
+   }
+  },
+  {
+   "id": "sm_sprite",
+   "cat": "speech_music",
+   "file": "data/scenes/speech_music/sm_sprite.mp3",
+   "video": "QKae1k1BDdA",
+   "url": "https://www.youtube.com/watch?v=QKae1k1BDdA",
+   "title": "A brie(f) history of cheese - Paul Kindstedt",
+   "uploader": "TED-Ed",
+   "video_duration": 334.0,
+   "clip_start_in_video": 60.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "TED-Ed 動畫課程，旁白＋背景配樂",
+   "astats": {
+    "RMS_level_dB": "-23.247697",
+    "Peak_level_dB": "-2.708886",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-89.623700"
+   }
+  },
+  {
+   "id": "sm_vlog",
+   "cat": "speech_music",
+   "file": "data/scenes/speech_music/sm_vlog.mp3",
+   "video": "OnzGcu9jzsw",
+   "url": "https://www.youtube.com/watch?v=OnzGcu9jzsw",
+   "title": "Quaker Breakfast Flats Voice-Over Recording - 30 Second TV Commercial",
+   "uploader": "JL Recording Studios",
+   "video_duration": 30.0,
+   "clip_start_in_video": 4.0,
+   "clip_seconds": 10.0,
+   "window_method": "manual",
+   "note": "Quaker 30 秒電視廣告配音",
+   "astats": {
+    "RMS_level_dB": "-20.096625",
+    "Peak_level_dB": "-3.407091",
+    "Flat_factor": "0.000000",
+    "Noise_floor_dB": "-24.647641"
+   }
+  }
+ ],
+ "failed": []
+}

@@ -1,0 +1,17 @@
+{
+ "video": "HPbPg7JT0bM",
+ "url": "https://www.youtube.com/watch?v=HPbPg7JT0bM",
+ "title": "Symphony No. 2 / Sergei Rachmaninoff / Vasily Petrenko / Oslo Philharmonic",
+ "uploader": "Oslo Philharmonic",
+ "video_duration": 3681.0,
+ "clip_start_in_video": 240.0,
+ "clip_seconds": 10.0,
+ "window_method": "manual",
+ "note": "拉赫曼尼諾夫第二號交響曲現場",
+ "astats": {
+  "RMS_level_dB": "-32.840250",
+  "Peak_level_dB": "-18.061744",
+  "Flat_factor": "0.000000",
+  "Noise_floor_dB": "-29.710081"
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "video": "RgKAFK5djSk",
+ "url": "https://www.youtube.com/watch?v=RgKAFK5djSk",
+ "title": "Wiz Khalifa - See You Again ft. Charlie Puth [Official Video] Furious 7 Soundtrack",
+ "uploader": "Wiz Khalifa",
+ "video_duration": 237.0,
+ "clip_start_in_video": 55.0,
+ "clip_seconds": 10.0,
+ "window_method": "manual",
+ "note": "See You Again 官方 MV",
+ "astats": {
+  "RMS_level_dB": "-9.353339",
+  "Peak_level_dB": "0.545830",
+  "Flat_factor": "0.000000",
+  "Noise_floor_dB": "-7.769947"
+ }
+}

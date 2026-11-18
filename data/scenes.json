@@ -1,0 +1,308 @@
+{
+  "_comment": "音場分類測試的素材來源。expected 是依影片標題／頻道／內容宣告的類別，不是模型輸出。start 為 null 時由 fetch_scenes.py 依能量穩定度自動挑 10 秒窗。",
+  "categories": {
+    "speech": "單人說話、無背景音樂（演講、旁白、有聲書）",
+    "singing": "人聲唱歌（含伴奏或純人聲）",
+    "music": "純器樂，無人聲",
+    "noise": "環境噪音（雨、交通、白噪音、工地）",
+    "concert": "演唱會現場（擴音、觀眾、合唱）",
+    "multi_speech": "多人同時或輪流說話（podcast、座談、訪談）",
+    "speech_music": "有人聲說話但疊了背景音樂（廣告、vlog、教學影片）"
+  },
+  "sources": [
+    {
+      "id": "sp_jobs",
+      "cat": "speech",
+      "video": "UF8uR6Z6KLc",
+      "start": 62,
+      "note": "Steve Jobs 2005 史丹佛畢業演講"
+    },
+    {
+      "id": "sp_ted_ken",
+      "cat": "speech",
+      "video": "8S0FDjFBj8o",
+      "start": 120,
+      "note": "TEDx 單人演講（Will Stephen，含觀眾笑聲）"
+    },
+    {
+      "id": "sp_zoo",
+      "cat": "speech",
+      "video": "jNQXAC9IVRw",
+      "start": 2,
+      "note": "YouTube 第一支影片，戶外單人說話"
+    },
+    {
+      "id": "sp_ted_amy",
+      "cat": "speech",
+      "video": "Ks-_Mh1QhMc",
+      "start": 150,
+      "note": "TED Amy Cuddy"
+    },
+    {
+      "id": "sp_audiobook",
+      "cat": "speech",
+      "video": "GnGIpT8cVMs",
+      "start": 600,
+      "note": "有聲書旁白"
+    },
+    {
+      "id": "sp_ted_tim",
+      "cat": "speech",
+      "video": "arj7oStGLkU",
+      "start": 200,
+      "note": "TED Tim Urban"
+    },
+    {
+      "id": "sg_bohemian",
+      "cat": "singing",
+      "video": "fJ9rUzIMcZQ",
+      "start": 40,
+      "note": "Bohemian Rhapsody 官方 MV"
+    },
+    {
+      "id": "sg_seeyou",
+      "cat": "singing",
+      "video": "RgKAFK5djSk",
+      "start": 55,
+      "note": "See You Again 官方 MV"
+    },
+    {
+      "id": "sg_despacito",
+      "cat": "singing",
+      "video": "kJQP7kiw5Fk",
+      "start": 60,
+      "note": "Despacito 官方 MV（改窗至 60s）"
+    },
+    {
+      "id": "sg_pentatonix",
+      "cat": "singing",
+      "video": "LRP8d7hhpoQ",
+      "start": 30,
+      "note": "Pentatonix Hallelujah，純人聲"
+    },
+    {
+      "id": "sg_buzztones",
+      "cat": "singing",
+      "video": "BQ3VtEDdM5k",
+      "start": 20,
+      "note": "The Buzztones 阿卡貝拉"
+    },
+    {
+      "id": "sg_sugar",
+      "cat": "singing",
+      "video": "09R8_2nJtjg",
+      "start": 60,
+      "note": "Maroon 5 Sugar 官方 MV"
+    },
+    {
+      "id": "mu_canon_cp",
+      "cat": "music",
+      "video": "Ptk_1Dc2iPY",
+      "start": 30,
+      "note": "Canon in D 大提琴＋鋼琴"
+    },
+    {
+      "id": "mu_canon_o",
+      "cat": "music",
+      "video": "9nX_ReyaetE",
+      "start": 40,
+      "note": "Canon in D 原版編制"
+    },
+    {
+      "id": "mu_lofi",
+      "cat": "music",
+      "video": "n61ULEU7CO0",
+      "start": 900,
+      "note": "lofi 合輯，無人聲"
+    },
+    {
+      "id": "mu_guitar",
+      "cat": "music",
+      "video": "m4gJCFPSu-c",
+      "start": 120,
+      "note": "木吉他獨奏"
+    },
+    {
+      "id": "mu_rach",
+      "cat": "music",
+      "video": "HPbPg7JT0bM",
+      "start": 240,
+      "note": "拉赫曼尼諾夫第二號交響曲現場"
+    },
+    {
+      "id": "mu_jazz",
+      "cat": "music",
+      "video": "Qe9v8mdYBlc",
+      "start": 200,
+      "note": "爵士四重奏"
+    },
+    {
+      "id": "no_rain",
+      "cat": "noise",
+      "video": "559a-bGMoR4",
+      "start": 600,
+      "note": "大雨＋雷"
+    },
+    {
+      "id": "no_traffic",
+      "cat": "noise",
+      "video": "fh3EdeGNKus",
+      "start": 900,
+      "note": "高速公路車流"
+    },
+    {
+      "id": "no_white",
+      "cat": "noise",
+      "video": "nMfPqeZjc2c",
+      "start": 1200,
+      "note": "白噪音"
+    },
+    {
+      "id": "no_build",
+      "cat": "noise",
+      "video": "UZ_RrLxMrEg",
+      "start": 600,
+      "note": "工地鑽孔敲打"
+    },
+    {
+      "id": "no_window",
+      "cat": "noise",
+      "video": "mPZkdNFkNps",
+      "start": 900,
+      "note": "窗邊雨聲"
+    },
+    {
+      "id": "no_nyc",
+      "cat": "noise",
+      "video": "eZcTP-XynnA",
+      "start": 900,
+      "note": "紐約夜間交通＋警笛"
+    },
+    {
+      "id": "co_liveaid",
+      "cat": "concert",
+      "video": "frdBb9Slu1A",
+      "start": 120,
+      "note": "Queen Live Aid 1985 全場"
+    },
+    {
+      "id": "co_bohemian_l",
+      "cat": "concert",
+      "video": "vbvyNnw8Qjg",
+      "start": 40,
+      "note": "Bohemian Rhapsody Live Aid"
+    },
+    {
+      "id": "co_coldplay",
+      "cat": "concert",
+      "video": "tPUd5iqq7wA",
+      "start": 240,
+      "note": "Coldplay 聖保羅現場"
+    },
+    {
+      "id": "co_coldplay2",
+      "cat": "concert",
+      "video": "SSJCE5-eb4o",
+      "start": 300,
+      "note": "Coldplay 印度現場"
+    },
+    {
+      "id": "co_bts",
+      "cat": "concert",
+      "video": "nK8Fh7J1A-A",
+      "start": 30,
+      "note": "BTS Butter 頒獎典禮 fancam（含 fanchant）"
+    },
+    {
+      "id": "co_dimash",
+      "cat": "concert",
+      "video": "1eHw_pBKgZo",
+      "start": 60,
+      "note": "Dimash 現場 fancam"
+    },
+    {
+      "id": "ms_twohot",
+      "cat": "multi_speech",
+      "video": "Ykbe5hJJjoo",
+      "start": 600,
+      "note": "Two Hot Takes podcast 兩位主持人"
+    },
+    {
+      "id": "ms_ivehadit",
+      "cat": "multi_speech",
+      "video": "KtMLxgLHUq4",
+      "start": 120,
+      "note": "I've Had It podcast"
+    },
+    {
+      "id": "ms_panel",
+      "cat": "multi_speech",
+      "video": "6jxRSF9wuoM",
+      "start": 300,
+      "note": "座談會多講者"
+    },
+    {
+      "id": "ms_panel2",
+      "cat": "multi_speech",
+      "video": "OEjYXl7wARo",
+      "start": 600,
+      "note": "座談會多講者（另一場）"
+    },
+    {
+      "id": "ms_twoperson",
+      "cat": "multi_speech",
+      "video": "HvqoMLjV4R4",
+      "start": 200,
+      "note": "雙人訪談示範帶"
+    },
+    {
+      "id": "ms_causal",
+      "cat": "multi_speech",
+      "video": "5Wq0xbZ4TQU",
+      "start": 600,
+      "note": "座談會（因果推論）"
+    },
+    {
+      "id": "sm_abelcole",
+      "cat": "speech_music",
+      "video": "rYzIOBwyhIU",
+      "start": 30,
+      "note": "電影預告 Back to Black，旁白＋配樂"
+    },
+    {
+      "id": "sm_sprite",
+      "cat": "speech_music",
+      "video": "QKae1k1BDdA",
+      "start": 60,
+      "note": "TED-Ed 動畫課程，旁白＋背景配樂"
+    },
+    {
+      "id": "sm_spotify",
+      "cat": "speech_music",
+      "video": "Ccn3c94QLT0",
+      "start": 2,
+      "note": "廣播廣告，人聲＋配樂"
+    },
+    {
+      "id": "sm_siva",
+      "cat": "speech_music",
+      "video": "JFQcDFhNh4o",
+      "start": 30,
+      "note": "電影預告，英語旁白＋配樂"
+    },
+    {
+      "id": "sm_vlog",
+      "cat": "speech_music",
+      "video": "OnzGcu9jzsw",
+      "start": 4,
+      "note": "Quaker 30 秒電視廣告配音"
+    },
+    {
+      "id": "sm_nursery",
+      "cat": "speech_music",
+      "video": "ojGj7Hpa-OQ",
+      "start": 3,
+      "note": "Coca-Cola 30 秒電視廣告，人聲＋配樂"
+    }
+  ]
+}

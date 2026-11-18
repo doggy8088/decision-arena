@@ -1,0 +1,17 @@
+{
+ "video": "Ccn3c94QLT0",
+ "url": "https://www.youtube.com/watch?v=Ccn3c94QLT0",
+ "title": "Spotify (30 Sec's) Radio Commercial 2020",
+ "uploader": "Arginel Pinoy Ad Productions",
+ "video_duration": 31.0,
+ "clip_start_in_video": 2.0,
+ "clip_seconds": 10.0,
+ "window_method": "manual",
+ "note": "廣播廣告，人聲＋配樂",
+ "astats": {
+  "RMS_level_dB": "-10.967924",
+  "Peak_level_dB": "-0.954640",
+  "Flat_factor": "0.000000",
+  "Noise_floor_dB": "-41.264064"
+ }
+}

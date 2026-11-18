@@ -1,0 +1,17 @@
+{
+ "video": "jNQXAC9IVRw",
+ "url": "https://www.youtube.com/watch?v=jNQXAC9IVRw",
+ "title": "Me at the zoo",
+ "uploader": "jawed",
+ "video_duration": 19.0,
+ "clip_start_in_video": 2.0,
+ "clip_seconds": 10.0,
+ "window_method": "manual",
+ "note": "YouTube 第一支影片，戶外單人說話",
+ "astats": {
+  "RMS_level_dB": "-26.806837",
+  "Peak_level_dB": "-7.821898",
+  "Flat_factor": "0.000000",
+  "Noise_floor_dB": "-27.194240"
+ }
+}

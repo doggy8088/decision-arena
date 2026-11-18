@@ -1,0 +1,17 @@
+{
+ "video": "UF8uR6Z6KLc",
+ "url": "https://www.youtube.com/watch?v=UF8uR6Z6KLc",
+ "title": "Steve Jobs' 2005 Stanford Commencement Address",
+ "uploader": "Stanford",
+ "video_duration": 904.0,
+ "clip_start_in_video": 62.0,
+ "clip_seconds": 10.0,
+ "window_method": "manual",
+ "note": "Steve Jobs 2005 史丹佛畢業演講",
+ "astats": {
+  "RMS_level_dB": "-29.123939",
+  "Peak_level_dB": "-8.494859",
+  "Flat_factor": "0.000000",
+  "Noise_floor_dB": "-53.577243"
+ }
+}

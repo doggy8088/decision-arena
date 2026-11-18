@@ -1,0 +1,17 @@
+{
+ "video": "QKae1k1BDdA",
+ "url": "https://www.youtube.com/watch?v=QKae1k1BDdA",
+ "title": "A brie(f) history of cheese - Paul Kindstedt",
+ "uploader": "TED-Ed",
+ "video_duration": 334.0,
+ "clip_start_in_video": 60.0,
+ "clip_seconds": 10.0,
+ "window_method": "manual",
+ "note": "TED-Ed 動畫課程，旁白＋背景配樂",
+ "astats": {
+  "RMS_level_dB": "-23.247697",
+  "Peak_level_dB": "-2.708886",
+  "Flat_factor": "0.000000",
+  "Noise_floor_dB": "-89.623700"
+ }
+}

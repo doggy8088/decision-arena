@@ -1,0 +1,17 @@
+{
+ "video": "BQ3VtEDdM5k",
+ "url": "https://www.youtube.com/watch?v=BQ3VtEDdM5k",
+ "title": "Stand By Me | The Buzztones | (Ben E King A Cappella Cover)",
+ "uploader": "The Buzztones",
+ "video_duration": 168.0,
+ "clip_start_in_video": 20.0,
+ "clip_seconds": 10.0,
+ "window_method": "manual",
+ "note": "The Buzztones 阿卡貝拉",
+ "astats": {
+  "RMS_level_dB": "-20.675686",
+  "Peak_level_dB": "-4.370937",
+  "Flat_factor": "0.000000",
+  "Noise_floor_dB": "-44.115406"
+ }
+}

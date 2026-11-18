@@ -1,0 +1,17 @@
+{
+ "video": "Ptk_1Dc2iPY",
+ "url": "https://www.youtube.com/watch?v=Ptk_1Dc2iPY",
+ "title": "Canon in D (Pachelbel's Canon) - Cello & Piano [BEST WEDDING VERSION]",
+ "uploader": "Brooklyn Duo",
+ "video_duration": 302.0,
+ "clip_start_in_video": 30.0,
+ "clip_seconds": 10.0,
+ "window_method": "manual",
+ "note": "Canon in D 大提琴＋鋼琴",
+ "astats": {
+  "RMS_level_dB": "-22.020914",
+  "Peak_level_dB": "-8.642760",
+  "Flat_factor": "0.000000",
+  "Noise_floor_dB": "-20.859176"
+ }
+}

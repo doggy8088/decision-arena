@@ -1,0 +1,17 @@
+{
+ "video": "frdBb9Slu1A",
+ "url": "https://www.youtube.com/watch?v=frdBb9Slu1A",
+ "title": "Queen - Live Aid 1985 Full Concert",
+ "uploader": "uploader.JP8",
+ "video_duration": 1265.0,
+ "clip_start_in_video": 120.0,
+ "clip_seconds": 10.0,
+ "window_method": "manual",
+ "note": "Queen Live Aid 1985 全場",
+ "astats": {
+  "RMS_level_dB": "-14.875861",
+  "Peak_level_dB": "-1.494041",
+  "Flat_factor": "0.000000",
+  "Noise_floor_dB": "-10.131659"
+ }
+}

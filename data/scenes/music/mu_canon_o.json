@@ -1,0 +1,17 @@
+{
+ "video": "9nX_ReyaetE",
+ "url": "https://www.youtube.com/watch?v=9nX_ReyaetE",
+ "title": "Pachelbel - Canon in D Major (Original Version)",
+ "uploader": "Just Classical",
+ "video_duration": 353.0,
+ "clip_start_in_video": 40.0,
+ "clip_seconds": 10.0,
+ "window_method": "manual",
+ "note": "Canon in D 原版編制",
+ "astats": {
+  "RMS_level_dB": "-31.225133",
+  "Peak_level_dB": "-17.287622",
+  "Flat_factor": "0.000000",
+  "Noise_floor_dB": "-28.845050"
+ }
+}

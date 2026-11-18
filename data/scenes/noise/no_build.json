@@ -1,0 +1,17 @@
+{
+ "video": "UZ_RrLxMrEg",
+ "url": "https://www.youtube.com/watch?v=UZ_RrLxMrEg",
+ "title": "CONSTRUCTION SITE SOUND EFFECT/ AMBIENCE DRILLING JACKHAMMER METAL HAMMERING NOISE SOUNDSCAPE ASMR",
+ "uploader": "Nature Sounds And Ambience",
+ "video_duration": 9608.0,
+ "clip_start_in_video": 600.0,
+ "clip_seconds": 10.0,
+ "window_method": "manual",
+ "note": "工地鑽孔敲打",
+ "astats": {
+  "RMS_level_dB": "-12.284863",
+  "Peak_level_dB": "-0.138955",
+  "Flat_factor": "0.000000",
+  "Noise_floor_dB": "-8.041714"
+ }
+}

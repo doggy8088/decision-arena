@@ -1,0 +1,17 @@
+{
+ "video": "Qe9v8mdYBlc",
+ "url": "https://www.youtube.com/watch?v=Qe9v8mdYBlc",
+ "title": "Darius Mercado Quartet - Jazz Reflections at Midnight - Red Note Jazz",
+ "uploader": "Red Note Records",
+ "video_duration": 1996.0,
+ "clip_start_in_video": 200.0,
+ "clip_seconds": 10.0,
+ "window_method": "manual",
+ "note": "爵士四重奏",
+ "astats": {
+  "RMS_level_dB": "-15.047156",
+  "Peak_level_dB": "-1.451648",
+  "Flat_factor": "0.000000",
+  "Noise_floor_dB": "-24.080737"
+ }
+}

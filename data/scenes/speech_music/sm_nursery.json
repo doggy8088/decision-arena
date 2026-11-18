@@ -1,0 +1,17 @@
+{
+ "video": "ojGj7Hpa-OQ",
+ "url": "https://www.youtube.com/watch?v=ojGj7Hpa-OQ",
+ "title": "Coca-Cola | For Everyone :30",
+ "uploader": "Coca-Cola",
+ "video_duration": 30.0,
+ "clip_start_in_video": 3.0,
+ "clip_seconds": 10.0,
+ "window_method": "manual",
+ "note": "Coca-Cola 30 秒電視廣告，人聲＋配樂",
+ "astats": {
+  "RMS_level_dB": "-27.200961",
+  "Peak_level_dB": "-12.112484",
+  "Flat_factor": "0.000000",
+  "Noise_floor_dB": "-40.824023"
+ }
+}
