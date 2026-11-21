@@ -17,6 +17,14 @@
 
 第一輪：2026-11-22，共 **34 個模型 × 20 個任務**，7,327 次請求，總花費約 **US$0.28**。
 
+## 網站
+
+<https://decision-arena.gh.miniasp.com>：首頁、Dashboard、評測報告與早期研究報告。
+
+- **部署方式**：每次 push 到 `main`，由 `.github/workflows/pages.yml` 自動部署到 GitHub Pages。
+- **部署內容**：只有 `pages/`（首頁、`robots.txt`、`CNAME`）與根目錄的 HTML 報告，不含原始資料與程式碼。repo 是私人的，但 Pages 網站本身公開。
+- **robots.txt**：封鎖所有爬蟲。這只是請爬蟲別抓，不是存取控制，知道網址的人仍然看得到。
+
 ## 重點結論（2026-11-22）
 
 | 發現 | 數據 |
