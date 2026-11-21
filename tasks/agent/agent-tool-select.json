@@ -1,0 +1,161 @@
+{
+  "id": "agent-tool-select",
+  "scenario": "agent",
+  "title": "Agent 工具選擇（6 選 1）",
+  "description": "14 則使用者請求，選出 agent 第一步該呼叫的工具。決策模型宣稱的主要用途之一（tool routing）。",
+  "question": {
+    "type": "choice",
+    "instructions": "一個 AI 助理收到以下使用者請求，第一步最該使用哪個工具？",
+    "options": {
+      "web_search": "搜尋網路上的即時或公開資訊",
+      "calendar": "查詢或建立行事曆事件",
+      "email": "寄送或查詢電子郵件",
+      "calculator": "精確數值計算",
+      "code_exec": "執行程式碼或分析使用者提供的資料檔",
+      "none": "不需要任何工具，直接回答即可"
+    }
+  },
+  "items": [
+    {
+      "id": "w1",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "今天美元兌新台幣的匯率是多少？"
+        }
+      ],
+      "gold": "web_search"
+    },
+    {
+      "id": "w2",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "幫我查一下這週末台北有哪些展覽。"
+        }
+      ],
+      "gold": "web_search"
+    },
+    {
+      "id": "w3",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "最新一季台積電法說會說了什麼？"
+        }
+      ],
+      "gold": "web_search"
+    },
+    {
+      "id": "c1",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "下週二下午兩點幫我約牙醫。"
+        }
+      ],
+      "gold": "calendar"
+    },
+    {
+      "id": "c2",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "我明天早上有什麼會議？"
+        }
+      ],
+      "gold": "calendar"
+    },
+    {
+      "id": "e1",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "寄一封信給王經理，告訴他報告會延後一天交。"
+        }
+      ],
+      "gold": "email"
+    },
+    {
+      "id": "e2",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "找出上個月供應商寄來的報價單信件。"
+        }
+      ],
+      "gold": "email"
+    },
+    {
+      "id": "k1",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "一筆 1,250,000 元的貸款，年利率 2.1%，20 年本息平均攤還，每月要繳多少？"
+        }
+      ],
+      "gold": "calculator",
+      "group": "ambiguous"
+    },
+    {
+      "id": "k2",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "387 × 2,416 等於多少？"
+        }
+      ],
+      "gold": "calculator"
+    },
+    {
+      "id": "x1",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "這是我匯出的 sales.csv，幫我算出每個月的營收成長率並畫圖。"
+        }
+      ],
+      "gold": "code_exec"
+    },
+    {
+      "id": "x2",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "執行這段 Python 看看會不會出錯：print(sum(range(10**6)))"
+        }
+      ],
+      "gold": "code_exec"
+    },
+    {
+      "id": "n1",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "「畫蛇添足」是什麼意思？"
+        }
+      ],
+      "gold": "none"
+    },
+    {
+      "id": "n2",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "幫我把這句話翻成英文：今天天氣很好。"
+        }
+      ],
+      "gold": "none"
+    },
+    {
+      "id": "n3",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "謝謝你的幫忙！"
+        }
+      ],
+      "gold": "none"
+    }
+  ]
+}

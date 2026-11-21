@@ -1,0 +1,763 @@
+{
+  "id": "audio-pron-ok",
+  "scenario": "audio",
+  "title": "發音練習：有沒有唸對目標句",
+  "description": "研究三的 50 段 TTS 語料（正確／正確＋噪音／聲調錯／換字／漏字／離題），已補 0.6 秒尾靜音。",
+  "source": "data/pron/manifest.json（音檔需先執行 scripts/build_pron_corpus.py 產生）",
+  "question": {
+    "type": "binary",
+    "instructions": "The audio is a learner reading this {lang} sentence aloud: 「{target}」. Did the speaker read the target sentence correctly, word for word?"
+  },
+  "items": [
+    {
+      "id": "en_1__correct",
+      "group": "correct",
+      "gold": "yes",
+      "vars": {
+        "target": "I like to read books.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_1__correct.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_1__correct_noisy",
+      "group": "correct_noisy",
+      "gold": "yes",
+      "vars": {
+        "target": "I like to read books.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_1__correct_noisy.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_1__wrong_word",
+      "group": "wrong_word",
+      "gold": "no",
+      "vars": {
+        "target": "I like to read books.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_1__wrong_word.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_1__missing_word",
+      "group": "missing_word",
+      "gold": "no",
+      "vars": {
+        "target": "I like to read books.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_1__missing_word.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_1__off_topic",
+      "group": "off_topic",
+      "gold": "no",
+      "vars": {
+        "target": "I like to read books.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_1__off_topic.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_2__correct",
+      "group": "correct",
+      "gold": "yes",
+      "vars": {
+        "target": "The cat sat on the mat.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_2__correct.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_2__correct_noisy",
+      "group": "correct_noisy",
+      "gold": "yes",
+      "vars": {
+        "target": "The cat sat on the mat.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_2__correct_noisy.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_2__wrong_word",
+      "group": "wrong_word",
+      "gold": "no",
+      "vars": {
+        "target": "The cat sat on the mat.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_2__wrong_word.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_2__missing_word",
+      "group": "missing_word",
+      "gold": "no",
+      "vars": {
+        "target": "The cat sat on the mat.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_2__missing_word.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_2__off_topic",
+      "group": "off_topic",
+      "gold": "no",
+      "vars": {
+        "target": "The cat sat on the mat.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_2__off_topic.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_5__correct",
+      "group": "correct",
+      "gold": "yes",
+      "vars": {
+        "target": "I would like a glass of water, please.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_5__correct.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_5__correct_noisy",
+      "group": "correct_noisy",
+      "gold": "yes",
+      "vars": {
+        "target": "I would like a glass of water, please.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_5__correct_noisy.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_5__wrong_word",
+      "group": "wrong_word",
+      "gold": "no",
+      "vars": {
+        "target": "I would like a glass of water, please.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_5__wrong_word.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_5__missing_word",
+      "group": "missing_word",
+      "gold": "no",
+      "vars": {
+        "target": "I would like a glass of water, please.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_5__missing_word.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_5__off_topic",
+      "group": "off_topic",
+      "gold": "no",
+      "vars": {
+        "target": "I would like a glass of water, please.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_5__off_topic.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_8__correct",
+      "group": "correct",
+      "gold": "yes",
+      "vars": {
+        "target": "Three green trees grow in the garden.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_8__correct.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_8__correct_noisy",
+      "group": "correct_noisy",
+      "gold": "yes",
+      "vars": {
+        "target": "Three green trees grow in the garden.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_8__correct_noisy.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_8__wrong_word",
+      "group": "wrong_word",
+      "gold": "no",
+      "vars": {
+        "target": "Three green trees grow in the garden.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_8__wrong_word.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_8__missing_word",
+      "group": "missing_word",
+      "gold": "no",
+      "vars": {
+        "target": "Three green trees grow in the garden.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_8__missing_word.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_8__off_topic",
+      "group": "off_topic",
+      "gold": "no",
+      "vars": {
+        "target": "Three green trees grow in the garden.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_8__off_topic.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_9__correct",
+      "group": "correct",
+      "gold": "yes",
+      "vars": {
+        "target": "She sells seashells by the seashore.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_9__correct.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_9__correct_noisy",
+      "group": "correct_noisy",
+      "gold": "yes",
+      "vars": {
+        "target": "She sells seashells by the seashore.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_9__correct_noisy.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_9__wrong_word",
+      "group": "wrong_word",
+      "gold": "no",
+      "vars": {
+        "target": "She sells seashells by the seashore.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_9__wrong_word.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_9__missing_word",
+      "group": "missing_word",
+      "gold": "no",
+      "vars": {
+        "target": "She sells seashells by the seashore.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_9__missing_word.mp3"
+        }
+      ]
+    },
+    {
+      "id": "en_9__off_topic",
+      "group": "off_topic",
+      "gold": "no",
+      "vars": {
+        "target": "She sells seashells by the seashore.",
+        "lang": "English"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/en_9__off_topic.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_1__correct",
+      "group": "correct",
+      "gold": "yes",
+      "vars": {
+        "target": "我喜歡吃蘋果。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_1__correct.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_1__correct_noisy",
+      "group": "correct_noisy",
+      "gold": "yes",
+      "vars": {
+        "target": "我喜歡吃蘋果。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_1__correct_noisy.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_1__tone_error",
+      "group": "tone_error",
+      "gold": "no",
+      "vars": {
+        "target": "我喜歡吃蘋果。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_1__tone_error.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_1__wrong_word",
+      "group": "wrong_word",
+      "gold": "no",
+      "vars": {
+        "target": "我喜歡吃蘋果。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_1__wrong_word.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_1__off_topic",
+      "group": "off_topic",
+      "gold": "no",
+      "vars": {
+        "target": "我喜歡吃蘋果。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_1__off_topic.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_2__correct",
+      "group": "correct",
+      "gold": "yes",
+      "vars": {
+        "target": "牛肉麵真好吃。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_2__correct.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_2__correct_noisy",
+      "group": "correct_noisy",
+      "gold": "yes",
+      "vars": {
+        "target": "牛肉麵真好吃。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_2__correct_noisy.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_2__tone_error",
+      "group": "tone_error",
+      "gold": "no",
+      "vars": {
+        "target": "牛肉麵真好吃。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_2__tone_error.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_2__wrong_word",
+      "group": "wrong_word",
+      "gold": "no",
+      "vars": {
+        "target": "牛肉麵真好吃。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_2__wrong_word.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_2__off_topic",
+      "group": "off_topic",
+      "gold": "no",
+      "vars": {
+        "target": "牛肉麵真好吃。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_2__off_topic.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_6__correct",
+      "group": "correct",
+      "gold": "yes",
+      "vars": {
+        "target": "小兔子乖乖，把門兒開開。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_6__correct.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_6__correct_noisy",
+      "group": "correct_noisy",
+      "gold": "yes",
+      "vars": {
+        "target": "小兔子乖乖，把門兒開開。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_6__correct_noisy.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_6__tone_error",
+      "group": "tone_error",
+      "gold": "no",
+      "vars": {
+        "target": "小兔子乖乖，把門兒開開。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_6__tone_error.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_6__wrong_word",
+      "group": "wrong_word",
+      "gold": "no",
+      "vars": {
+        "target": "小兔子乖乖，把門兒開開。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_6__wrong_word.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_6__off_topic",
+      "group": "off_topic",
+      "gold": "no",
+      "vars": {
+        "target": "小兔子乖乖，把門兒開開。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_6__off_topic.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_8__correct",
+      "group": "correct",
+      "gold": "yes",
+      "vars": {
+        "target": "四是四，十是十，十四是十四。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_8__correct.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_8__correct_noisy",
+      "group": "correct_noisy",
+      "gold": "yes",
+      "vars": {
+        "target": "四是四，十是十，十四是十四。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_8__correct_noisy.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_8__tone_error",
+      "group": "tone_error",
+      "gold": "no",
+      "vars": {
+        "target": "四是四，十是十，十四是十四。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_8__tone_error.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_8__wrong_word",
+      "group": "wrong_word",
+      "gold": "no",
+      "vars": {
+        "target": "四是四，十是十，十四是十四。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_8__wrong_word.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_8__off_topic",
+      "group": "off_topic",
+      "gold": "no",
+      "vars": {
+        "target": "四是四，十是十，十四是十四。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_8__off_topic.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_10__correct",
+      "group": "correct",
+      "gold": "yes",
+      "vars": {
+        "target": "媽媽騎馬，馬慢，媽媽罵馬。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_10__correct.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_10__correct_noisy",
+      "group": "correct_noisy",
+      "gold": "yes",
+      "vars": {
+        "target": "媽媽騎馬，馬慢，媽媽罵馬。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_10__correct_noisy.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_10__tone_error",
+      "group": "tone_error",
+      "gold": "no",
+      "vars": {
+        "target": "媽媽騎馬，馬慢，媽媽罵馬。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_10__tone_error.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_10__wrong_word",
+      "group": "wrong_word",
+      "gold": "no",
+      "vars": {
+        "target": "媽媽騎馬，馬慢，媽媽罵馬。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_10__wrong_word.mp3"
+        }
+      ]
+    },
+    {
+      "id": "zh_10__off_topic",
+      "group": "off_topic",
+      "gold": "no",
+      "vars": {
+        "target": "媽媽騎馬，馬慢，媽媽罵馬。",
+        "lang": "Mandarin Chinese"
+      },
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/pron/padded/zh_10__off_topic.mp3"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,2262 @@
+{
+  "run_id": "20261122-main",
+  "created": "2026-11-21T19:52:35+00:00",
+  "models": [
+    "gemini-decision-1",
+    "bison-1",
+    "d1.2-ultra",
+    "drex-max",
+    "mammoth-1",
+    "pplx-decider-v1.3",
+    "d1.2",
+    "microsoft-decision-1.1",
+    "elephant-1",
+    "jev-1.14",
+    "pplx-decider-flash-v1.3",
+    "microsoft-decision-1",
+    "drex-v2.0",
+    "clef",
+    "gpt-6-luna-decisions",
+    "clef-omni",
+    "heygen-decision-1",
+    "heygen-decision-1-turbo",
+    "solar-decide",
+    "clef-flash",
+    "span-02",
+    "reflex",
+    "classify-1"
+  ],
+  "tasks": [
+    "audio-has-voice",
+    "audio-pron-ok",
+    "audio-scene-7class",
+    "audio-syllable-lu2",
+    "image-caption-match",
+    "image-color",
+    "image-count",
+    "image-ui-error",
+    "image-zh-char",
+    "image-zhuyin",
+    "zh-intent-routing",
+    "zh-scam-sms",
+    "zh-sentiment",
+    "agent-escalate",
+    "agent-judge",
+    "agent-tool-select"
+  ],
+  "limit": 0,
+  "budget_usd": 5.0,
+  "spent_usd": 0.09538,
+  "calls": 3984,
+  "stopped": "",
+  "cells": [
+    {
+      "model": "gemini-decision-1",
+      "task": "audio-has-voice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gemini-decision-1",
+      "task": "audio-pron-ok",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gemini-decision-1",
+      "task": "audio-scene-7class",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gemini-decision-1",
+      "task": "audio-syllable-lu2",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gemini-decision-1",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gemini-decision-1",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gemini-decision-1",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gemini-decision-1",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gemini-decision-1",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gemini-decision-1",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gemini-decision-1",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gemini-decision-1",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gemini-decision-1",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gemini-decision-1",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gemini-decision-1",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gemini-decision-1",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "bison-1",
+      "task": "audio-has-voice",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "bison-1",
+      "task": "audio-pron-ok",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "bison-1",
+      "task": "audio-scene-7class",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "bison-1",
+      "task": "audio-syllable-lu2",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "bison-1",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "bison-1",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "bison-1",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "bison-1",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "bison-1",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "bison-1",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "bison-1",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "bison-1",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "bison-1",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "bison-1",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "bison-1",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "bison-1",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "audio-has-voice",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "audio-pron-ok",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "audio-scene-7class",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "audio-syllable-lu2",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max",
+      "task": "audio-has-voice",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "drex-max",
+      "task": "audio-pron-ok",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "drex-max",
+      "task": "audio-scene-7class",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "drex-max",
+      "task": "audio-syllable-lu2",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "drex-max",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "mammoth-1",
+      "task": "audio-has-voice",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "mammoth-1",
+      "task": "audio-pron-ok",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "mammoth-1",
+      "task": "audio-scene-7class",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "mammoth-1",
+      "task": "audio-syllable-lu2",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "mammoth-1",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "mammoth-1",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "mammoth-1",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "mammoth-1",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "mammoth-1",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "mammoth-1",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "mammoth-1",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "mammoth-1",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "mammoth-1",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "mammoth-1",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "mammoth-1",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "mammoth-1",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "audio-has-voice",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "audio-pron-ok",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "audio-scene-7class",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "audio-syllable-lu2",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2",
+      "task": "audio-has-voice",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "d1.2",
+      "task": "audio-pron-ok",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "d1.2",
+      "task": "audio-scene-7class",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "d1.2",
+      "task": "audio-syllable-lu2",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "d1.2",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "audio-has-voice",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "audio-pron-ok",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "audio-scene-7class",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "audio-syllable-lu2",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "elephant-1",
+      "task": "audio-has-voice",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "elephant-1",
+      "task": "audio-pron-ok",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "elephant-1",
+      "task": "audio-scene-7class",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "elephant-1",
+      "task": "audio-syllable-lu2",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "elephant-1",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "elephant-1",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "elephant-1",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "elephant-1",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "elephant-1",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "elephant-1",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "elephant-1",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "elephant-1",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "elephant-1",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "elephant-1",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "elephant-1",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "elephant-1",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "jev-1.14",
+      "task": "audio-has-voice",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "jev-1.14",
+      "task": "audio-pron-ok",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "jev-1.14",
+      "task": "audio-scene-7class",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "jev-1.14",
+      "task": "audio-syllable-lu2",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "jev-1.14",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "jev-1.14",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "jev-1.14",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "jev-1.14",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "jev-1.14",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "jev-1.14",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "jev-1.14",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "jev-1.14",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "jev-1.14",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "jev-1.14",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "jev-1.14",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "jev-1.14",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "audio-has-voice",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "audio-pron-ok",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "audio-scene-7class",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "audio-syllable-lu2",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1",
+      "task": "audio-has-voice",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "microsoft-decision-1",
+      "task": "audio-pron-ok",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "microsoft-decision-1",
+      "task": "audio-scene-7class",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "microsoft-decision-1",
+      "task": "audio-syllable-lu2",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "microsoft-decision-1",
+      "task": "image-caption-match",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "microsoft-decision-1",
+      "task": "image-color",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "microsoft-decision-1",
+      "task": "image-count",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "microsoft-decision-1",
+      "task": "image-ui-error",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "microsoft-decision-1",
+      "task": "image-zh-char",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "microsoft-decision-1",
+      "task": "image-zhuyin",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "microsoft-decision-1",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-v2.0",
+      "task": "audio-has-voice",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "drex-v2.0",
+      "task": "audio-pron-ok",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "drex-v2.0",
+      "task": "audio-scene-7class",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "drex-v2.0",
+      "task": "audio-syllable-lu2",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "drex-v2.0",
+      "task": "image-caption-match",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "drex-v2.0",
+      "task": "image-color",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "drex-v2.0",
+      "task": "image-count",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "drex-v2.0",
+      "task": "image-ui-error",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "drex-v2.0",
+      "task": "image-zh-char",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "drex-v2.0",
+      "task": "image-zhuyin",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "drex-v2.0",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-v2.0",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-v2.0",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-v2.0",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-v2.0",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-v2.0",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef",
+      "task": "audio-has-voice",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "clef",
+      "task": "audio-pron-ok",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "clef",
+      "task": "audio-scene-7class",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "clef",
+      "task": "audio-syllable-lu2",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "clef",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "audio-has-voice",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "audio-pron-ok",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "audio-scene-7class",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "audio-syllable-lu2",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "audio-has-voice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "audio-pron-ok",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "audio-scene-7class",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "audio-syllable-lu2",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "audio-has-voice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "audio-pron-ok",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "audio-scene-7class",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "audio-syllable-lu2",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "audio-has-voice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "audio-pron-ok",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "audio-scene-7class",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "audio-syllable-lu2",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "solar-decide",
+      "task": "audio-has-voice",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "solar-decide",
+      "task": "audio-pron-ok",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "solar-decide",
+      "task": "audio-scene-7class",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "solar-decide",
+      "task": "audio-syllable-lu2",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "solar-decide",
+      "task": "image-caption-match",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "solar-decide",
+      "task": "image-color",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "solar-decide",
+      "task": "image-count",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "solar-decide",
+      "task": "image-ui-error",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "solar-decide",
+      "task": "image-zh-char",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "solar-decide",
+      "task": "image-zhuyin",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "solar-decide",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "solar-decide",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "solar-decide",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "solar-decide",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "solar-decide",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "solar-decide",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-flash",
+      "task": "audio-has-voice",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "clef-flash",
+      "task": "audio-pron-ok",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "clef-flash",
+      "task": "audio-scene-7class",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "clef-flash",
+      "task": "audio-syllable-lu2",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "clef-flash",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-flash",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-flash",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-flash",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-flash",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-flash",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-flash",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-flash",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-flash",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-flash",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-flash",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-flash",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-02",
+      "task": "audio-has-voice",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "span-02",
+      "task": "audio-pron-ok",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "span-02",
+      "task": "audio-scene-7class",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "span-02",
+      "task": "audio-syllable-lu2",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "span-02",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-02",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-02",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-02",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-02",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-02",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-02",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-02",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-02",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-02",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-02",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-02",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "reflex",
+      "task": "audio-has-voice",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "reflex",
+      "task": "audio-pron-ok",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "reflex",
+      "task": "audio-scene-7class",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "reflex",
+      "task": "audio-syllable-lu2",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "reflex",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "reflex",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "reflex",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "reflex",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "reflex",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "reflex",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "reflex",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "reflex",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "reflex",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "reflex",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "reflex",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "reflex",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "classify-1",
+      "task": "audio-has-voice",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "classify-1",
+      "task": "audio-pron-ok",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "classify-1",
+      "task": "audio-scene-7class",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "classify-1",
+      "task": "audio-syllable-lu2",
+      "run": false,
+      "reason": "modality:audio=rejected"
+    },
+    {
+      "model": "classify-1",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "classify-1",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "classify-1",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "classify-1",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "classify-1",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "classify-1",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "classify-1",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "classify-1",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "classify-1",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "classify-1",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "classify-1",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "classify-1",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    }
+  ]
+}

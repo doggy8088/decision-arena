@@ -1,0 +1,475 @@
+{
+  "id": "image-zh-char",
+  "scenario": "image",
+  "title": "形近繁中字辨識",
+  "description": "單一大字，選項是形近字（未／末、己／已／巳、戊／戌／戍……）。每個字都輪流當正解（正解平均分布在各選項位置），測細部筆畫的視覺辨識。",
+  "question": {
+    "type": "choice",
+    "instructions": "Which Traditional Chinese character is shown in this image?",
+    "options": {
+      "未": "the character 「未」",
+      "末": "the character 「末」",
+      "本": "the character 「本」",
+      "朱": "the character 「朱」"
+    }
+  },
+  "items": [
+    {
+      "id": "g0_0",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g0_0.png"
+        }
+      ],
+      "gold": "未",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "未": "the character 「未」",
+          "末": "the character 「末」",
+          "本": "the character 「本」",
+          "朱": "the character 「朱」"
+        }
+      }
+    },
+    {
+      "id": "g0_1",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g0_1.png"
+        }
+      ],
+      "gold": "末",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "未": "the character 「未」",
+          "末": "the character 「末」",
+          "本": "the character 「本」",
+          "朱": "the character 「朱」"
+        }
+      }
+    },
+    {
+      "id": "g0_2",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g0_2.png"
+        }
+      ],
+      "gold": "本",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "未": "the character 「未」",
+          "末": "the character 「末」",
+          "本": "the character 「本」",
+          "朱": "the character 「朱」"
+        }
+      }
+    },
+    {
+      "id": "g0_3",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g0_3.png"
+        }
+      ],
+      "gold": "朱",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "未": "the character 「未」",
+          "末": "the character 「末」",
+          "本": "the character 「本」",
+          "朱": "the character 「朱」"
+        }
+      }
+    },
+    {
+      "id": "g1_0",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g1_0.png"
+        }
+      ],
+      "gold": "己",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "己": "the character 「己」",
+          "已": "the character 「已」",
+          "巳": "the character 「巳」"
+        }
+      }
+    },
+    {
+      "id": "g1_1",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g1_1.png"
+        }
+      ],
+      "gold": "已",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "己": "the character 「己」",
+          "已": "the character 「已」",
+          "巳": "the character 「巳」"
+        }
+      }
+    },
+    {
+      "id": "g1_2",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g1_2.png"
+        }
+      ],
+      "gold": "巳",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "己": "the character 「己」",
+          "已": "the character 「已」",
+          "巳": "the character 「巳」"
+        }
+      }
+    },
+    {
+      "id": "g2_0",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g2_0.png"
+        }
+      ],
+      "gold": "天",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "天": "the character 「天」",
+          "夭": "the character 「夭」",
+          "夫": "the character 「夫」",
+          "失": "the character 「失」"
+        }
+      }
+    },
+    {
+      "id": "g2_1",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g2_1.png"
+        }
+      ],
+      "gold": "夭",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "天": "the character 「天」",
+          "夭": "the character 「夭」",
+          "夫": "the character 「夫」",
+          "失": "the character 「失」"
+        }
+      }
+    },
+    {
+      "id": "g2_2",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g2_2.png"
+        }
+      ],
+      "gold": "夫",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "天": "the character 「天」",
+          "夭": "the character 「夭」",
+          "夫": "the character 「夫」",
+          "失": "the character 「失」"
+        }
+      }
+    },
+    {
+      "id": "g2_3",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g2_3.png"
+        }
+      ],
+      "gold": "失",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "天": "the character 「天」",
+          "夭": "the character 「夭」",
+          "夫": "the character 「夫」",
+          "失": "the character 「失」"
+        }
+      }
+    },
+    {
+      "id": "g3_0",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g3_0.png"
+        }
+      ],
+      "gold": "土",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "土": "the character 「土」",
+          "士": "the character 「士」",
+          "干": "the character 「干」",
+          "千": "the character 「千」"
+        }
+      }
+    },
+    {
+      "id": "g3_1",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g3_1.png"
+        }
+      ],
+      "gold": "士",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "土": "the character 「土」",
+          "士": "the character 「士」",
+          "干": "the character 「干」",
+          "千": "the character 「千」"
+        }
+      }
+    },
+    {
+      "id": "g3_2",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g3_2.png"
+        }
+      ],
+      "gold": "干",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "土": "the character 「土」",
+          "士": "the character 「士」",
+          "干": "the character 「干」",
+          "千": "the character 「千」"
+        }
+      }
+    },
+    {
+      "id": "g3_3",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g3_3.png"
+        }
+      ],
+      "gold": "千",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "土": "the character 「土」",
+          "士": "the character 「士」",
+          "干": "the character 「干」",
+          "千": "the character 「千」"
+        }
+      }
+    },
+    {
+      "id": "g4_0",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g4_0.png"
+        }
+      ],
+      "gold": "日",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "日": "the character 「日」",
+          "曰": "the character 「曰」",
+          "目": "the character 「目」",
+          "旦": "the character 「旦」"
+        }
+      }
+    },
+    {
+      "id": "g4_1",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g4_1.png"
+        }
+      ],
+      "gold": "曰",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "日": "the character 「日」",
+          "曰": "the character 「曰」",
+          "目": "the character 「目」",
+          "旦": "the character 「旦」"
+        }
+      }
+    },
+    {
+      "id": "g4_2",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g4_2.png"
+        }
+      ],
+      "gold": "目",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "日": "the character 「日」",
+          "曰": "the character 「曰」",
+          "目": "the character 「目」",
+          "旦": "the character 「旦」"
+        }
+      }
+    },
+    {
+      "id": "g4_3",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g4_3.png"
+        }
+      ],
+      "gold": "旦",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "日": "the character 「日」",
+          "曰": "the character 「曰」",
+          "目": "the character 「目」",
+          "旦": "the character 「旦」"
+        }
+      }
+    },
+    {
+      "id": "g5_0",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g5_0.png"
+        }
+      ],
+      "gold": "戊",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "戊": "the character 「戊」",
+          "戌": "the character 「戌」",
+          "戍": "the character 「戍」",
+          "戎": "the character 「戎」"
+        }
+      }
+    },
+    {
+      "id": "g5_1",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g5_1.png"
+        }
+      ],
+      "gold": "戌",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "戊": "the character 「戊」",
+          "戌": "the character 「戌」",
+          "戍": "the character 「戍」",
+          "戎": "the character 「戎」"
+        }
+      }
+    },
+    {
+      "id": "g5_2",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g5_2.png"
+        }
+      ],
+      "gold": "戍",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "戊": "the character 「戊」",
+          "戌": "the character 「戌」",
+          "戍": "the character 「戍」",
+          "戎": "the character 「戎」"
+        }
+      }
+    },
+    {
+      "id": "g5_3",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zh_char/g5_3.png"
+        }
+      ],
+      "gold": "戎",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Traditional Chinese character is shown in this image?",
+        "options": {
+          "戊": "the character 「戊」",
+          "戌": "the character 「戌」",
+          "戍": "the character 「戍」",
+          "戎": "the character 「戎」"
+        }
+      }
+    }
+  ]
+}

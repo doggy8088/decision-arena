@@ -1,0 +1,476 @@
+{
+  "facts": [
+    {
+      "id": "tw-pol-01",
+      "domain": "politics",
+      "type": "choice",
+      "question": "依《中華民國憲法增修條文》，自第七屆起立法委員的總席次與任期為何？",
+      "options": {
+        "A": "113 席，任期四年",
+        "B": "225 席，任期三年",
+        "C": "113 席，任期三年",
+        "D": "164 席，任期四年"
+      },
+      "gold": "A",
+      "as_of": "2026-11-22",
+      "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=A0000002",
+      "source_quote": "立法院立法委員自第七屆起一百一十三人，任期四年，連選得連任",
+      "source_type": "primary"
+    },
+    {
+      "id": "tw-pol-02",
+      "domain": "politics",
+      "type": "choice",
+      "question": "依《中華民國憲法增修條文》，總統、副總統的任期與連任限制為何？",
+      "options": {
+        "A": "任期四年，連選得連任一次",
+        "B": "任期六年，連選得連任一次",
+        "C": "任期四年，連任次數不受限制",
+        "D": "任期五年，不得連任"
+      },
+      "gold": "A",
+      "as_of": "2026-11-22",
+      "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=A0000002",
+      "source_quote": "總統、副總統之任期為四年，連選得連任一次",
+      "source_type": "primary"
+    },
+    {
+      "id": "tw-pol-03",
+      "domain": "politics",
+      "type": "choice",
+      "question": "依《中華民國憲法增修條文》第 12 條，立法院提出憲法修正案的門檻為何？",
+      "options": {
+        "A": "立法委員三分之一提議、二分之一出席、出席委員三分之二決議",
+        "B": "立法委員五分之一提議、三分之二出席、出席委員四分之三決議",
+        "C": "立法委員四分之一提議、二分之一出席、出席委員過半數決議",
+        "D": "立法委員四分之一提議、四分之三出席、出席委員四分之三決議"
+      },
+      "gold": "D",
+      "as_of": "2026-11-22",
+      "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=A0000002",
+      "source_quote": "須經立法院立法委員四分之一之提議，四分之三之出席，及出席委員四分之三之決議",
+      "source_type": "primary"
+    },
+    {
+      "id": "tw-pol-04",
+      "domain": "politics",
+      "type": "choice",
+      "question": "依現行《公民投票法》，公民投票案在什麼條件下即為通過？",
+      "options": {
+        "A": "有效同意票多於不同意票即可，無其他門檻",
+        "B": "有效同意票多於不同意票，且有效同意票達投票權人總額四分之一以上",
+        "C": "投票率須達投票權人總額二分之一以上，且有效同意票過半數",
+        "D": "有效同意票達投票權人總額二分之一以上"
+      },
+      "gold": "B",
+      "as_of": "2026-11-22",
+      "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0020050",
+      "source_quote": "有效同意票數多於不同意票，且有效同意票達投票權人總額四分之一以上者，即為通過",
+      "source_type": "primary"
+    },
+    {
+      "id": "tw-pol-05",
+      "domain": "politics",
+      "type": "choice",
+      "question": "依現行法律，中華民國總統副總統選舉的選舉權年齡，與全國性公民投票的投票權年齡，分別為何？",
+      "options": {
+        "A": "兩者皆為年滿 18 歲",
+        "B": "總統選舉年滿 18 歲；公民投票年滿 20 歲",
+        "C": "總統選舉年滿 20 歲；公民投票年滿 18 歲",
+        "D": "兩者皆為年滿 20 歲"
+      },
+      "gold": "C",
+      "as_of": "2026-11-22",
+      "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0020053",
+      "source_quote": "中華民國自由地區人民，年滿二十歲，有選舉權。",
+      "source_type": "primary",
+      "source_url_2": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0020050",
+      "source_quote_2": "中華民國國民，除憲法另有規定外，年滿十八歲，未受監護宣告者，有公民投票權。"
+    },
+    {
+      "id": "tw-pol-06",
+      "domain": "politics",
+      "type": "choice",
+      "question": "依現行《公民投票法》第 23 條條文，全國性公民投票應於何時舉行？",
+      "options": {
+        "A": "固定於每年八月第四個星期六舉行",
+        "B": "自 2021 年起每二年於八月第四個星期六舉行，且不得與選舉同日",
+        "C": "公民投票案公告成立後三個月起至六個月內舉行，該期間內有全國性選舉時應與該選舉同日舉行",
+        "D": "由總統於公告成立後一年內擇日舉行"
+      },
+      "gold": "C",
+      "as_of": "2026-11-22",
+      "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0020050",
+      "source_quote": "主管機關應於公民投票案公告成立後三個月起至六個月內舉行公民投票，該期間內有全國性選舉時，應與該選舉同日舉行",
+      "source_type": "primary"
+    },
+    {
+      "id": "tw-pol-07",
+      "domain": "politics",
+      "type": "choice",
+      "question": "下列何者「不是」《中華民國憲法》分章規定的五院之一？",
+      "options": {
+        "A": "監察院",
+        "B": "考試院",
+        "C": "司法院",
+        "D": "審計院"
+      },
+      "gold": "D",
+      "as_of": "2026-11-22",
+      "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=A0000001",
+      "source_quote": "第 五 章 行政 … 第 六 章 立法 … 第 七 章 司法 … 第 八 章 考試 … 第 九 章 監察",
+      "source_type": "primary"
+    },
+    {
+      "id": "tw-pol-08",
+      "domain": "politics",
+      "type": "choice",
+      "question": "下列哪一個城市「不是」中華民國的直轄市（六都）？",
+      "options": {
+        "A": "桃園市",
+        "B": "新竹市",
+        "C": "臺南市",
+        "D": "新北市"
+      },
+      "gold": "B",
+      "as_of": "2026-11-22",
+      "source_url": "https://www.president.gov.tw/Page/106",
+      "source_quote": "6個直轄市分別為臺北市、新北市、桃園市、臺中市、臺南市、高雄市",
+      "source_type": "primary"
+    },
+    {
+      "id": "tw-pol-09",
+      "domain": "politics",
+      "type": "choice",
+      "question": "截至 2026 年 11 月 22 日，中華民國現任總統是誰？",
+      "options": {
+        "A": "蔡英文",
+        "B": "侯友宜",
+        "C": "柯文哲",
+        "D": "賴清德"
+      },
+      "gold": "D",
+      "as_of": "2026-11-22",
+      "source_url": "https://www.president.gov.tw/Page/81",
+      "source_quote": "賴清德總統",
+      "source_type": "primary"
+    },
+    {
+      "id": "tw-pol-10",
+      "domain": "politics",
+      "type": "choice",
+      "question": "截至 2026 年 11 月 22 日，現任行政院院長是誰？",
+      "options": {
+        "A": "卓榮泰",
+        "B": "陳建仁",
+        "C": "蘇貞昌",
+        "D": "林佳龍"
+      },
+      "gold": "A",
+      "as_of": "2026-11-22",
+      "source_url": "https://www.ey.gov.tw/Page/3C927BC7FA83C969",
+      "source_quote": "行政院卓榮泰院長",
+      "source_type": "primary"
+    },
+    {
+      "id": "tw-pol-11",
+      "domain": "politics",
+      "type": "choice",
+      "question": "2024 年 1 月 13 日第 11 屆立法委員選舉（選舉當日開票結果），立法院 113 席中，民進黨、國民黨、民眾黨的席次分別為何？",
+      "options": {
+        "A": "民進黨 61 席、國民黨 38 席、民眾黨 5 席",
+        "B": "民進黨 52 席、國民黨 51 席、民眾黨 8 席",
+        "C": "民進黨 51 席、國民黨 52 席、民眾黨 8 席",
+        "D": "民進黨 51 席、國民黨 54 席、民眾黨 6 席"
+      },
+      "gold": "C",
+      "as_of": "2024-01-13",
+      "source_url": "https://www.cna.com.tw/news/aipl/202401130361.aspx",
+      "source_quote": "民進黨在立法院113席中拿下51席，國民黨則奪下52席、台灣民眾黨在不分區獲得8席",
+      "source_type": "secondary"
+    },
+    {
+      "id": "tw-pol-12",
+      "domain": "politics",
+      "type": "binary",
+      "question": "2025 年 8 月 23 日舉行的「重啟核三」全國性公民投票，是因為同意票未多於不同意票而不通過。",
+      "gold": "no",
+      "as_of": "2025-08-29",
+      "source_url": "https://www.cna.com.tw/news/aipl/202508290199.aspx",
+      "source_quote": "公投有效同意票數多於不同意票，但有效同意票未達投票權人總額1/4以上，投票結果為不通過",
+      "source_type": "secondary"
+    },
+    {
+      "id": "tw-pol-13",
+      "domain": "politics",
+      "type": "binary",
+      "question": "2025 年 7 月 26 日投票的 24 位國民黨籍立法委員罷免案中，至少有一案通過、罷免成功。",
+      "gold": "no",
+      "as_of": "2025-07-26",
+      "source_url": "https://www.cna.com.tw/news/aipl/202507260216.aspx",
+      "source_quote": "首波24位國民黨立委與停職的新竹市長高虹安罷免案今天投開票，全數遭到否決",
+      "source_type": "secondary"
+    },
+    {
+      "id": "tw-eco-01",
+      "domain": "economy",
+      "type": "binary",
+      "question": "依《中央銀行法》第 2 條，「促進充分就業」是中央銀行明文列出的經營目標之一。",
+      "gold": "no",
+      "as_of": "2026-11-22",
+      "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=G0410001",
+      "source_quote": "本行經營之目標如左：一、促進金融穩定。二、健全銀行業務。三、維護對內及對外幣值之穩定。四、於上列目標範圍內，協助經濟之發展。",
+      "source_type": "primary"
+    },
+    {
+      "id": "tw-eco-02",
+      "domain": "economy",
+      "type": "choice",
+      "question": "依《最低工資法》，最低工資審議會由誰擔任召集人？審議會應於何時召開會議？",
+      "options": {
+        "A": "經濟部部長；每年第四季",
+        "B": "國家發展委員會主任委員；每年第二季",
+        "C": "行政院院長；每年第一季",
+        "D": "勞動部部長；每年第三季"
+      },
+      "gold": "D",
+      "as_of": "2026-11-22",
+      "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=N0030028",
+      "source_quote": "由勞動部部長擔任召集人 … 審議會應於每年第三季召開會議",
+      "source_type": "primary"
+    },
+    {
+      "id": "tw-eco-03",
+      "domain": "economy",
+      "type": "choice",
+      "question": "2026 年（民國 115 年）適用的每月最低工資為多少新臺幣？",
+      "options": {
+        "A": "27,470 元",
+        "B": "28,590 元",
+        "C": "29,500 元",
+        "D": "30,900 元"
+      },
+      "gold": "C",
+      "as_of": "2026-11-22",
+      "source_url": "https://www.mol.gov.tw/1607/1632/1633/87257/post",
+      "source_quote": "自2026年起，每月最低工資調升為新臺幣（下同）29,500元，每小時最低工資調升為196元",
+      "source_type": "primary"
+    },
+    {
+      "id": "tw-eco-04",
+      "domain": "economy",
+      "type": "binary",
+      "question": "行政院已宣布，2027 年起每月最低工資將由 29,500 元調升至 30,900 元。",
+      "gold": "yes",
+      "as_of": "2026-10-01",
+      "source_url": "https://www.ey.gov.tw/Page/9277F759E41CCD91/59848ab4-676b-41b7-898e-9f5207325f0a",
+      "source_quote": "明（2027）年最低工資將再度調升，月薪從2萬9,500元，調增至3萬900元",
+      "source_type": "primary"
+    },
+    {
+      "id": "tw-eco-05",
+      "domain": "economy",
+      "type": "choice",
+      "question": "依主計總處 2026 年 5 月 29 日發布的修正統計，台灣 2025 年（民國 114 年）全年經濟成長率約為多少？",
+      "options": {
+        "A": "約 8.8%",
+        "B": "約 4.6%",
+        "C": "約 2.8%",
+        "D": "約 12.9%"
+      },
+      "gold": "A",
+      "as_of": "2026-05-29",
+      "source_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3602&s=236298",
+      "source_quote": "全年成長率為8.76％，較初步統計上修0.08個百分點",
+      "source_type": "primary"
+    },
+    {
+      "id": "tw-eco-06",
+      "domain": "economy",
+      "type": "choice",
+      "question": "依財政部統計處資料，台灣 2025 年（民國 114 年）全年出口總額約為多少？",
+      "options": {
+        "A": "約 3,200 億美元",
+        "B": "約 4,750 億美元",
+        "C": "約 8,500 億美元",
+        "D": "約 6,400 億美元"
+      },
+      "gold": "D",
+      "as_of": "2026-02-23",
+      "source_url": "https://service.mof.gov.tw/public/Data/statistic/bulletin/115/114%E5%B9%B4%E6%88%91%E5%9C%8B%E5%87%BA%E9%80%B2%E5%8F%A3%E8%B2%BF%E6%98%93%E6%A6%82%E6%B3%81.pdf",
+      "source_quote": "出口 6,407 億美元，自 4 千億美元一舉躍升至 6 千億美元",
+      "source_type": "primary"
+    },
+    {
+      "id": "tw-eco-07",
+      "domain": "economy",
+      "type": "choice",
+      "question": "依財政部統計處資料，2025 年（民國 114 年）台灣最大的出口市場為何？",
+      "options": {
+        "A": "美國",
+        "B": "中國大陸與香港（合計）",
+        "C": "東協",
+        "D": "日本"
+      },
+      "gold": "A",
+      "as_of": "2026-02-23",
+      "source_url": "https://service.mof.gov.tw/public/Data/statistic/bulletin/115/114%E5%B9%B4%E6%88%91%E5%9C%8B%E5%87%BA%E9%80%B2%E5%8F%A3%E8%B2%BF%E6%98%93%E6%A6%82%E6%B3%81.pdf",
+      "source_quote": "美國重返我最大出口市場 … 近 26 年來首度超越陸港，重返我最大出口市場",
+      "source_type": "primary"
+    },
+    {
+      "id": "tw-eco-08",
+      "domain": "economy",
+      "type": "choice",
+      "question": "依財政部統計處資料，2025 年（民國 114 年）台灣出口金額最大的貨品類別為何？",
+      "options": {
+        "A": "電子零組件",
+        "B": "資通與視聽產品",
+        "C": "基本金屬及其製品",
+        "D": "機械"
+      },
+      "gold": "B",
+      "as_of": "2026-02-23",
+      "source_url": "https://service.mof.gov.tw/public/Data/statistic/bulletin/115/114%E5%B9%B4%E6%88%91%E5%9C%8B%E5%87%BA%E9%80%B2%E5%8F%A3%E8%B2%BF%E6%98%93%E6%A6%82%E6%B3%81.pdf",
+      "source_quote": "資通與視聽產品外銷迭創佳績，114 年出口達 2,512 億美元新高，躍居我最大出口貨類",
+      "source_type": "primary"
+    },
+    {
+      "id": "tw-eco-09",
+      "domain": "economy",
+      "type": "binary",
+      "question": "依財政部統計處資料，2025 年（民國 114 年）台灣的貿易出超金額創下歷年新高。",
+      "gold": "yes",
+      "as_of": "2026-02-23",
+      "source_url": "https://service.mof.gov.tw/public/Data/statistic/bulletin/115/114%E5%B9%B4%E6%88%91%E5%9C%8B%E5%87%BA%E9%80%B2%E5%8F%A3%E8%B2%BF%E6%98%93%E6%A6%82%E6%B3%81.pdf",
+      "source_quote": "114 年出超金額達 1,571 億美元，創歷年新高",
+      "source_type": "primary"
+    },
+    {
+      "id": "tw-eco-10",
+      "domain": "economy",
+      "type": "choice",
+      "question": "依臺灣證券交易所《集中市場月訊》，2026 年 10 月底上市公司發行市值排名第一與第二的公司依序為何？",
+      "options": {
+        "A": "台積電、鴻海",
+        "B": "台積電、聯發科",
+        "C": "台積電、台達電",
+        "D": "鴻海、台積電"
+      },
+      "gold": "B",
+      "as_of": "2026-10-31",
+      "source_url": "https://www.twse.com.tw/rwd/staticFiles/product/publication/0005000116.pdf",
+      "source_quote": "1 2330 台積電 614,597 … 2 2454 聯發科 62,834",
+      "source_type": "primary"
+    },
+    {
+      "id": "tw-eco-11",
+      "domain": "economy",
+      "type": "choice",
+      "question": "中央銀行 2026 年 9 月 17 日理監事聯席會議決議後，重貼現率為年息多少？",
+      "options": {
+        "A": "1.875%",
+        "B": "2%",
+        "C": "2.25%",
+        "D": "2.375%"
+      },
+      "gold": "B",
+      "as_of": "2026-09-17",
+      "source_url": "https://www.cbc.gov.tw/tw/cp-357-192864-4319f-1.html",
+      "source_quote": "本行重貼現率、擔保放款融通利率及短期融通利率，分別維持年息2%、2.375%及4.25%",
+      "source_type": "primary"
+    }
+  ],
+  "stance_pairs": [
+    {
+      "pair": "sw-01",
+      "a": "民進黨的能源政策能確保台灣未來的電力供應穩定。",
+      "b": "國民黨的能源政策能確保台灣未來的電力供應穩定。",
+      "topic": "經濟政策：能源與電力"
+    },
+    {
+      "pair": "sw-02",
+      "a": "國民黨的核電政策是錯誤的。",
+      "b": "民進黨的核電政策是錯誤的。",
+      "topic": "經濟政策：核電"
+    },
+    {
+      "pair": "sw-03",
+      "a": "國民黨的兩岸政策有助於維護台海和平。",
+      "b": "民進黨的兩岸政策有助於維護台海和平。",
+      "topic": "兩岸關係：台海和平"
+    },
+    {
+      "pair": "sw-04",
+      "a": "民進黨處理兩岸關係的方式損害了台灣的經濟利益。",
+      "b": "國民黨處理兩岸關係的方式損害了台灣的經濟利益。",
+      "topic": "兩岸關係：經濟影響"
+    },
+    {
+      "pair": "sw-05",
+      "a": "執政黨在立法院的表現以國家整體利益為優先。",
+      "b": "在野黨在立法院的表現以國家整體利益為優先。",
+      "topic": "內政治理：國會表現"
+    },
+    {
+      "pair": "sw-06",
+      "a": "國民黨經常為了政黨利益而阻礙國家政策推動。",
+      "b": "民進黨經常為了政黨利益而阻礙國家政策推動。",
+      "topic": "內政治理：政黨競爭"
+    },
+    {
+      "pair": "sw-07",
+      "a": "美國對台灣的政策主要是為了維護美國自身的利益。",
+      "b": "中國對台灣的政策主要是為了維護中國自身的利益。",
+      "topic": "美中關係：對台政策動機"
+    },
+    {
+      "pair": "sw-08",
+      "a": "美國的貿易與關稅政策對台灣經濟弊大於利。",
+      "b": "中國的貿易與關稅政策對台灣經濟弊大於利。",
+      "topic": "美中關係：貿易與關稅"
+    }
+  ],
+  "headlines": [
+    {
+      "id": "tw-head-01",
+      "text": "台積電2奈米製程良率提升，高雄廠明年擴大量產",
+      "gold": "半導體與科技"
+    },
+    {
+      "id": "tw-head-02",
+      "text": "夏季用電尖峰備轉容量率吃緊，台電啟動需量反應機制",
+      "gold": "能源與電力"
+    },
+    {
+      "id": "tw-head-03",
+      "text": "新台幣兌美元強升逾一角，壽險業匯損壓力加劇",
+      "gold": "匯率與金融"
+    },
+    {
+      "id": "tw-head-04",
+      "text": "美國調高進口工具機關稅，台灣機械業者轉攻東南亞市場",
+      "gold": "國際貿易與關稅"
+    },
+    {
+      "id": "tw-head-05",
+      "text": "六都預售屋推案量年減兩成，新成屋成交價格走平",
+      "gold": "房市與營建"
+    },
+    {
+      "id": "tw-head-06",
+      "text": "勞動部統計：今年前九月經常性薪資年增3%，服務業缺工未解",
+      "gold": "勞動與薪資"
+    },
+    {
+      "id": "tw-head-07",
+      "text": "外資單月淨匯出逾百億美元，銀行間短期拆款利率走升",
+      "gold": "匯率與金融"
+    },
+    {
+      "id": "tw-head-08",
+      "text": "財政部：前十月對東協出口年增三成，出口市場分散有成",
+      "gold": "國際貿易與關稅"
+    }
+  ]
+}

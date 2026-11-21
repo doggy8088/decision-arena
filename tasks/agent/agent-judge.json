@@ -1,0 +1,138 @@
+{
+  "id": "agent-judge",
+  "scenario": "agent",
+  "title": "LLM-as-judge：回答是否正確且切題",
+  "description": "6 個問題 × 正確回答／錯誤回答（事實錯或答非所問）。測決策模型當自動評分器的可靠度。",
+  "question": {
+    "type": "binary",
+    "instructions": "以下回答是否正確且直接回答了問題？"
+  },
+  "items": [
+    {
+      "id": "j1",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "問題：台灣的國際電話國碼是多少？\n回答：台灣的國碼是 +886。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "j2",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "問題：台灣的國際電話國碼是多少？\n回答：台灣的國碼是 +86。"
+        }
+      ],
+      "gold": "no",
+      "group": "factual"
+    },
+    {
+      "id": "j3",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "問題：Python 中如何反轉一個 list？\n回答：可以用 lst.reverse() 原地反轉，或用 lst[::-1] 產生新的反轉串列。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "j4",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "問題：Python 中如何反轉一個 list？\n回答：使用 lst.sort(reverse=False) 即可反轉。"
+        }
+      ],
+      "gold": "no",
+      "group": "factual"
+    },
+    {
+      "id": "j5",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "問題：水的沸點在一大氣壓下是幾度？\n回答：攝氏 100 度。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "j6",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "問題：水的沸點在一大氣壓下是幾度？\n回答：水是由氫和氧組成的化合物，在生活中非常重要。"
+        }
+      ],
+      "gold": "no",
+      "group": "off_topic"
+    },
+    {
+      "id": "j7",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "問題：HTTP 狀態碼 404 代表什麼？\n回答：代表伺服器找不到請求的資源（Not Found）。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "j8",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "問題：HTTP 狀態碼 404 代表什麼？\n回答：代表伺服器內部錯誤。"
+        }
+      ],
+      "gold": "no",
+      "group": "factual"
+    },
+    {
+      "id": "j9",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "問題：請用一句話說明什麼是 API。\n回答：API 是讓不同軟體之間依照約定格式互相溝通的介面。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "j10",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "問題：請用一句話說明什麼是 API。\n回答：這是一個很好的問題！API 有很多種，涉及很多面向，值得深入探討，我們下次再聊。"
+        }
+      ],
+      "gold": "no",
+      "group": "off_topic"
+    },
+    {
+      "id": "j11",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "問題：1 公里等於幾公尺？\n回答：1,000 公尺。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "j12",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "問題：1 公里等於幾公尺？\n回答：100 公尺。"
+        }
+      ],
+      "gold": "no",
+      "group": "factual"
+    }
+  ]
+}

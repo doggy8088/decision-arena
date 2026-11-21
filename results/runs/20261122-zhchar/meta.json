@@ -1,0 +1,191 @@
+{
+  "run_id": "20261122-zhchar",
+  "created": "2026-11-21T20:05:35+00:00",
+  "models": [
+    "gemini-decision-1",
+    "bison-1",
+    "d1.2-ultra",
+    "drex-max",
+    "mammoth-1",
+    "pplx-decider-v1.3",
+    "d1.2",
+    "microsoft-decision-1.1",
+    "elephant-1",
+    "jev-1.14",
+    "pplx-decider-flash-v1.3",
+    "clef",
+    "gpt-6-luna-decisions",
+    "clef-omni",
+    "heygen-decision-1",
+    "heygen-decision-1-turbo",
+    "clef-flash",
+    "span-02",
+    "reflex",
+    "classify-1",
+    "pplx-decider-v1.2",
+    "pplx-decider-flash-v1.2",
+    "drex-max-finance",
+    "groundhog-1",
+    "joey-1"
+  ],
+  "tasks": [
+    "image-zh-char"
+  ],
+  "limit": 0,
+  "budget_usd": 1.0,
+  "spent_usd": 0.011423,
+  "calls": 275,
+  "stopped": "",
+  "cells": [
+    {
+      "model": "gemini-decision-1",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "bison-1",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "mammoth-1",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "elephant-1",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "jev-1.14",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-flash",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-02",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "reflex",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "classify-1",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.2",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.2",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max-finance",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "groundhog-1",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "joey-1",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    }
+  ]
+}

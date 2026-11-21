@@ -1,0 +1,1098 @@
+{
+  "run_id": "20261122-more",
+  "created": "2026-11-21T20:04:31+00:00",
+  "models": [
+    "pplx-decider-v1.2",
+    "pplx-decider-flash-v1.2",
+    "drex-max-finance",
+    "groundhog-1",
+    "joey-1",
+    "solar-decide-flash",
+    "span-01",
+    "span-01-lite",
+    "tev1-4b-experimental",
+    "kev-4b",
+    "decisions-fast"
+  ],
+  "tasks": [
+    "image-caption-match",
+    "image-color",
+    "image-count",
+    "image-ui-error",
+    "image-zh-char",
+    "image-zhuyin",
+    "zh-intent-routing",
+    "zh-scam-sms",
+    "zh-sentiment",
+    "agent-escalate",
+    "agent-judge",
+    "agent-tool-select",
+    "tw-econ-headline",
+    "tw-facts-binary",
+    "tw-facts-choice",
+    "tw-stance-swap"
+  ],
+  "limit": 0,
+  "budget_usd": 2.0,
+  "spent_usd": 0.152547,
+  "calls": 1880,
+  "stopped": "",
+  "cells": [
+    {
+      "model": "pplx-decider-v1.2",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.2",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.2",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.2",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.2",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.2",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.2",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.2",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.2",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.2",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.2",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.2",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.2",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.2",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.2",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.2",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.2",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.2",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.2",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.2",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.2",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.2",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.2",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.2",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.2",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.2",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.2",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.2",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.2",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.2",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.2",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.2",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max-finance",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max-finance",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max-finance",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max-finance",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max-finance",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max-finance",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max-finance",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max-finance",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max-finance",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max-finance",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max-finance",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max-finance",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max-finance",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max-finance",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max-finance",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max-finance",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "groundhog-1",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "groundhog-1",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "groundhog-1",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "groundhog-1",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "groundhog-1",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "groundhog-1",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "groundhog-1",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "groundhog-1",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "groundhog-1",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "groundhog-1",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "groundhog-1",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "groundhog-1",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "groundhog-1",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "groundhog-1",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "groundhog-1",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "groundhog-1",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "joey-1",
+      "task": "image-caption-match",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "joey-1",
+      "task": "image-color",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "joey-1",
+      "task": "image-count",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "joey-1",
+      "task": "image-ui-error",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "joey-1",
+      "task": "image-zh-char",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "joey-1",
+      "task": "image-zhuyin",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "joey-1",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "joey-1",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "joey-1",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "joey-1",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "joey-1",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "joey-1",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "joey-1",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "joey-1",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "joey-1",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "joey-1",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "solar-decide-flash",
+      "task": "image-caption-match",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "solar-decide-flash",
+      "task": "image-color",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "solar-decide-flash",
+      "task": "image-count",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "solar-decide-flash",
+      "task": "image-ui-error",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "solar-decide-flash",
+      "task": "image-zh-char",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "solar-decide-flash",
+      "task": "image-zhuyin",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "solar-decide-flash",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "solar-decide-flash",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "solar-decide-flash",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "solar-decide-flash",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "solar-decide-flash",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "solar-decide-flash",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "solar-decide-flash",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "solar-decide-flash",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "solar-decide-flash",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "solar-decide-flash",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-01",
+      "task": "image-caption-match",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "span-01",
+      "task": "image-color",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "span-01",
+      "task": "image-count",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "span-01",
+      "task": "image-ui-error",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "span-01",
+      "task": "image-zh-char",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "span-01",
+      "task": "image-zhuyin",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "span-01",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-01",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-01",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-01",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-01",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-01",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-01",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-01",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-01",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-01",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-01-lite",
+      "task": "image-caption-match",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "span-01-lite",
+      "task": "image-color",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "span-01-lite",
+      "task": "image-count",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "span-01-lite",
+      "task": "image-ui-error",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "span-01-lite",
+      "task": "image-zh-char",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "span-01-lite",
+      "task": "image-zhuyin",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "span-01-lite",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-01-lite",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-01-lite",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-01-lite",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-01-lite",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-01-lite",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-01-lite",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-01-lite",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-01-lite",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-01-lite",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "tev1-4b-experimental",
+      "task": "image-caption-match",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "tev1-4b-experimental",
+      "task": "image-color",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "tev1-4b-experimental",
+      "task": "image-count",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "tev1-4b-experimental",
+      "task": "image-ui-error",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "tev1-4b-experimental",
+      "task": "image-zh-char",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "tev1-4b-experimental",
+      "task": "image-zhuyin",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "tev1-4b-experimental",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "tev1-4b-experimental",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "tev1-4b-experimental",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "tev1-4b-experimental",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "tev1-4b-experimental",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "tev1-4b-experimental",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "tev1-4b-experimental",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "tev1-4b-experimental",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "tev1-4b-experimental",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "tev1-4b-experimental",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "kev-4b",
+      "task": "image-caption-match",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "kev-4b",
+      "task": "image-color",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "kev-4b",
+      "task": "image-count",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "kev-4b",
+      "task": "image-ui-error",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "kev-4b",
+      "task": "image-zh-char",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "kev-4b",
+      "task": "image-zhuyin",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "kev-4b",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "kev-4b",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "kev-4b",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "kev-4b",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "kev-4b",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "kev-4b",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "kev-4b",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "kev-4b",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "kev-4b",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "kev-4b",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "decisions-fast",
+      "task": "image-caption-match",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "decisions-fast",
+      "task": "image-color",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "decisions-fast",
+      "task": "image-count",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "decisions-fast",
+      "task": "image-ui-error",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "decisions-fast",
+      "task": "image-zh-char",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "decisions-fast",
+      "task": "image-zhuyin",
+      "run": false,
+      "reason": "modality:image=rejected"
+    },
+    {
+      "model": "decisions-fast",
+      "task": "zh-intent-routing",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "decisions-fast",
+      "task": "zh-scam-sms",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "decisions-fast",
+      "task": "zh-sentiment",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "decisions-fast",
+      "task": "agent-escalate",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "decisions-fast",
+      "task": "agent-judge",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "decisions-fast",
+      "task": "agent-tool-select",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "decisions-fast",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "decisions-fast",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "decisions-fast",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "decisions-fast",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    }
+  ]
+}

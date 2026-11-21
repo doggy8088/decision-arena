@@ -1,0 +1,119 @@
+{
+  "id": "image-count",
+  "scenario": "image",
+  "title": "數方塊（1–5 個）",
+  "description": "白底上 1 到 5 個同色方塊。數量是決策模型常見的弱點（研究二的「幾個人在講」就失敗）。",
+  "question": {
+    "type": "choice",
+    "instructions": "How many filled squares are in this image?",
+    "options": {
+      "1": "exactly one square",
+      "2": "exactly two squares",
+      "3": "exactly three squares",
+      "4": "exactly four squares",
+      "5": "exactly five squares"
+    }
+  },
+  "items": [
+    {
+      "id": "n1_0",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n1_0.png"
+        }
+      ],
+      "gold": "1"
+    },
+    {
+      "id": "n1_1",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n1_1.png"
+        }
+      ],
+      "gold": "1"
+    },
+    {
+      "id": "n2_0",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n2_0.png"
+        }
+      ],
+      "gold": "2"
+    },
+    {
+      "id": "n2_1",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n2_1.png"
+        }
+      ],
+      "gold": "2"
+    },
+    {
+      "id": "n3_0",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n3_0.png"
+        }
+      ],
+      "gold": "3"
+    },
+    {
+      "id": "n3_1",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n3_1.png"
+        }
+      ],
+      "gold": "3"
+    },
+    {
+      "id": "n4_0",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n4_0.png"
+        }
+      ],
+      "gold": "4"
+    },
+    {
+      "id": "n4_1",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n4_1.png"
+        }
+      ],
+      "gold": "4"
+    },
+    {
+      "id": "n5_0",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n5_0.png"
+        }
+      ],
+      "gold": "5"
+    },
+    {
+      "id": "n5_1",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n5_1.png"
+        }
+      ],
+      "gold": "5"
+    }
+  ]
+}

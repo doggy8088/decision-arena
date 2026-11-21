@@ -1,0 +1,30 @@
+{
+  "run_id": "anchor-gemini",
+  "created": "2026-11-21T19:44:20+00:00",
+  "models": [
+    "gemini-decision-1"
+  ],
+  "tasks": [
+    "audio-scene-7class",
+    "audio-has-voice"
+  ],
+  "limit": 0,
+  "budget_usd": 1.0,
+  "spent_usd": 0.003742,
+  "calls": 84,
+  "stopped": "",
+  "cells": [
+    {
+      "model": "gemini-decision-1",
+      "task": "audio-scene-7class",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gemini-decision-1",
+      "task": "audio-has-voice",
+      "run": true,
+      "reason": ""
+    }
+  ]
+}

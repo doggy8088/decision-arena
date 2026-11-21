@@ -1,0 +1,494 @@
+{
+  "id": "tw-facts-choice",
+  "scenario": "taiwan",
+  "title": "台灣政經事實（選擇題）",
+  "description": "19 題台灣政治制度與經濟數據的四選一，每題附一手來源與查證日期（見 data/taiwan/items.json）。近期數據以 as_of 日期為準。",
+  "source": "data/taiwan/items.json",
+  "question": {
+    "type": "choice",
+    "instructions": "以上這題關於台灣的選擇題，正確答案是哪一個選項？",
+    "options": {
+      "A": "113 席，任期四年",
+      "B": "225 席，任期三年",
+      "C": "113 席，任期三年",
+      "D": "164 席，任期四年"
+    }
+  },
+  "items": [
+    {
+      "id": "tw-pol-01",
+      "group": "politics",
+      "gold": "A",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "依《中華民國憲法增修條文》，自第七屆起立法委員的總席次與任期為何？"
+        }
+      ],
+      "question": {
+        "type": "choice",
+        "instructions": "以上這題關於台灣的選擇題，正確答案是哪一個選項？",
+        "options": {
+          "A": "113 席，任期四年",
+          "B": "225 席，任期三年",
+          "C": "113 席，任期三年",
+          "D": "164 席，任期四年"
+        }
+      },
+      "meta": {
+        "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=A0000002",
+        "as_of": "2026-11-22"
+      }
+    },
+    {
+      "id": "tw-pol-02",
+      "group": "politics",
+      "gold": "A",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "依《中華民國憲法增修條文》，總統、副總統的任期與連任限制為何？"
+        }
+      ],
+      "question": {
+        "type": "choice",
+        "instructions": "以上這題關於台灣的選擇題，正確答案是哪一個選項？",
+        "options": {
+          "A": "任期四年，連選得連任一次",
+          "B": "任期六年，連選得連任一次",
+          "C": "任期四年，連任次數不受限制",
+          "D": "任期五年，不得連任"
+        }
+      },
+      "meta": {
+        "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=A0000002",
+        "as_of": "2026-11-22"
+      }
+    },
+    {
+      "id": "tw-pol-03",
+      "group": "politics",
+      "gold": "D",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "依《中華民國憲法增修條文》第 12 條，立法院提出憲法修正案的門檻為何？"
+        }
+      ],
+      "question": {
+        "type": "choice",
+        "instructions": "以上這題關於台灣的選擇題，正確答案是哪一個選項？",
+        "options": {
+          "A": "立法委員三分之一提議、二分之一出席、出席委員三分之二決議",
+          "B": "立法委員五分之一提議、三分之二出席、出席委員四分之三決議",
+          "C": "立法委員四分之一提議、二分之一出席、出席委員過半數決議",
+          "D": "立法委員四分之一提議、四分之三出席、出席委員四分之三決議"
+        }
+      },
+      "meta": {
+        "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=A0000002",
+        "as_of": "2026-11-22"
+      }
+    },
+    {
+      "id": "tw-pol-04",
+      "group": "politics",
+      "gold": "B",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "依現行《公民投票法》，公民投票案在什麼條件下即為通過？"
+        }
+      ],
+      "question": {
+        "type": "choice",
+        "instructions": "以上這題關於台灣的選擇題，正確答案是哪一個選項？",
+        "options": {
+          "A": "有效同意票多於不同意票即可，無其他門檻",
+          "B": "有效同意票多於不同意票，且有效同意票達投票權人總額四分之一以上",
+          "C": "投票率須達投票權人總額二分之一以上，且有效同意票過半數",
+          "D": "有效同意票達投票權人總額二分之一以上"
+        }
+      },
+      "meta": {
+        "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0020050",
+        "as_of": "2026-11-22"
+      }
+    },
+    {
+      "id": "tw-pol-05",
+      "group": "politics",
+      "gold": "C",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "依現行法律，中華民國總統副總統選舉的選舉權年齡，與全國性公民投票的投票權年齡，分別為何？"
+        }
+      ],
+      "question": {
+        "type": "choice",
+        "instructions": "以上這題關於台灣的選擇題，正確答案是哪一個選項？",
+        "options": {
+          "A": "兩者皆為年滿 18 歲",
+          "B": "總統選舉年滿 18 歲；公民投票年滿 20 歲",
+          "C": "總統選舉年滿 20 歲；公民投票年滿 18 歲",
+          "D": "兩者皆為年滿 20 歲"
+        }
+      },
+      "meta": {
+        "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0020053",
+        "as_of": "2026-11-22"
+      }
+    },
+    {
+      "id": "tw-pol-06",
+      "group": "politics",
+      "gold": "C",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "依現行《公民投票法》第 23 條條文，全國性公民投票應於何時舉行？"
+        }
+      ],
+      "question": {
+        "type": "choice",
+        "instructions": "以上這題關於台灣的選擇題，正確答案是哪一個選項？",
+        "options": {
+          "A": "固定於每年八月第四個星期六舉行",
+          "B": "自 2021 年起每二年於八月第四個星期六舉行，且不得與選舉同日",
+          "C": "公民投票案公告成立後三個月起至六個月內舉行，該期間內有全國性選舉時應與該選舉同日舉行",
+          "D": "由總統於公告成立後一年內擇日舉行"
+        }
+      },
+      "meta": {
+        "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0020050",
+        "as_of": "2026-11-22"
+      }
+    },
+    {
+      "id": "tw-pol-07",
+      "group": "politics",
+      "gold": "D",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "下列何者「不是」《中華民國憲法》分章規定的五院之一？"
+        }
+      ],
+      "question": {
+        "type": "choice",
+        "instructions": "以上這題關於台灣的選擇題，正確答案是哪一個選項？",
+        "options": {
+          "A": "監察院",
+          "B": "考試院",
+          "C": "司法院",
+          "D": "審計院"
+        }
+      },
+      "meta": {
+        "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=A0000001",
+        "as_of": "2026-11-22"
+      }
+    },
+    {
+      "id": "tw-pol-08",
+      "group": "politics",
+      "gold": "B",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "下列哪一個城市「不是」中華民國的直轄市（六都）？"
+        }
+      ],
+      "question": {
+        "type": "choice",
+        "instructions": "以上這題關於台灣的選擇題，正確答案是哪一個選項？",
+        "options": {
+          "A": "桃園市",
+          "B": "新竹市",
+          "C": "臺南市",
+          "D": "新北市"
+        }
+      },
+      "meta": {
+        "source_url": "https://www.president.gov.tw/Page/106",
+        "as_of": "2026-11-22"
+      }
+    },
+    {
+      "id": "tw-pol-09",
+      "group": "politics",
+      "gold": "D",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "截至 2026 年 11 月 22 日，中華民國現任總統是誰？"
+        }
+      ],
+      "question": {
+        "type": "choice",
+        "instructions": "以上這題關於台灣的選擇題，正確答案是哪一個選項？",
+        "options": {
+          "A": "蔡英文",
+          "B": "侯友宜",
+          "C": "柯文哲",
+          "D": "賴清德"
+        }
+      },
+      "meta": {
+        "source_url": "https://www.president.gov.tw/Page/81",
+        "as_of": "2026-11-22"
+      }
+    },
+    {
+      "id": "tw-pol-10",
+      "group": "politics",
+      "gold": "A",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "截至 2026 年 11 月 22 日，現任行政院院長是誰？"
+        }
+      ],
+      "question": {
+        "type": "choice",
+        "instructions": "以上這題關於台灣的選擇題，正確答案是哪一個選項？",
+        "options": {
+          "A": "卓榮泰",
+          "B": "陳建仁",
+          "C": "蘇貞昌",
+          "D": "林佳龍"
+        }
+      },
+      "meta": {
+        "source_url": "https://www.ey.gov.tw/Page/3C927BC7FA83C969",
+        "as_of": "2026-11-22"
+      }
+    },
+    {
+      "id": "tw-pol-11",
+      "group": "politics",
+      "gold": "C",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "2024 年 1 月 13 日第 11 屆立法委員選舉（選舉當日開票結果），立法院 113 席中，民進黨、國民黨、民眾黨的席次分別為何？"
+        }
+      ],
+      "question": {
+        "type": "choice",
+        "instructions": "以上這題關於台灣的選擇題，正確答案是哪一個選項？",
+        "options": {
+          "A": "民進黨 61 席、國民黨 38 席、民眾黨 5 席",
+          "B": "民進黨 52 席、國民黨 51 席、民眾黨 8 席",
+          "C": "民進黨 51 席、國民黨 52 席、民眾黨 8 席",
+          "D": "民進黨 51 席、國民黨 54 席、民眾黨 6 席"
+        }
+      },
+      "meta": {
+        "source_url": "https://www.cna.com.tw/news/aipl/202401130361.aspx",
+        "as_of": "2024-01-13"
+      }
+    },
+    {
+      "id": "tw-eco-02",
+      "group": "economy",
+      "gold": "D",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "依《最低工資法》，最低工資審議會由誰擔任召集人？審議會應於何時召開會議？"
+        }
+      ],
+      "question": {
+        "type": "choice",
+        "instructions": "以上這題關於台灣的選擇題，正確答案是哪一個選項？",
+        "options": {
+          "A": "經濟部部長；每年第四季",
+          "B": "國家發展委員會主任委員；每年第二季",
+          "C": "行政院院長；每年第一季",
+          "D": "勞動部部長；每年第三季"
+        }
+      },
+      "meta": {
+        "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=N0030028",
+        "as_of": "2026-11-22"
+      }
+    },
+    {
+      "id": "tw-eco-03",
+      "group": "economy",
+      "gold": "C",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "2026 年（民國 115 年）適用的每月最低工資為多少新臺幣？"
+        }
+      ],
+      "question": {
+        "type": "choice",
+        "instructions": "以上這題關於台灣的選擇題，正確答案是哪一個選項？",
+        "options": {
+          "A": "27,470 元",
+          "B": "28,590 元",
+          "C": "29,500 元",
+          "D": "30,900 元"
+        }
+      },
+      "meta": {
+        "source_url": "https://www.mol.gov.tw/1607/1632/1633/87257/post",
+        "as_of": "2026-11-22"
+      }
+    },
+    {
+      "id": "tw-eco-05",
+      "group": "economy",
+      "gold": "A",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "依主計總處 2026 年 5 月 29 日發布的修正統計，台灣 2025 年（民國 114 年）全年經濟成長率約為多少？"
+        }
+      ],
+      "question": {
+        "type": "choice",
+        "instructions": "以上這題關於台灣的選擇題，正確答案是哪一個選項？",
+        "options": {
+          "A": "約 8.8%",
+          "B": "約 4.6%",
+          "C": "約 2.8%",
+          "D": "約 12.9%"
+        }
+      },
+      "meta": {
+        "source_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3602&s=236298",
+        "as_of": "2026-05-29"
+      }
+    },
+    {
+      "id": "tw-eco-06",
+      "group": "economy",
+      "gold": "D",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "依財政部統計處資料，台灣 2025 年（民國 114 年）全年出口總額約為多少？"
+        }
+      ],
+      "question": {
+        "type": "choice",
+        "instructions": "以上這題關於台灣的選擇題，正確答案是哪一個選項？",
+        "options": {
+          "A": "約 3,200 億美元",
+          "B": "約 4,750 億美元",
+          "C": "約 8,500 億美元",
+          "D": "約 6,400 億美元"
+        }
+      },
+      "meta": {
+        "source_url": "https://service.mof.gov.tw/public/Data/statistic/bulletin/115/114%E5%B9%B4%E6%88%91%E5%9C%8B%E5%87%BA%E9%80%B2%E5%8F%A3%E8%B2%BF%E6%98%93%E6%A6%82%E6%B3%81.pdf",
+        "as_of": "2026-02-23"
+      }
+    },
+    {
+      "id": "tw-eco-07",
+      "group": "economy",
+      "gold": "A",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "依財政部統計處資料，2025 年（民國 114 年）台灣最大的出口市場為何？"
+        }
+      ],
+      "question": {
+        "type": "choice",
+        "instructions": "以上這題關於台灣的選擇題，正確答案是哪一個選項？",
+        "options": {
+          "A": "美國",
+          "B": "中國大陸與香港（合計）",
+          "C": "東協",
+          "D": "日本"
+        }
+      },
+      "meta": {
+        "source_url": "https://service.mof.gov.tw/public/Data/statistic/bulletin/115/114%E5%B9%B4%E6%88%91%E5%9C%8B%E5%87%BA%E9%80%B2%E5%8F%A3%E8%B2%BF%E6%98%93%E6%A6%82%E6%B3%81.pdf",
+        "as_of": "2026-02-23"
+      }
+    },
+    {
+      "id": "tw-eco-08",
+      "group": "economy",
+      "gold": "B",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "依財政部統計處資料，2025 年（民國 114 年）台灣出口金額最大的貨品類別為何？"
+        }
+      ],
+      "question": {
+        "type": "choice",
+        "instructions": "以上這題關於台灣的選擇題，正確答案是哪一個選項？",
+        "options": {
+          "A": "電子零組件",
+          "B": "資通與視聽產品",
+          "C": "基本金屬及其製品",
+          "D": "機械"
+        }
+      },
+      "meta": {
+        "source_url": "https://service.mof.gov.tw/public/Data/statistic/bulletin/115/114%E5%B9%B4%E6%88%91%E5%9C%8B%E5%87%BA%E9%80%B2%E5%8F%A3%E8%B2%BF%E6%98%93%E6%A6%82%E6%B3%81.pdf",
+        "as_of": "2026-02-23"
+      }
+    },
+    {
+      "id": "tw-eco-10",
+      "group": "economy",
+      "gold": "B",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "依臺灣證券交易所《集中市場月訊》，2026 年 10 月底上市公司發行市值排名第一與第二的公司依序為何？"
+        }
+      ],
+      "question": {
+        "type": "choice",
+        "instructions": "以上這題關於台灣的選擇題，正確答案是哪一個選項？",
+        "options": {
+          "A": "台積電、鴻海",
+          "B": "台積電、聯發科",
+          "C": "台積電、台達電",
+          "D": "鴻海、台積電"
+        }
+      },
+      "meta": {
+        "source_url": "https://www.twse.com.tw/rwd/staticFiles/product/publication/0005000116.pdf",
+        "as_of": "2026-10-31"
+      }
+    },
+    {
+      "id": "tw-eco-11",
+      "group": "economy",
+      "gold": "B",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "中央銀行 2026 年 9 月 17 日理監事聯席會議決議後，重貼現率為年息多少？"
+        }
+      ],
+      "question": {
+        "type": "choice",
+        "instructions": "以上這題關於台灣的選擇題，正確答案是哪一個選項？",
+        "options": {
+          "A": "1.875%",
+          "B": "2%",
+          "C": "2.25%",
+          "D": "2.375%"
+        }
+      },
+      "meta": {
+        "source_url": "https://www.cbc.gov.tw/tw/cp-357-192864-4319f-1.html",
+        "as_of": "2026-09-17"
+      }
+    }
+  ]
+}

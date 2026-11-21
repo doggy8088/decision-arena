@@ -1,0 +1,74 @@
+{
+  "summary": [
+    {
+      "tone": "ok",
+      "title": "音訊：實測聽得到的只有 4 個",
+      "body": "34 個模型中，經本專案測試的路徑（Gemini 直連、其餘經 OpenRouter），探針確認能解碼音訊的只有 <code>gemini-decision-1</code>、<code>clef-omni</code>、<code>heygen-decision-1</code> 與其 turbo 版。Liquid d1.2 系列的官方 API 文件有寫音訊欄位，但經 OpenRouter 送出會被 400 拒收；它的原生 API 這輪沒有測。"
+    },
+    {
+      "tone": "ok",
+      "title": "發音判斷：clef-omni 勝過 Gemini",
+      "body": "發音練習 50 段（正確 20、錯誤 30）的 AUC：clef-omni 0.92、HeyGen 0.86、Gemini 0.78。音場 7 類 × 6 段：clef-omni 88%、HeyGen 86%、Gemini 76%（演唱會 0/6）。ㄌㄨˊ 單音節辨音：clef-omni 與 HeyGen 的 AUC 都是 1.00，Gemini 0.54；但這題 14 段裡只有 2 段正例，只能當參考。"
+    },
+    {
+      "tone": "bad",
+      "title": "聲調錯誤：沒有模型抓得到",
+      "body": "發音題中刻意唸錯聲調的只有 5 段：Gemini 抓到 1 段、clef-omni 1 段、HeyGen 0 段。樣本雖小，但方向和研究一、研究三一致：聲調層級的判斷仍要靠生成式模型或專用 ASR。"
+    },
+    {
+      "tone": "warn",
+      "title": "中文文字與 Agent 題組：天花板效應",
+      "body": "情緒、詐騙簡訊、意圖路由、工具選擇、轉真人、LLM-as-judge 與經濟新聞分類，232 格中有 200 格是 100%，分不出高下，只剩 Brier（校準）有差。這批是種子題組，下一輪需要更難、更貼近你實際資料的題目。"
+    },
+    {
+      "tone": "info",
+      "title": "真正有鑑別力的：繁中細節與台灣知識",
+      "body": "形近字（23 題，正解平均分布在各選項位置）：最佳 Gemini 83%、Jev 1.14 74%，最差 26%。注音字卡：最佳 75%（Jev、Perplexity Decider v1.3），有兩個模型 0%。台灣政經選擇題 19 題：不上網的模型中，最佳是 Drex Max Finance 84%，最差 32%。"
+    },
+    {
+      "tone": "info",
+      "title": "政治立場對稱：多數大致中立，少數明顯不對稱",
+      "body": "8 組陳述只互換主體（民進黨↔國民黨、美國↔中國）。GPT-6 Luna（|Δ| 0.003）、tev1-4b（0.025）、Gemini（0.030）最對稱；clef-omni（0.243）、d1.2（0.195）最不對稱。偏向分數介於 −0.14 到 +0.13，沒有一致偏向某一方。只有 8 組，只能當描述性觀察。"
+    }
+  ],
+  "notes": [
+    {
+      "title": "回歸對照：重現了 11-17 的原始結果",
+      "body": "新框架用研究二的原始類別描述重跑 42 段音場分類，<code>gemini-decision-1</code> 得到 32/42，各類召回與 2026-11-17 完全相同（演唱會 0/6、說話＋音樂 4/6）。這證明新框架「一次只問一題」的設計與原本「一次問 8 題」結果一致。開發過程中曾誤用較短的類別描述，那時是 29/42，可見決策模型對選項描述的措辭相當敏感。"
+    },
+    {
+      "title": "台灣題組：有 5 題多數模型答錯，全是 2025 年後的新事實",
+      "body": "依序是：2025 年最大出口市場為美國（多數答陸港）、最大出口貨類為資通與視聽產品（多數答電子零組件）、上市市值第二為聯發科（多數答鴻海）、2027 年最低工資調為 30,900 元，以及 2025 年出超創新高。我們重新核對了這 5 題的來源引文，並直接抓取行政院新聞稿原文確認，標註無誤。這部分分數混合了「台灣知識」與「知識截止日」兩個因素。"
+    },
+    {
+      "title": "Parallel decisions-fast 會上網查證，不能直接比較",
+      "body": "<code>decisions-fast</code> 在台灣事實題拿到 100%，但它每次請求都會即時搜尋網路（每次 US$0.001），等於開卷考。其他模型只靠內部知識。比較台灣題組時請把它分開看。"
+    },
+    {
+      "title": "clef-omni 數方塊系統性多數",
+      "body": "clef-omni 把 1 個方塊答成 2、2 個答成 4、3 個答成 5（10 題對 2 題），圖文一致題也幾乎都答「不一致」。同一批圖其他模型幾乎全對，主色題 clef-omni 也全對，看起來像是圖片在送進模型前被重複或切塊。音訊方面它卻是表現最好的模型。"
+    },
+    {
+      "title": "HeyGen turbo 與標準版的音訊結果幾乎一樣",
+      "body": "148 段音訊中有 138 段兩者的機率完全相同（影像、文字題則不同），推測共用同一個音訊後端。"
+    },
+    {
+      "title": "Respan span-01 系列只支援是非題",
+      "body": "<code>span-01</code> 與 <code>span-01-lite</code> 遇到選擇題一律回 400（只接受 noul），總覽表標成「請求被拒」，不計為答錯。"
+    },
+    {
+      "title": "模態探針與資料檢查",
+      "body": "先前 Microsoft Decision 1.1 直連 Azure 時，會把音訊 base64 當文字照單全收。這次經 OpenRouter，每個模型收到無效的媒體位元組都回 4xx，不支援的模態也直接回 400，沒有出現「收下但沒在看」的情況。另外，所有成功回應都檢查過：回傳的選項必須和題目一一對應、機率總和約為 1，7,209 筆成功回應全部通過（另 118 筆失敗都是 span-01 系列拒收選擇題）。"
+    },
+    {
+      "title": "這一輪沒有涵蓋的模型",
+      "body": "以下模型不在 OpenRouter 上，需要各家的 API 金鑰才能接：GLiDE v1.2（Fastino）、SubQ Snap 1.2（Subquadratic）、Celeris-1.1 Decision、Mercury Decide（Inception，2026-12-28 停止服務）。OpenRouter 上刻意不跑的有：抽取型的 cloudflare/clairic，以及已退役或改道的舊版（d1、d1.1、d1-ultra、Jev 1.13、Drex v1.5）。"
+    }
+  ],
+  "unlisted": [
+    "GLiDE v1.2（Fastino，需 FASTINO_API_KEY）",
+    "SubQ Snap 1.2（Subquadratic，需 SUBQ_API_KEY）",
+    "Celeris-1.1 Decision（需 CELERIS_API_KEY）",
+    "Mercury Decide（Inception，2026-12-28 停止服務）"
+  ]
+}

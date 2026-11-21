@@ -1,0 +1,167 @@
+{
+  "id": "audio-syllable-lu2",
+  "scenario": "audio",
+  "title": "單音節辨音：是不是 ㄌㄨˊ",
+  "description": "研究一的 14 段注音音檔（含已知唸錯成 lü 的舊檔）。原始結果：gemini-decision-1 無鑑別力。",
+  "source": "data/labels.json",
+  "question": {
+    "type": "binary",
+    "instructions": "Is the spoken Mandarin syllable ㄌㄨˊ (lu, second tone)?"
+  },
+  "items": [
+    {
+      "id": "ma",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/control/ma.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "control"
+    },
+    {
+      "id": "ma3",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/control/ma3.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "control"
+    },
+    {
+      "id": "da4",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/control/da4.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "control"
+    },
+    {
+      "id": "ni3",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/control/ni3.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "control"
+    },
+    {
+      "id": "shui3",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/control/shui3.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "control"
+    },
+    {
+      "id": "xue2",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/control/xue2.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "control"
+    },
+    {
+      "id": "zhong",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/control/zhong.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "control"
+    },
+    {
+      "id": "ai4",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/control/ai4.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "control"
+    },
+    {
+      "id": "old_M_lu2",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/lu2/old_M_lu2.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "target"
+    },
+    {
+      "id": "new_M_lu2",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/lu2/new_M_lu2.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "target"
+    },
+    {
+      "id": "old_F_lu2",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/lu2/old_F_lu2.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "target"
+    },
+    {
+      "id": "new_F_lu2",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/lu2/new_F_lu2.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "target"
+    },
+    {
+      "id": "silence",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/negative/silence.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "negative"
+    },
+    {
+      "id": "noise",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/negative/noise.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "negative"
+    }
+  ]
+}

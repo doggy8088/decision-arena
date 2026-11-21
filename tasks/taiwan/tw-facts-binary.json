@@ -1,0 +1,88 @@
+{
+  "id": "tw-facts-binary",
+  "scenario": "taiwan",
+  "title": "台灣政經事實（是非題）",
+  "description": "5 題台灣政經是非題，常見誤解（例如投票年齡、門檻）刻意做成錯誤陳述。",
+  "source": "data/taiwan/items.json",
+  "question": {
+    "type": "binary",
+    "instructions": "這個關於台灣的陳述是否正確？"
+  },
+  "items": [
+    {
+      "id": "tw-pol-12",
+      "group": "politics",
+      "gold": "no",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "2025 年 8 月 23 日舉行的「重啟核三」全國性公民投票，是因為同意票未多於不同意票而不通過。"
+        }
+      ],
+      "meta": {
+        "source_url": "https://www.cna.com.tw/news/aipl/202508290199.aspx",
+        "as_of": "2025-08-29"
+      }
+    },
+    {
+      "id": "tw-pol-13",
+      "group": "politics",
+      "gold": "no",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "2025 年 7 月 26 日投票的 24 位國民黨籍立法委員罷免案中，至少有一案通過、罷免成功。"
+        }
+      ],
+      "meta": {
+        "source_url": "https://www.cna.com.tw/news/aipl/202507260216.aspx",
+        "as_of": "2025-07-26"
+      }
+    },
+    {
+      "id": "tw-eco-01",
+      "group": "economy",
+      "gold": "no",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "依《中央銀行法》第 2 條，「促進充分就業」是中央銀行明文列出的經營目標之一。"
+        }
+      ],
+      "meta": {
+        "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=G0410001",
+        "as_of": "2026-11-22"
+      }
+    },
+    {
+      "id": "tw-eco-04",
+      "group": "economy",
+      "gold": "yes",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "行政院已宣布，2027 年起每月最低工資將由 29,500 元調升至 30,900 元。"
+        }
+      ],
+      "meta": {
+        "source_url": "https://www.ey.gov.tw/Page/9277F759E41CCD91/59848ab4-676b-41b7-898e-9f5207325f0a",
+        "as_of": "2026-10-01"
+      }
+    },
+    {
+      "id": "tw-eco-09",
+      "group": "economy",
+      "gold": "yes",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "依財政部統計處資料，2025 年（民國 114 年）台灣的貿易出超金額創下歷年新高。"
+        }
+      ],
+      "meta": {
+        "source_url": "https://service.mof.gov.tw/public/Data/statistic/bulletin/115/114%E5%B9%B4%E6%88%91%E5%9C%8B%E5%87%BA%E9%80%B2%E5%8F%A3%E8%B2%BF%E6%98%93%E6%A6%82%E6%B3%81.pdf",
+        "as_of": "2026-02-23"
+      }
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+{
+  "id": "image-zhuyin",
+  "scenario": "image",
+  "title": "注音字卡（含聲調符號）",
+  "description": "延續研究一的 ㄌㄨˊ／ㄌㄩ 主題，改成「看」注音字卡；四個選項只差韻母或聲調符號。",
+  "question": {
+    "type": "choice",
+    "instructions": "Which Zhuyin (Bopomofo) syllable, including its tone mark, is shown in this image?",
+    "options": {
+      "ㄌㄨˊ": "「ㄌㄨˊ」",
+      "ㄌㄩˊ": "「ㄌㄩˊ」",
+      "ㄌㄩˇ": "「ㄌㄩˇ」",
+      "ㄌㄨˋ": "「ㄌㄨˋ」"
+    }
+  },
+  "items": [
+    {
+      "id": "s0_0",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zhuyin/s0_0.png"
+        }
+      ],
+      "gold": "ㄌㄨˊ",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Zhuyin (Bopomofo) syllable, including its tone mark, is shown in this image?",
+        "options": {
+          "ㄌㄨˊ": "「ㄌㄨˊ」",
+          "ㄌㄩˊ": "「ㄌㄩˊ」",
+          "ㄌㄩˇ": "「ㄌㄩˇ」",
+          "ㄌㄨˋ": "「ㄌㄨˋ」"
+        }
+      }
+    },
+    {
+      "id": "s0_1",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zhuyin/s0_1.png"
+        }
+      ],
+      "gold": "ㄌㄩˊ",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Zhuyin (Bopomofo) syllable, including its tone mark, is shown in this image?",
+        "options": {
+          "ㄌㄨˊ": "「ㄌㄨˊ」",
+          "ㄌㄩˊ": "「ㄌㄩˊ」",
+          "ㄌㄩˇ": "「ㄌㄩˇ」",
+          "ㄌㄨˋ": "「ㄌㄨˋ」"
+        }
+      }
+    },
+    {
+      "id": "s0_2",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zhuyin/s0_2.png"
+        }
+      ],
+      "gold": "ㄌㄩˇ",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Zhuyin (Bopomofo) syllable, including its tone mark, is shown in this image?",
+        "options": {
+          "ㄌㄨˊ": "「ㄌㄨˊ」",
+          "ㄌㄩˊ": "「ㄌㄩˊ」",
+          "ㄌㄩˇ": "「ㄌㄩˇ」",
+          "ㄌㄨˋ": "「ㄌㄨˋ」"
+        }
+      }
+    },
+    {
+      "id": "s0_3",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zhuyin/s0_3.png"
+        }
+      ],
+      "gold": "ㄌㄨˋ",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Zhuyin (Bopomofo) syllable, including its tone mark, is shown in this image?",
+        "options": {
+          "ㄌㄨˊ": "「ㄌㄨˊ」",
+          "ㄌㄩˊ": "「ㄌㄩˊ」",
+          "ㄌㄩˇ": "「ㄌㄩˇ」",
+          "ㄌㄨˋ": "「ㄌㄨˋ」"
+        }
+      }
+    },
+    {
+      "id": "s1_0",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zhuyin/s1_0.png"
+        }
+      ],
+      "gold": "ㄇㄚ",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Zhuyin (Bopomofo) syllable, including its tone mark, is shown in this image?",
+        "options": {
+          "ㄇㄚ": "「ㄇㄚ」",
+          "ㄇㄚˊ": "「ㄇㄚˊ」",
+          "ㄇㄚˇ": "「ㄇㄚˇ」",
+          "ㄇㄚˋ": "「ㄇㄚˋ」"
+        }
+      }
+    },
+    {
+      "id": "s1_1",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zhuyin/s1_1.png"
+        }
+      ],
+      "gold": "ㄇㄚˊ",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Zhuyin (Bopomofo) syllable, including its tone mark, is shown in this image?",
+        "options": {
+          "ㄇㄚ": "「ㄇㄚ」",
+          "ㄇㄚˊ": "「ㄇㄚˊ」",
+          "ㄇㄚˇ": "「ㄇㄚˇ」",
+          "ㄇㄚˋ": "「ㄇㄚˋ」"
+        }
+      }
+    },
+    {
+      "id": "s1_2",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zhuyin/s1_2.png"
+        }
+      ],
+      "gold": "ㄇㄚˇ",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Zhuyin (Bopomofo) syllable, including its tone mark, is shown in this image?",
+        "options": {
+          "ㄇㄚ": "「ㄇㄚ」",
+          "ㄇㄚˊ": "「ㄇㄚˊ」",
+          "ㄇㄚˇ": "「ㄇㄚˇ」",
+          "ㄇㄚˋ": "「ㄇㄚˋ」"
+        }
+      }
+    },
+    {
+      "id": "s1_3",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/zhuyin/s1_3.png"
+        }
+      ],
+      "gold": "ㄇㄚˋ",
+      "question": {
+        "type": "choice",
+        "instructions": "Which Zhuyin (Bopomofo) syllable, including its tone mark, is shown in this image?",
+        "options": {
+          "ㄇㄚ": "「ㄇㄚ」",
+          "ㄇㄚˊ": "「ㄇㄚˊ」",
+          "ㄇㄚˇ": "「ㄇㄚˇ」",
+          "ㄇㄚˋ": "「ㄇㄚˋ」"
+        }
+      }
+    }
+  ]
+}

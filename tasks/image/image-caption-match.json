@@ -1,0 +1,292 @@
+{
+  "id": "image-caption-match",
+  "scenario": "image",
+  "title": "圖文是否一致",
+  "description": "同一張圖配上正確或錯誤（數量錯或顏色錯）的中文說明，問說明是否正確。測影像＋文字的跨模態比對。",
+  "question": {
+    "type": "binary",
+    "instructions": "Does the caption accurately describe the image?"
+  },
+  "items": [
+    {
+      "id": "n1_0_t",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n1_0.png"
+        },
+        {
+          "type": "text",
+          "text": "說明：圖中有一個藍色方塊。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "n1_0_f",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n1_0.png"
+        },
+        {
+          "type": "text",
+          "text": "說明：圖中有兩個藍色方塊。"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "n1_1_t",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n1_1.png"
+        },
+        {
+          "type": "text",
+          "text": "說明：圖中有一個紅色方塊。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "n1_1_f",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n1_1.png"
+        },
+        {
+          "type": "text",
+          "text": "說明：圖中有一個藍色方塊。"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "n2_0_t",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n2_0.png"
+        },
+        {
+          "type": "text",
+          "text": "說明：圖中有兩個藍色方塊。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "n2_0_f",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n2_0.png"
+        },
+        {
+          "type": "text",
+          "text": "說明：圖中有三個藍色方塊。"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "n2_1_t",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n2_1.png"
+        },
+        {
+          "type": "text",
+          "text": "說明：圖中有兩個紅色方塊。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "n2_1_f",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n2_1.png"
+        },
+        {
+          "type": "text",
+          "text": "說明：圖中有兩個藍色方塊。"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "n3_0_t",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n3_0.png"
+        },
+        {
+          "type": "text",
+          "text": "說明：圖中有三個藍色方塊。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "n3_0_f",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n3_0.png"
+        },
+        {
+          "type": "text",
+          "text": "說明：圖中有四個藍色方塊。"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "n3_1_t",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n3_1.png"
+        },
+        {
+          "type": "text",
+          "text": "說明：圖中有三個紅色方塊。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "n3_1_f",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n3_1.png"
+        },
+        {
+          "type": "text",
+          "text": "說明：圖中有三個藍色方塊。"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "n4_0_t",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n4_0.png"
+        },
+        {
+          "type": "text",
+          "text": "說明：圖中有四個藍色方塊。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "n4_0_f",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n4_0.png"
+        },
+        {
+          "type": "text",
+          "text": "說明：圖中有五個藍色方塊。"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "n4_1_t",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n4_1.png"
+        },
+        {
+          "type": "text",
+          "text": "說明：圖中有四個紅色方塊。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "n4_1_f",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n4_1.png"
+        },
+        {
+          "type": "text",
+          "text": "說明：圖中有四個藍色方塊。"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "n5_0_t",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n5_0.png"
+        },
+        {
+          "type": "text",
+          "text": "說明：圖中有五個藍色方塊。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "n5_0_f",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n5_0.png"
+        },
+        {
+          "type": "text",
+          "text": "說明：圖中有四個藍色方塊。"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "n5_1_t",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n5_1.png"
+        },
+        {
+          "type": "text",
+          "text": "說明：圖中有五個紅色方塊。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "n5_1_f",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/count/n5_1.png"
+        },
+        {
+          "type": "text",
+          "text": "說明：圖中有五個藍色方塊。"
+        }
+      ],
+      "gold": "no"
+    }
+  ]
+}

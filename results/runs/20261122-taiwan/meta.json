@@ -1,0 +1,594 @@
+{
+  "run_id": "20261122-taiwan",
+  "created": "2026-11-21T19:54:40+00:00",
+  "models": [
+    "gemini-decision-1",
+    "bison-1",
+    "d1.2-ultra",
+    "drex-max",
+    "mammoth-1",
+    "pplx-decider-v1.3",
+    "d1.2",
+    "microsoft-decision-1.1",
+    "elephant-1",
+    "jev-1.14",
+    "pplx-decider-flash-v1.3",
+    "microsoft-decision-1",
+    "drex-v2.0",
+    "clef",
+    "gpt-6-luna-decisions",
+    "clef-omni",
+    "heygen-decision-1",
+    "heygen-decision-1-turbo",
+    "solar-decide",
+    "clef-flash",
+    "span-02",
+    "reflex",
+    "classify-1"
+  ],
+  "tasks": [
+    "tw-econ-headline",
+    "tw-facts-binary",
+    "tw-facts-choice",
+    "tw-stance-swap"
+  ],
+  "limit": 0,
+  "budget_usd": 2.0,
+  "spent_usd": 0.013467,
+  "calls": 1104,
+  "stopped": "",
+  "cells": [
+    {
+      "model": "gemini-decision-1",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gemini-decision-1",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gemini-decision-1",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gemini-decision-1",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "bison-1",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "bison-1",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "bison-1",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "bison-1",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2-ultra",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-max",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "mammoth-1",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "mammoth-1",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "mammoth-1",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "mammoth-1",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-v1.3",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "d1.2",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1.1",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "elephant-1",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "elephant-1",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "elephant-1",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "elephant-1",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "jev-1.14",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "jev-1.14",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "jev-1.14",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "jev-1.14",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "pplx-decider-flash-v1.3",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "microsoft-decision-1",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-v2.0",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-v2.0",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-v2.0",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "drex-v2.0",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "gpt-6-luna-decisions",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "solar-decide",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "solar-decide",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "solar-decide",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "solar-decide",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-flash",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-flash",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-flash",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-flash",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-02",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-02",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-02",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "span-02",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "reflex",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "reflex",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "reflex",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "reflex",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "classify-1",
+      "task": "tw-econ-headline",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "classify-1",
+      "task": "tw-facts-binary",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "classify-1",
+      "task": "tw-facts-choice",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "classify-1",
+      "task": "tw-stance-swap",
+      "run": true,
+      "reason": ""
+    }
+  ]
+}

@@ -1,0 +1,215 @@
+{
+  "id": "zh-scam-sms",
+  "scenario": "zh_text",
+  "title": "台灣詐騙簡訊判斷",
+  "description": "20 則台灣常見簡訊：10 則詐騙（假冒電信、健保署、監理站、物流、退稅、解除分期、投資群組、假冒熟人），10 則正常；其中 3 則正常簡訊刻意含「官方單位＋提醒」字樣（tricky）。",
+  "question": {
+    "type": "binary",
+    "instructions": "這則簡訊是詐騙或釣魚訊息嗎？"
+  },
+  "items": [
+    {
+      "id": "s1",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "【中華電信】您的帳單逾期未繳，今日將停話，請立即點擊 https://cht-pay.top 補繳。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "s2",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "您好，我是健保署，您的健保卡涉及洗錢案件，請加 LINE ID：gov886 配合檢察官調查。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "s3",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "【監理站】您有一筆交通罰鍰未繳，逾期將加倍，繳費連結：mvdis-tw.cc/pay"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "s4",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "恭喜您獲得 momo 週年慶抽獎 iPhone 17，請於 24 小時內填寫領獎資料並支付運費 99 元。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "s5",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "老師帶單，保證獲利 30%，加入飆股群組名額有限：line.me/ti/g/xxxx"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "s6",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "您好，您上次網購時誤設為分期付款，每月將扣款 6,000 元，請依客服指示操作 ATM 解除。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "s7",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "【7-11 物流】您的包裹地址不完整，無法配送，請於今日更新資料：711-ship.vip"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "s8",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "我是你大學同學阿明，換新號碼了，最近手頭有點緊，可以先借我兩萬嗎？明天就還。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "s9",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "你的帳號因異常登入已被凍結，請提供簡訊驗證碼以解除鎖定。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "s10",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "【國稅局】您有 2,380 元綜所稅退稅尚未領取，請點此登記帳戶：etax-refund.info"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "h1",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "【中華電信】您 10 月帳單金額 599 元，繳費期限 11/15，可至 emome 或超商繳費。"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "h2",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "【台灣大車隊】您叫的車 ABC-1234 預計 3 分鐘後抵達。"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "h3",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "您的驗證碼為 482913，請勿將驗證碼告訴任何人，包括自稱客服的人員。"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "h4",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "【博客來】您的訂單已送達 7-11 信義門市，請於 7 日內攜帶證件取貨。"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "h5",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "媽，我今天加班會晚點回家，晚餐不用等我。"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "h6",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "【中央氣象署】颱風警報：今晚至明晨北部山區有豪雨，請注意防範。"
+        }
+      ],
+      "gold": "no",
+      "group": "tricky"
+    },
+    {
+      "id": "h7",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "【臺北市政府】本市 11/30 起實施新制垃圾分類，詳情請見市府官網公告。"
+        }
+      ],
+      "gold": "no",
+      "group": "tricky"
+    },
+    {
+      "id": "h8",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "王先生您好，您預約的牙科門診改到週四下午 3 點，如需更改請回電診所。"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "h9",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "【玉山銀行】您的信用卡於 11/20 消費 1,280 元（全聯），如非本人交易請撥背面客服電話。"
+        }
+      ],
+      "gold": "no",
+      "group": "tricky"
+    },
+    {
+      "id": "h10",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "社區公告：本週六上午 9 點至 12 點停水，請住戶提前儲水。"
+        }
+      ],
+      "gold": "no"
+    }
+  ]
+}

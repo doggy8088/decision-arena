@@ -1,0 +1,44 @@
+{
+  "run_id": "20261122-scene-orig",
+  "created": "2026-11-21T20:02:46+00:00",
+  "models": [
+    "gemini-decision-1",
+    "clef-omni",
+    "heygen-decision-1",
+    "heygen-decision-1-turbo"
+  ],
+  "tasks": [
+    "audio-scene-7class"
+  ],
+  "limit": 0,
+  "budget_usd": 1.0,
+  "spent_usd": 0.006517,
+  "calls": 168,
+  "stopped": "",
+  "cells": [
+    {
+      "model": "gemini-decision-1",
+      "task": "audio-scene-7class",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "clef-omni",
+      "task": "audio-scene-7class",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1",
+      "task": "audio-scene-7class",
+      "run": true,
+      "reason": ""
+    },
+    {
+      "model": "heygen-decision-1-turbo",
+      "task": "audio-scene-7class",
+      "run": true,
+      "reason": ""
+    }
+  ]
+}

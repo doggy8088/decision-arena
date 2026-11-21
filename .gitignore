@@ -18,3 +18,4 @@ data/pron/*.mp3
 
 # App 的錄音與研究紀錄
 app/data/
+data/pron/padded/

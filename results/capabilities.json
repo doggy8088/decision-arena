@@ -1,0 +1,710 @@
+{
+  "gemini-decision-1": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "positive": [
+        0.839,
+        0.8533
+      ],
+      "negative": [
+        0.0982,
+        0.0987
+      ],
+      "margin": 0.7404,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "positive": [
+        0.872,
+        0.8665
+      ],
+      "negative": [
+        0.3652,
+        0.2948
+      ],
+      "margin": 0.5013,
+      "status": "supported"
+    }
+  },
+  "bison-1": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(422)",
+      "positive": [
+        0.9999,
+        0.9991
+      ],
+      "negative": [
+        0.0001,
+        0.0
+      ],
+      "margin": 0.999,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"BaseTen does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "d1.2-ultra": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(422)",
+      "positive": [
+        0.9985,
+        0.9938
+      ],
+      "negative": [
+        0.0027,
+        0.0022
+      ],
+      "margin": 0.991,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Liquid does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "drex-max": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(422)",
+      "positive": [
+        0.9994,
+        0.9899
+      ],
+      "negative": [
+        0.0005,
+        0.0007
+      ],
+      "margin": 0.9892,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"DeepInfra does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "mammoth-1": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(422)",
+      "positive": [
+        0.9997,
+        0.9959
+      ],
+      "negative": [
+        0.0002,
+        0.0001
+      ],
+      "margin": 0.9958,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"BaseTen does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "pplx-decider-v1.3": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "positive": [
+        0.9988,
+        0.9546
+      ],
+      "negative": [
+        0.0004,
+        0.0005
+      ],
+      "margin": 0.9542,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Perplexity does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "d1.2": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(422)",
+      "positive": [
+        0.9961,
+        0.9886
+      ],
+      "negative": [
+        0.0015,
+        0.0016
+      ],
+      "margin": 0.987,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Liquid does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "microsoft-decision-1.1": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "positive": [
+        0.9969,
+        0.9845
+      ],
+      "negative": [
+        0.0003,
+        0.0002
+      ],
+      "margin": 0.9842,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Azure does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "elephant-1": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(422)",
+      "positive": [
+        0.9992,
+        0.9915
+      ],
+      "negative": [
+        0.0002,
+        0.0001
+      ],
+      "margin": 0.9913,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"BaseTen does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "jev-1.14": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "positive": [
+        0.99,
+        0.93
+      ],
+      "negative": [
+        0.01,
+        0.01
+      ],
+      "margin": 0.92,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"TypeSafe does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "pplx-decider-flash-v1.3": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "positive": [
+        0.9968,
+        0.9733
+      ],
+      "negative": [
+        0.0022,
+        0.0029
+      ],
+      "margin": 0.9705,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Perplexity does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "microsoft-decision-1": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Azure does not accept \\\"image_url\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Azure does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "drex-v2.0": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"DeepInfra does not accept \\\"image_url\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"DeepInfra does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "clef": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "positive": [
+        0.9929,
+        0.9927
+      ],
+      "negative": [
+        0.0065,
+        0.0071
+      ],
+      "margin": 0.9856,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Only clef-omni accepts audio or video, got \\\"clef\\\"\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "gpt-6-luna-decisions": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "positive": [
+        1.0,
+        1.0
+      ],
+      "negative": [
+        0.0,
+        0.0
+      ],
+      "margin": 1.0,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"OpenAI does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "clef-omni": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(422)",
+      "positive": [
+        0.9853,
+        0.9834
+      ],
+      "negative": [
+        0.001,
+        0.0023
+      ],
+      "margin": 0.9811,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(422)",
+      "positive": [
+        0.9896,
+        0.9794
+      ],
+      "negative": [
+        0.0068,
+        0.0057
+      ],
+      "margin": 0.9726,
+      "status": "supported"
+    }
+  },
+  "heygen-decision-1": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "positive": [
+        0.9991,
+        0.977
+      ],
+      "negative": [
+        0.0003,
+        0.0015
+      ],
+      "margin": 0.9755,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "positive": [
+        0.982,
+        0.9797
+      ],
+      "negative": [
+        0.1824,
+        0.0675
+      ],
+      "margin": 0.7972,
+      "status": "supported"
+    }
+  },
+  "heygen-decision-1-turbo": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "positive": [
+        0.9859,
+        0.9526
+      ],
+      "negative": [
+        0.011,
+        0.0006
+      ],
+      "margin": 0.9416,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "positive": [
+        0.982,
+        0.9797
+      ],
+      "negative": [
+        0.1824,
+        0.0675
+      ],
+      "margin": 0.7972,
+      "status": "supported"
+    }
+  },
+  "solar-decide": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Upstage does not accept \\\"image_url\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Upstage does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "clef-flash": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "positive": [
+        0.9777,
+        0.9408
+      ],
+      "negative": [
+        0.0326,
+        0.0331
+      ],
+      "margin": 0.9077,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"PrimeIntellect does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "span-02": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "positive": [
+        0.9983,
+        0.9863
+      ],
+      "negative": [
+        0.0,
+        0.0
+      ],
+      "margin": 0.9863,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Respan does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "reflex": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(422)",
+      "positive": [
+        0.9999,
+        0.9985
+      ],
+      "negative": [
+        0.0002,
+        0.0001
+      ],
+      "margin": 0.9983,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Morph does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "classify-1": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(502)",
+      "positive": [
+        0.891,
+        0.8184
+      ],
+      "negative": [
+        0.0675,
+        0.1393
+      ],
+      "margin": 0.6791,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"ScaleDown does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "pplx-decider-v1.2": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "positive": [
+        0.9991,
+        0.9919
+      ],
+      "negative": [
+        0.0004,
+        0.0003
+      ],
+      "margin": 0.9916,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Perplexity does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "pplx-decider-flash-v1.2": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "positive": [
+        0.9963,
+        0.9817
+      ],
+      "negative": [
+        0.0025,
+        0.0026
+      ],
+      "margin": 0.9791,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Perplexity does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "drex-max-finance": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(422)",
+      "positive": [
+        0.9958,
+        0.9853
+      ],
+      "negative": [
+        0.0017,
+        0.0016
+      ],
+      "margin": 0.9836,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"DeepInfra does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "groundhog-1": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(422)",
+      "positive": [
+        0.9991,
+        0.9954
+      ],
+      "negative": [
+        0.0001,
+        0.0001
+      ],
+      "margin": 0.9953,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"BaseTen does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "joey-1": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(422)",
+      "positive": [
+        0.9865,
+        0.9844
+      ],
+      "negative": [
+        0.0043,
+        0.0109
+      ],
+      "margin": 0.9735,
+      "status": "supported"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"BaseTen does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "solar-decide-flash": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Upstage does not accept \\\"image_url\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Upstage does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "span-01": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Respan does not accept \\\"image_url\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Respan does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "span-01-lite": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Respan does not accept \\\"image_url\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Respan does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "tev1-4b-experimental": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Together does not accept \\\"image_url\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Together does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "kev-4b": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"SiliconFlow does not accept \\\"image_url\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"SiliconFlow does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  },
+  "decisions-fast": {
+    "image": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Parallel does not accept \\\"image_url\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    },
+    "audio": {
+      "date": "2026-11-21",
+      "invalid_data": "rejected(400)",
+      "error": "HTTP 400: {\"error\":{\"message\":\"Parallel does not accept \\\"input_audio\\\" parts in state\",\"code\":400}}",
+      "status": "rejected"
+    }
+  }
+}

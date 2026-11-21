@@ -1,0 +1,178 @@
+{
+  "id": "zh-sentiment",
+  "scenario": "zh_text",
+  "title": "繁中商品評論：整體是否正面",
+  "description": "16 則台灣口語評論，含 4 則反諷與 2 則先抑後揚／先揚後抑。標註以「評論者整體是否推薦」為準。",
+  "question": {
+    "type": "binary",
+    "instructions": "這則商品評論的作者，整體而言對商品是正面、會推薦的嗎？"
+  },
+  "items": [
+    {
+      "id": "p1",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "這台吹風機風量超大，三分鐘就吹乾，買了不後悔。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "p2",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "店員很有耐心幫我挑尺寸，下次還會再來。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "p3",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "CP 值爆表，用了半年電池還是撐一整天。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "p4",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "原本擔心網購會踩雷，結果品質比門市還好。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "p5",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "客服半夜回信還主動補寄零件，太佛心了。"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "p6",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "雖然出貨慢了兩天，但東西真的很好用，整體很滿意。"
+        }
+      ],
+      "gold": "yes",
+      "group": "mixed"
+    },
+    {
+      "id": "n1",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "用不到一週就無法開機，送修還要自付運費。"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "n2",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "包裝破損、內容物刮傷，跟圖片差很多。"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "n3",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "客服已讀不回，退貨流程卡了一個月。"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "n4",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "聲音超吵，晚上開根本睡不著，後悔買。"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "n5",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "外觀很漂亮，可惜三天就壞了，完全不推。"
+        }
+      ],
+      "gold": "no",
+      "group": "mixed"
+    },
+    {
+      "id": "n6",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "說好的防水，結果淋一點雨就進水。"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "x1",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "真是太棒了，第二次開機就冒煙，讓我省了很多使用時間。"
+        }
+      ],
+      "gold": "no",
+      "group": "sarcasm"
+    },
+    {
+      "id": "x2",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "好喔，又一條只能配原廠線的充電器，感謝創新。"
+        }
+      ],
+      "gold": "no",
+      "group": "sarcasm"
+    },
+    {
+      "id": "x3",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "客服效率驚人，只花了三個禮拜就回我「已收到」。"
+        }
+      ],
+      "gold": "no",
+      "group": "sarcasm"
+    },
+    {
+      "id": "x4",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "本來想給負評挑毛病，結果找不到缺點，可惡。"
+        }
+      ],
+      "gold": "yes",
+      "group": "sarcasm"
+    }
+  ]
+}

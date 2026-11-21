@@ -1,0 +1,100 @@
+{
+  "id": "tw-econ-headline",
+  "scenario": "taiwan",
+  "title": "台灣經濟新聞主題分類",
+  "description": "8 則台灣經濟新聞標題（手寫、虛構但貼近真實），分到 6 個主題。",
+  "question": {
+    "type": "choice",
+    "instructions": "這則台灣經濟新聞標題屬於哪個主題？",
+    "options": {
+      "tech": "半導體與科技（半導體、晶片、AI 伺服器、科技業）",
+      "energy": "能源與電力（電價、發電、核能、再生能源、供電）",
+      "finance": "匯率與金融（新台幣匯率、央行利率、股市、銀行）",
+      "trade": "國際貿易與關稅（出口、進口、關稅、貿易協定）",
+      "housing": "房市與營建（房價、房貸、建案、營建業）",
+      "labor": "勞動與薪資（基本工資、就業、勞工權益、薪資）"
+    }
+  },
+  "items": [
+    {
+      "id": "tw-head-01",
+      "gold": "tech",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "台積電2奈米製程良率提升，高雄廠明年擴大量產"
+        }
+      ]
+    },
+    {
+      "id": "tw-head-02",
+      "gold": "energy",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "夏季用電尖峰備轉容量率吃緊，台電啟動需量反應機制"
+        }
+      ]
+    },
+    {
+      "id": "tw-head-03",
+      "gold": "finance",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "新台幣兌美元強升逾一角，壽險業匯損壓力加劇"
+        }
+      ]
+    },
+    {
+      "id": "tw-head-04",
+      "gold": "trade",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "美國調高進口工具機關稅，台灣機械業者轉攻東南亞市場"
+        }
+      ]
+    },
+    {
+      "id": "tw-head-05",
+      "gold": "housing",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "六都預售屋推案量年減兩成，新成屋成交價格走平"
+        }
+      ]
+    },
+    {
+      "id": "tw-head-06",
+      "gold": "labor",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "勞動部統計：今年前九月經常性薪資年增3%，服務業缺工未解"
+        }
+      ]
+    },
+    {
+      "id": "tw-head-07",
+      "gold": "finance",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "外資單月淨匯出逾百億美元，銀行間短期拆款利率走升"
+        }
+      ]
+    },
+    {
+      "id": "tw-head-08",
+      "gold": "trade",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "財政部：前十月對東協出口年增三成，出口市場分散有成"
+        }
+      ]
+    }
+  ]
+}

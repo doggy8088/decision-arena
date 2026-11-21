@@ -1,0 +1,202 @@
+{
+  "id": "zh-intent-routing",
+  "scenario": "zh_text",
+  "title": "客服意圖路由（6 類）",
+  "description": "18 句電商客服來訊，分到 6 個處理單位。2 句刻意跨類（退款 vs 取消、付款按鈕無反應 = 技術而非帳單）。",
+  "question": {
+    "type": "choice",
+    "instructions": "這則顧客訊息應該轉給哪個客服單位處理？",
+    "options": {
+      "billing": "帳單、扣款、退款、發票",
+      "shipping": "出貨、物流、配送進度、取貨",
+      "returns": "退貨、換貨、商品瑕疵",
+      "account": "登入、密碼、會員資料、帳號安全",
+      "tech": "App 或網站故障、功能操作問題",
+      "other": "以上皆非（閒聊、建議、與服務無關）"
+    }
+  },
+  "items": [
+    {
+      "id": "b1",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "我這個月怎麼被扣了兩次款？"
+        }
+      ],
+      "gold": "billing"
+    },
+    {
+      "id": "b2",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "請問可以補開統編發票嗎？"
+        }
+      ],
+      "gold": "billing"
+    },
+    {
+      "id": "b3",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "取消訂單已經十天了，錢什麼時候退回信用卡？"
+        }
+      ],
+      "gold": "billing",
+      "group": "ambiguous"
+    },
+    {
+      "id": "s1",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "我的包裹顯示已到店，但門市說找不到。"
+        }
+      ],
+      "gold": "shipping"
+    },
+    {
+      "id": "s2",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "下單三天了還沒出貨，可以幫我催一下嗎？"
+        }
+      ],
+      "gold": "shipping"
+    },
+    {
+      "id": "s3",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "可以改成寄到公司地址嗎？還沒出貨。"
+        }
+      ],
+      "gold": "shipping"
+    },
+    {
+      "id": "r1",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "收到的杯子有裂痕，想要換一個新的。"
+        }
+      ],
+      "gold": "returns"
+    },
+    {
+      "id": "r2",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "衣服尺寸太小，七天內可以退嗎？"
+        }
+      ],
+      "gold": "returns"
+    },
+    {
+      "id": "r3",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "耳機左邊沒聲音，才用兩天。"
+        }
+      ],
+      "gold": "returns"
+    },
+    {
+      "id": "a1",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "忘記密碼，重設信一直收不到。"
+        }
+      ],
+      "gold": "account"
+    },
+    {
+      "id": "a2",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "我想把會員綁定的手機號碼改掉。"
+        }
+      ],
+      "gold": "account"
+    },
+    {
+      "id": "a3",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "收到通知說我的帳號在國外登入，不是我本人。"
+        }
+      ],
+      "gold": "account"
+    },
+    {
+      "id": "t1",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "App 一打開就閃退，已經重裝過了。"
+        }
+      ],
+      "gold": "tech"
+    },
+    {
+      "id": "t2",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "結帳頁面按了付款都沒反應。"
+        }
+      ],
+      "gold": "tech",
+      "group": "ambiguous"
+    },
+    {
+      "id": "t3",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "優惠券要在哪裡輸入？找不到欄位。"
+        }
+      ],
+      "gold": "tech"
+    },
+    {
+      "id": "o1",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "你們的 logo 很可愛耶。"
+        }
+      ],
+      "gold": "other"
+    },
+    {
+      "id": "o2",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "建議可以多賣一點素食商品。"
+        }
+      ],
+      "gold": "other"
+    },
+    {
+      "id": "o3",
+      "inputs": [
+        {
+          "type": "text",
+          "text": "請問今天台北會下雨嗎？"
+        }
+      ],
+      "gold": "other"
+    }
+  ]
+}

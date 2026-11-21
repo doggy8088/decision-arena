@@ -1,0 +1,98 @@
+{
+  "id": "image-color",
+  "scenario": "image",
+  "title": "主色辨識（健全性檢查）",
+  "description": "灰底上一個大色塊，問主色是什麼。看不到圖的模型只能猜（25%），用來確認影像通道真的有在運作。",
+  "question": {
+    "type": "choice",
+    "instructions": "What is the color of the large shape in this image?",
+    "options": {
+      "red": "the shape is red",
+      "green": "the shape is green",
+      "blue": "the shape is blue",
+      "yellow": "the shape is yellow"
+    }
+  },
+  "items": [
+    {
+      "id": "red_0",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/color/red_0.png"
+        }
+      ],
+      "gold": "red"
+    },
+    {
+      "id": "red_1",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/color/red_1.png"
+        }
+      ],
+      "gold": "red"
+    },
+    {
+      "id": "green_0",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/color/green_0.png"
+        }
+      ],
+      "gold": "green"
+    },
+    {
+      "id": "green_1",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/color/green_1.png"
+        }
+      ],
+      "gold": "green"
+    },
+    {
+      "id": "blue_0",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/color/blue_0.png"
+        }
+      ],
+      "gold": "blue"
+    },
+    {
+      "id": "blue_1",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/color/blue_1.png"
+        }
+      ],
+      "gold": "blue"
+    },
+    {
+      "id": "yellow_0",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/color/yellow_0.png"
+        }
+      ],
+      "gold": "yellow"
+    },
+    {
+      "id": "yellow_1",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/color/yellow_1.png"
+        }
+      ],
+      "gold": "yellow"
+    }
+  ]
+}

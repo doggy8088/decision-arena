@@ -1,0 +1,112 @@
+{
+  "id": "image-ui-error",
+  "scenario": "image",
+  "title": "App 畫面是否為錯誤狀態",
+  "description": "合成的 App 截圖。刻意放了「紅底但不是錯誤」（限時特價）與「藍／灰底但是錯誤」，測模型是看語意還是只看顏色。",
+  "question": {
+    "type": "binary",
+    "instructions": "Does this app screen show an error or failure state that the user needs to deal with?"
+  },
+  "items": [
+    {
+      "id": "pay_fail",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/ui/pay_fail.png"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "timeout",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/ui/timeout.png"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "login_fail",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/ui/login_fail.png"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "err_grey",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/ui/err_grey.png"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "upload_fail",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/ui/upload_fail.png"
+        }
+      ],
+      "gold": "yes"
+    },
+    {
+      "id": "pay_ok",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/ui/pay_ok.png"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "loading",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/ui/loading.png"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "saved",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/ui/saved.png"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "sale_red",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/ui/sale_red.png"
+        }
+      ],
+      "gold": "no"
+    },
+    {
+      "id": "empty",
+      "inputs": [
+        {
+          "type": "image",
+          "path": "assets/images/ui/empty.png"
+        }
+      ],
+      "gold": "no"
+    }
+  ]
+}

@@ -1,0 +1,475 @@
+{
+  "id": "audio-has-voice",
+  "scenario": "audio",
+  "title": "有沒有人聲（守門）",
+  "description": "同一批 42 段，只問有沒有人聲（說話或唱歌）。原始結果：Decisions 42/42。",
+  "source": "data/scenes/manifest.json",
+  "question": {
+    "type": "binary",
+    "instructions": "Does this audio clip contain a human voice (speaking or singing)?"
+  },
+  "items": [
+    {
+      "id": "co_bohemian_l",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/concert/co_bohemian_l.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "concert"
+    },
+    {
+      "id": "co_bts",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/concert/co_bts.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "concert"
+    },
+    {
+      "id": "co_coldplay",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/concert/co_coldplay.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "concert"
+    },
+    {
+      "id": "co_coldplay2",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/concert/co_coldplay2.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "concert"
+    },
+    {
+      "id": "co_dimash",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/concert/co_dimash.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "concert"
+    },
+    {
+      "id": "co_liveaid",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/concert/co_liveaid.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "concert"
+    },
+    {
+      "id": "ms_causal",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/multi_speech/ms_causal.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "multi_speech"
+    },
+    {
+      "id": "ms_ivehadit",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/multi_speech/ms_ivehadit.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "multi_speech"
+    },
+    {
+      "id": "ms_panel",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/multi_speech/ms_panel.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "multi_speech"
+    },
+    {
+      "id": "ms_panel2",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/multi_speech/ms_panel2.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "multi_speech"
+    },
+    {
+      "id": "ms_twohot",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/multi_speech/ms_twohot.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "multi_speech"
+    },
+    {
+      "id": "ms_twoperson",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/multi_speech/ms_twoperson.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "multi_speech"
+    },
+    {
+      "id": "mu_canon_cp",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/music/mu_canon_cp.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "music"
+    },
+    {
+      "id": "mu_canon_o",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/music/mu_canon_o.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "music"
+    },
+    {
+      "id": "mu_guitar",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/music/mu_guitar.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "music"
+    },
+    {
+      "id": "mu_jazz",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/music/mu_jazz.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "music"
+    },
+    {
+      "id": "mu_lofi",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/music/mu_lofi.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "music"
+    },
+    {
+      "id": "mu_rach",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/music/mu_rach.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "music"
+    },
+    {
+      "id": "no_build",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/noise/no_build.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "noise"
+    },
+    {
+      "id": "no_nyc",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/noise/no_nyc.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "noise"
+    },
+    {
+      "id": "no_rain",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/noise/no_rain.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "noise"
+    },
+    {
+      "id": "no_traffic",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/noise/no_traffic.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "noise"
+    },
+    {
+      "id": "no_white",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/noise/no_white.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "noise"
+    },
+    {
+      "id": "no_window",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/noise/no_window.mp3"
+        }
+      ],
+      "gold": "no",
+      "group": "noise"
+    },
+    {
+      "id": "sg_bohemian",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/singing/sg_bohemian.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "singing"
+    },
+    {
+      "id": "sg_buzztones",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/singing/sg_buzztones.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "singing"
+    },
+    {
+      "id": "sg_despacito",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/singing/sg_despacito.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "singing"
+    },
+    {
+      "id": "sg_pentatonix",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/singing/sg_pentatonix.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "singing"
+    },
+    {
+      "id": "sg_seeyou",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/singing/sg_seeyou.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "singing"
+    },
+    {
+      "id": "sg_sugar",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/singing/sg_sugar.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "singing"
+    },
+    {
+      "id": "sp_audiobook",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/speech/sp_audiobook.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "speech"
+    },
+    {
+      "id": "sp_jobs",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/speech/sp_jobs.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "speech"
+    },
+    {
+      "id": "sp_ted_amy",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/speech/sp_ted_amy.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "speech"
+    },
+    {
+      "id": "sp_ted_ken",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/speech/sp_ted_ken.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "speech"
+    },
+    {
+      "id": "sp_ted_tim",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/speech/sp_ted_tim.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "speech"
+    },
+    {
+      "id": "sp_zoo",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/speech/sp_zoo.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "speech"
+    },
+    {
+      "id": "sm_abelcole",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/speech_music/sm_abelcole.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "speech_music"
+    },
+    {
+      "id": "sm_nursery",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/speech_music/sm_nursery.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "speech_music"
+    },
+    {
+      "id": "sm_siva",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/speech_music/sm_siva.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "speech_music"
+    },
+    {
+      "id": "sm_spotify",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/speech_music/sm_spotify.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "speech_music"
+    },
+    {
+      "id": "sm_sprite",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/speech_music/sm_sprite.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "speech_music"
+    },
+    {
+      "id": "sm_vlog",
+      "inputs": [
+        {
+          "type": "audio",
+          "path": "data/scenes/speech_music/sm_vlog.mp3"
+        }
+      ],
+      "gold": "yes",
+      "group": "speech_music"
+    }
+  ]
+}

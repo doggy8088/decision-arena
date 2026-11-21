@@ -1,3 +1,105 @@
+# Decision 模型評測
+
+評測市面上的 **decision models**：一次前向傳播就直接回傳校準機率、不生成文字的決策模型。評測涵蓋多模態能力（文字、影像、音訊），以及五類情境：
+
+- 語音
+- 影像判斷
+- 中文文字決策
+- Agent 守門與路由
+- 台灣政經
+
+> 📊 **互動版報告**：[`bench-report.html`](bench-report.html)。單一 HTML 檔，支援深色模式。
+> 報告由 `python3 -m bench report` 從 `results/` 直接產生。
+
+第一輪：2026-11-22，共 **34 個模型 × 20 個任務**，7,327 次請求，總花費約 **US$0.28**。
+
+## 重點結論（2026-11-22）
+
+| 發現 | 數據 |
+| --- | --- |
+| 實測能解碼音訊的只有 4 個模型 | `gemini-decision-1`、`clef-omni`、`heygen-decision-1`（含 turbo）。Liquid d1.2 經 OpenRouter 送音訊會被拒收；它的原生 API 有寫音訊欄位，這輪沒測 |
+| 發音判斷，`clef-omni` 勝過 Gemini | 發音練習 50 段 AUC 0.92 vs 0.78；音場 7 類 88% vs 76%；ㄌㄨˊ 辨音 AUC 1.00 vs 0.54（14 段中只有 2 段正例） |
+| 聲調錯誤，沒有模型抓得到 | 5 段刻意唸錯聲調的錄音，最多只抓到 1 段 |
+| 中文文字與 Agent 種子題組出現天花板效應 | 232 格中有 200 格是 100%，下一輪需要更難的題目 |
+| 有鑑別力的是繁中細節與台灣知識 | 形近字 26%–83%；注音字卡 0%–75%；台灣政經選擇題 32%–84%（不含會上網的 `decisions-fast`） |
+| 台灣題組的錯誤集中在 2025 年後的新事實 | 例如最大出口市場已是美國、上市市值第二為聯發科；多數模型答錯 |
+| 新框架重現了原始研究 | 用原始題目描述，`gemini-decision-1` 音場分類 32/42，與 11-17 完全一致 |
+
+## 架構
+
+```text
+bench/                     # 評測框架（純 Python 標準函式庫）
+├── schema.py              # 任務格式：標準化題型 binary／choice、輸入 text／image／audio
+├── providers/             # 每個模型一個 adapter，標準化題目 → 各家 API
+│   ├── gemini.py          #   Google Decisions API 直連（音訊已驗證）
+│   ├── openrouter.py      #   OpenRouter /api/alpha/decisions，33 個模型的名冊
+│   └── mock.py            #   離線測試用
+├── probe.py               # 模態探針：用正負例對照確認模型真的看得到／聽得到
+├── runner.py              # 執行：快取、美元上限、模態守門、多模型平行
+├── metrics.py             # 正確率、AUC、Brier、ECE、log loss、立場對稱 |Δ|
+├── report.py              # 產生 bench-report.html
+├── build_assets.py        # 用 ffmpeg 合成影像題，並把既有音訊研究轉成任務
+└── build_taiwan.py        # data/taiwan/items.json（附一手來源）→ 任務檔
+tasks/<情境>/<任務>.json   # 20 個任務，所有模型共用
+assets/images/             # 合成影像題（標註由程式決定）
+data/taiwan/items.json     # 台灣政經題目，每題附來源網址、引文與查證日期
+results/
+├── capabilities.json      # 各模型 × 模態的探針結果
+├── notes.json             # 報告裡手寫的結論與註記
+└── runs/<run-id>/         # 每次執行的原始紀錄（records.jsonl、meta.json）
+tests/test_bench.py        # 離線單元測試
+```
+
+## 怎麼跑
+
+```bash
+export OPENROUTER_API_KEY=...   # 33 個模型都經由 OpenRouter
+export GEMINI_API_KEY=...       # Gemini 直連
+
+python3 -m bench models                       # 列出模型名冊與金鑰狀態
+python3 -m bench tasks                        # 列出任務
+python3 -m bench build                        # 重新產生影像素材與音訊任務
+python3 -m bench probe                        # 對所有模型探測影像／音訊能力
+python3 -m bench run --tasks zh_text,agent --budget 1
+python3 -m bench run --models clef-omni,gemini-decision-1 --tasks audio --limit 10
+python3 -m bench report                       # 合併 results/runs/* → bench-report.html
+python3 -m unittest discover -s tests         # 離線測試
+```
+
+各項行為說明：
+
+- **音訊任務**需要先下載素材：`scripts/fetch_scenes.py` 下載音場片段，`scripts/build_pron_corpus.py` 產生發音語料。這些音檔不進版控。
+- **跳過的任務**：模態探針沒有判定為 `supported` 的任務，會整格跳過、不計分。要硬跑請加 `--force`。
+- **快取**：原始回應快取在 `out/bench/cache/`，重跑或重出報告不會重複計費。
+
+## 擴充
+
+- **新增模型**：
+  - OpenRouter 上有的模型，在 `bench/providers/openrouter.py` 的 `CATALOG` 加一行即可。
+  - 其他廠商請繼承 `Provider`，實作 `build_request` 與 `parse_response`，再登記到 `providers/__init__.py`。
+  - 加完後先執行 `probe`。
+- **新增任務**：在 `tasks/<情境>/` 放一個 JSON。格式見 `bench/schema.py` 的說明。標註不可取自任何受測模型的輸出。
+- **尚未接上的模型**：
+  - OpenRouter 上刻意不跑的：抽取型的 `cloudflare/clairic`，以及已退役或改道的舊版（d1、d1.1、d1-ultra、Jev 1.13、Drex v1.5）。
+  - 以下四個不在 OpenRouter 上，需要各家的金鑰：
+    - GLiDE v1.2（Fastino）
+    - SubQ Snap 1.2
+    - Celeris-1.1 Decision
+    - Mercury Decide（2026-12-28 停止服務）
+
+## 已知限制
+
+- **題組規模小**：每個任務 5–50 題，是種子題組，分數差距在小樣本下不一定顯著。
+- **中文文字與 Agent 題組太簡單**：需要換成貼近實際資料的難題。
+- **台灣政經的近期數據有時效性**：最低工資、經濟成長率、市值排名等題目，以 `as_of` 日期為準。
+- **立場對稱題只有 8 組**：只能當描述性觀察，不能當作偏見的定論。
+- **對措辭敏感**：決策模型對選項描述的措辭很敏感。同樣的音場題，類別描述寫短一點，Gemini 就從 32/42 掉到 29/42。
+- **模型會更新**：雲端模型的行為可能改變，數字只代表測試當天的狀態。
+
+---
+
+以下是本專案原本針對 `gemini-decision-1` 的深入研究（2026-11-17～19），內容保留不動。
+
 # Gemini Decisions 多模態實測
 
 三個研究，回答同一個問題：**`gemini-decision-1`（Decisions API）在「非文字」的判斷上到底能做什麼、不能做什麼**，並以 `gemini-4-argon` 當對照組。
@@ -60,7 +162,7 @@
 <details>
 <summary>研究一原始數據（點開）</summary>
 
-### Decisions：無鑑別力
+## Decisions：無鑑別力
 
 | 音檔 | 應為 lu2？ | P(lu2) | 四選一最高 |
 | --- | --- | --- | --- |
@@ -79,7 +181,7 @@
 
 正例平均 0.663、其餘 0.639；`min(P|正)=0.611 < max(P|負)=0.780` → 無法分離。重跑一次結論相同（正例 0.703、其餘 0.597，四選一仍 0/2）。
 
-### Argon 盲測
+## Argon 盲測
 
 | 音檔 | 期望 | Argon | 判定 |
 | --- | --- | --- | --- |
@@ -189,7 +291,7 @@
 
 ### 混淆矩陣（Decisions）
 
-```
+```text
 true\pred      speech  singin   music   noise  concer  multi_  speech   n  recall
 ---------------------------------------------------------------------------------
 speech              6       0       0       0       0       0       0   6  6/6
@@ -203,7 +305,7 @@ speech_music        0       0       0       0       1       1       4   6  4/6
 
 ### 混淆矩陣（Argon 多數決）
 
-```
+```text
 true\pred      speech  singin   music   noise  concer  multi_  speech   n  recall
 ---------------------------------------------------------------------------------
 speech              6       0       0       0       0       0       0   6  6/6
@@ -249,7 +351,7 @@ speech_music        0       0       0       0       0       0       6   6  6/6
 | 重跑結果一致 | **42/42** | **42/42** |
 | 真實類別平均機率 / 信心 | 0.648 | 0.962 |
 | 平均延遲 | **500 ms** | 6 704 ms |
-| 每段成本（10 秒音訊＋8 個題目） | 約 US$0.00009 | 約 US$0.0025 |
+| 每段成本（10 秒音訊＋8 個題目） | 約 US\$0.00009 | 約 US\$0.0025 |
 
 ## 判讀
 
@@ -479,8 +581,8 @@ app/data/
 
 | 模型 | 文字輸入 | 音訊輸入 | 輸出 | 10 秒音訊一次呼叫 |
 | --- | --- | --- | --- | --- |
-| `gemini-decision-1` | $0.10／1M | $0.10／1M | $0（無輸出 token） | 約 US$0.00009 |
-| `gemini-4-argon` | $2／1M | $2／1M | $10／1M | 約 US$0.0025 |
+| `gemini-decision-1` | \$0.10／1M | \$0.10／1M | \$0（無輸出 token） | 約 US\$0.00009 |
+| `gemini-4-argon` | \$2／1M | \$2／1M | \$10／1M | 約 US\$0.0025 |
 
 ---
 
