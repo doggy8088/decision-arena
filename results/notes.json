@@ -1,4 +1,52 @@
 {
+  "overall": {
+    "headline": "沒有一個模型全面勝出：先看要不要聽音訊，再依情境挑模型。",
+    "points": [
+      "<strong>決策模型便宜又快，適合當守門與路由。</strong>34 個模型、7,327 次請求總共只花 US$0.28，各模型延遲中位數約 0.5–1.3 秒。一般的文字分類、詐騙判斷、Agent 工具選擇與轉真人判斷，幾乎每個模型都 100%。",
+      "<strong>細節判斷與新知識仍不可靠。</strong>聲調錯誤沒有模型抓得到；注音字卡、形近字最多七、八成；2025 年以後的台灣新事實多數模型都答錯。這類任務不要只靠決策模型驗收。",
+      "<strong>需要音訊，只能從 4 個裡挑。</strong>clef-omni 的發音與音場判斷最好，但它的影像能力有明顯問題（數方塊多數一倍）；要影像與音訊都穩定，選 HeyGen Decision 1 Turbo。",
+      "<strong>只需要文字與影像，Jev 1.14 綜合表現最好。</strong>在形近字、注音、台灣選擇題與是非題這 4 個有鑑別力的任務上平均 69%，是唯一每一項都達六成以上的模型。",
+      "<strong>Gemini Decision 1 不是首選。</strong>它的形近字辨識最好（83%），但音訊判斷輸給 clef-omni 與 HeyGen，台灣選擇題也只有 58%。"
+    ],
+    "picks": [
+      {
+        "need": "語音／發音判斷",
+        "pick": "clef-omni",
+        "alt": "heygen-decision-1-turbo",
+        "why": "發音練習 AUC 0.92、音場 88%；但都抓不到聲調錯誤"
+      },
+      {
+        "need": "影像＋音訊都要",
+        "pick": "heygen-decision-1-turbo",
+        "alt": "gemini-decision-1",
+        "why": "音訊與標準版幾乎相同、價格較低，影像題也都穩定"
+      },
+      {
+        "need": "圖片與繁中細節",
+        "pick": "jev-1.14",
+        "alt": "gemini-decision-1",
+        "why": "形近字 74%、注音 75%；Gemini 形近字 83%，但注音只有 50%"
+      },
+      {
+        "need": "台灣政經知識",
+        "pick": "drex-max-finance",
+        "alt": "pplx-decider-v1.3、microsoft-decision-1.1",
+        "why": "選擇題 84%；要 2025 年後的新事實，請搭配上網查證或 RAG"
+      },
+      {
+        "need": "政治議題需要中立",
+        "pick": "gpt-6-luna-decisions",
+        "alt": "gemini-decision-1",
+        "why": "互換主體的陳述，機率差 |Δ| 只有 0.003 與 0.030"
+      },
+      {
+        "need": "一般文字分類／Agent 路由",
+        "pick": "任一模型",
+        "alt": "挑便宜或快的",
+        "why": "種子題組幾乎全員 100%，差異只在校準與價格"
+      }
+    ]
+  },
   "summary": [
     {
       "tone": "ok",

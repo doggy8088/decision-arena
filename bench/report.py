@@ -127,6 +127,23 @@ def build_report(run_ids: list[str] | None = None, out: Path = OUT) -> Path:
 <div><dt>總花費</dt><dd>US${total_cost:.3f}</dd></div>
 </dl><p class="meta">產生時間 {esc(created)}｜執行批次 {len(metas)} 次</p></header>""")
 
+    # ---------------------------------------------------------- 總結
+    ov = notes.get("overall")
+    if ov:
+        w(f'<section class="overall"><h2>總結</h2><p class="verdict">{esc(ov["headline"])}</p><ul>')
+        for pt in ov.get("points", []):
+            w(f"<li>{pt}</li>")
+        w("</ul>")
+        if ov.get("picks"):
+            w('<h3>依需求選模型</h3><div class="table-wrap"><table><thead><tr><th>需求</th><th>首選</th>'
+              '<th>備選</th><th>理由</th></tr></thead><tbody>')
+            for pk in ov["picks"]:
+                pick = pk["pick"] if pk["pick"].startswith("任一") else f'<code>{esc(pk["pick"])}</code>'
+                alt = "、".join(f"<code>{esc(a)}</code>" if a.isascii() else esc(a) for a in pk["alt"].split("、"))
+                w(f'<tr><th>{esc(pk["need"])}</th><td>{pick}</td><td>{alt}</td><td>{esc(pk["why"])}</td></tr>')
+            w("</tbody></table></div>")
+        w("</section>")
+
     # ---------------------------------------------------------- 結論
     if notes.get("summary"):
         w('<section><h2>重點結論</h2><div class="cards">')
@@ -370,6 +387,18 @@ td small,th small{display:block}
 .q span{display:inline-block;font-size:14px;font-weight:700;color:var(--accent);margin-right:10px}
 details{margin:8px 0}
 summary{cursor:pointer;color:var(--link);font-weight:600}
+.overall{background:var(--surface);border:1px solid var(--border);border-top:5px solid var(--accent);
+  border-radius:14px;padding:24px 28px}
+@media (max-width:640px){.overall{padding:20px 16px}}
+.overall h2{border-top:0;padding-top:0}
+.overall .verdict{font-size:1.25rem;font-weight:700;line-height:1.5;color:var(--accent)}
+.overall ul{margin:0 0 24px;padding-left:1.2em}
+.overall li{margin-bottom:.7em}
+.overall h3{margin-top:8px}
+.overall tbody th{white-space:nowrap;background:var(--surface-2)}
+.overall table{min-width:860px}
+.overall td:last-child{min-width:18em}
+.overall td code{white-space:nowrap;word-break:normal}
 </style>
 </head>
 <body><main>
