@@ -174,6 +174,20 @@ class RunnerTests(unittest.TestCase):
         self.assertIn("500", rec["error"])
 
 
+class ReportTests(unittest.TestCase):
+    def test_report_lists_each_model_once(self):
+        """回歸測試：曾因 providers.get([]) 回傳全部模型，導致報告每個模型出現兩次。"""
+        import re
+        from bench import report
+        with tempfile.TemporaryDirectory() as td:
+            out = report.build_report(out=Path(td) / "r.html")
+            html_text = out.read_text(encoding="utf-8")
+        head = html_text.split('<table class="matrix">', 1)[1].split("</thead>", 1)[0]
+        ids = re.findall(r"<code>([^<]+)</code>", head)
+        self.assertEqual(len(ids), len(set(ids)))
+        self.assertEqual(len(ids), len(REGISTRY))
+
+
 class DashboardTests(unittest.TestCase):
     def test_build_data_shape_and_composite_rule(self):
         from bench import dashboard
@@ -188,7 +202,11 @@ class DashboardTests(unittest.TestCase):
 
     def test_template_has_placeholder(self):
         from bench import dashboard
-        self.assertIn("/*__DATA__*/null", dashboard.TEMPLATE.read_text(encoding="utf-8"))
+        tpl = dashboard.TEMPLATE.read_text(encoding="utf-8")
+        self.assertIn("/*__DATA__*/null", tpl)
+        for name in ("CSS", "BODY", "SCRIPT"):
+            self.assertIn(f"<!--{name}-->", tpl)
+            self.assertIn(f"<!--/{name}-->", tpl)
 
 
 class ProviderShapeTests(unittest.TestCase):

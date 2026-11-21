@@ -19,3 +19,6 @@ data/pron/*.mp3
 # App 的錄音與研究紀錄
 app/data/
 data/pron/padded/
+
+# 圖像生成原始檔（網站用的是 assets/site/ 的壓縮版）
+output/

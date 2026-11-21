@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Decision Arena</title>
+<meta name="description" content="跨廠商 Decision 模型的多模態評測：34 個模型在語音、影像、繁中文字、Agent 守門與台灣政經情境的實測。">
+<meta name="color-scheme" content="light dark">
+<script>(()=>{try{const t=localStorage.getItem('da-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}})();</script>
+<style>
+:root{color-scheme:light;--bg:#f5f6f8;--surface:#ffffff;--surface-2:#eef0f3;--surface-3:#e4e7ec;--ink:#14171c;--ink-2:#4a515c;--muted:#646c79;--border:#dde1e6;--border-strong:#c3c9d1;--accent:#7a2e5c;--accent-ink:#ffffff;--accent-soft:#f4e6ee;--link:#7a2e5c;--ok:#1f7a3d;--ok-bg:#e2f3e7;--warn:#875700;--warn-bg:#fcefd5;--bad:#a3261e;--bad-bg:#fbe6e4;--tier-text:#2a78d6;--tier-image:#eb6834;--tier-audio:#1baf7a;--seq-0:#cde2fb;--seq-1:#9ec5f4;--seq-2:#6da7ec;--seq-3:#3987e5;--seq-4:#256abf;--seq-5:#184f95;--seq-6:#0d366b;--seqi-0:#13233a;--seqi-1:#13233a;--seqi-2:#13233a;--seqi-3:#ffffff;--seqi-4:#ffffff;--seqi-5:#ffffff;--seqi-6:#ffffff;--pos:#2a78d6;--neg:#eb6834;--track:#e9ecf0;--grid:#e3e6ea;--shadow:0 1px 2px rgba(20,23,28,.04), 0 8px 24px rgba(20,23,28,.06);}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0f1115;--surface:#161920;--surface-2:#1d2129;--surface-3:#262b34;--ink:#e8ebf0;--ink-2:#b2b9c4;--muted:#8f97a3;--border:#2a2f38;--border-strong:#3b414c;--accent:#e7a3c8;--accent-ink:#1a0f16;--accent-soft:#2b1a25;--link:#edb3d3;--ok:#7ed69a;--ok-bg:#15301f;--warn:#f0c46a;--warn-bg:#33280f;--bad:#ff9a90;--bad-bg:#3a1a17;--tier-text:#3987e5;--tier-image:#d95926;--tier-audio:#199e70;--seq-0:#1b2a3c;--seq-1:#184f95;--seq-2:#1c5cab;--seq-3:#256abf;--seq-4:#3987e5;--seq-5:#6da7ec;--seq-6:#b7d3f6;--seqi-0:#e8ebf0;--seqi-1:#e8ebf0;--seqi-2:#e8ebf0;--seqi-3:#ffffff;--seqi-4:#ffffff;--seqi-5:#0d1b2a;--seqi-6:#0d1b2a;--pos:#3987e5;--neg:#d95926;--track:#232831;--grid:#272c35;--shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0f1115;--surface:#161920;--surface-2:#1d2129;--surface-3:#262b34;--ink:#e8ebf0;--ink-2:#b2b9c4;--muted:#8f97a3;--border:#2a2f38;--border-strong:#3b414c;--accent:#e7a3c8;--accent-ink:#1a0f16;--accent-soft:#2b1a25;--link:#edb3d3;--ok:#7ed69a;--ok-bg:#15301f;--warn:#f0c46a;--warn-bg:#33280f;--bad:#ff9a90;--bad-bg:#3a1a17;--tier-text:#3987e5;--tier-image:#d95926;--tier-audio:#199e70;--seq-0:#1b2a3c;--seq-1:#184f95;--seq-2:#1c5cab;--seq-3:#256abf;--seq-4:#3987e5;--seq-5:#6da7ec;--seq-6:#b7d3f6;--seqi-0:#e8ebf0;--seqi-1:#e8ebf0;--seqi-2:#e8ebf0;--seqi-3:#ffffff;--seqi-4:#ffffff;--seqi-5:#0d1b2a;--seqi-6:#0d1b2a;--pos:#3987e5;--neg:#d95926;--track:#232831;--grid:#272c35;--shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:17px;line-height:1.75;font-feature-settings:"palt" 0;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:var(--link);text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+code,.mono{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:max(14px,.86em);
+  background:var(--surface-2);padding:.08em .38em;border-radius:5px;word-break:break-word}
+.wrap{max-width:960px;margin:0 auto;padding:0 32px}
+@media (max-width:640px){.wrap{padding:0 16px}}
+main{padding-bottom:96px}
+h1,h2,h3,h4{line-height:1.3;margin:0;color:var(--ink);letter-spacing:-.005em}
+h1{font-size:clamp(2.1rem,1.4rem + 2.6vw,3.1rem);font-weight:750;line-height:1.18;letter-spacing:-.015em}
+h2{font-size:1.55rem;font-weight:700}
+h3{font-size:1.17rem;font-weight:650}
+p{margin:0 0 1em}
+.lede{font-size:1.12rem;color:var(--ink-2);max-width:62ch;line-height:1.75}
+.small{font-size:15px;color:var(--ink-2)}
+.muted{color:var(--muted)}
+.num{font-variant-numeric:tabular-nums}
+
+/* 頁首 */
+.site-head{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 86%,transparent);
+  backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--border)}
+.site-head .wrap{display:flex;align-items:center;gap:20px;min-height:64px}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font-weight:700;font-size:17px;white-space:nowrap}
+.brand svg{flex:none}
+.nav{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{color:var(--ink-2);text-decoration:none;font-size:15px;font-weight:550;padding:8px 12px;border-radius:8px;white-space:nowrap}
+.nav a:hover{background:var(--surface-2);color:var(--ink)}
+.nav a[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
+.theme-btn{flex:none;display:inline-grid;place-items:center;width:40px;height:40px;border-radius:10px;border:1px solid var(--border);
+  background:var(--surface);color:var(--ink);cursor:pointer}
+.theme-btn:hover{background:var(--surface-2)}
+.theme-btn .moon{display:none}
+:root[data-theme="dark"] .theme-btn .sun{display:none}
+:root[data-theme="dark"] .theme-btn .moon{display:block}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .theme-btn .sun{display:none}
+  :root:not([data-theme="light"]) .theme-btn .moon{display:block}}
+@media (max-width:720px){
+  .site-head .wrap{flex-wrap:wrap;gap:0 12px;padding-top:8px}
+  .brand{order:1}.theme-btn{order:2;margin-left:auto}
+  .nav{order:3;width:100%;margin:4px -8px 6px;padding:0 0 2px}
+}
+
+/* 區塊 */
+.page-hero{padding:56px 0 8px}
+@media (max-width:640px){.page-hero{padding:36px 0 0}}
+.page-hero h1{margin-bottom:16px}
+.meta{font-size:14px;color:var(--muted);margin-top:16px}
+.section{margin-top:72px}
+@media (max-width:640px){.section{margin-top:56px}}
+.section-head{margin-bottom:20px}
+.section-head h2{margin-bottom:8px}
+.section-head p{color:var(--ink-2);max-width:66ch;margin:0}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 26px;box-shadow:var(--shadow)}
+@media (max-width:640px){.panel{padding:18px 16px;border-radius:14px}}
+.panel + .panel{margin-top:16px}
+.panel-title{font-size:1.05rem;font-weight:650;margin:0 0 4px}
+.panel-sub{font-size:15px;color:var(--ink-2);margin:0 0 16px;max-width:64ch}
+
+/* 數字列 */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);
+  border-radius:14px;overflow:hidden;margin:28px 0 0}
+@media (max-width:720px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stats div{background:var(--surface);padding:16px 18px}
+.stats dt{font-size:14px;color:var(--ink-2)}
+.stats dd{margin:2px 0 0;font-size:1.7rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.3}
+.stats dd small{font-size:15px;font-weight:500;color:var(--ink-2);margin-left:2px}
+
+/* 標籤與狀態 */
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;padding:2px 10px;border-radius:999px;white-space:nowrap;line-height:1.6}
+.pill.ok{background:var(--ok-bg);color:var(--ok)}
+.pill.bad{background:var(--bad-bg);color:var(--bad)}
+.pill.warn{background:var(--warn-bg);color:var(--warn)}
+.pill.muted{background:var(--surface-2);color:var(--muted)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;flex:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;color:var(--ink-2);align-items:center}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:15px;line-height:1.55}
+th,td{padding:12px 16px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border)}
+thead th{background:var(--surface-2);font-weight:600;font-size:14px;color:var(--ink-2);white-space:nowrap;position:sticky;top:0}
+tbody tr:last-child>*{border-bottom:0}
+tbody tr:hover>td{background:color-mix(in srgb,var(--surface-2) 55%,transparent)}
+td.note{color:var(--ink-2);font-size:14px;min-width:220px}
+td small,th small{display:block;font-size:14px;color:var(--muted);font-weight:400}
+
+details{margin-top:12px;border-top:1px solid var(--border);padding-top:10px}
+summary{cursor:pointer;color:var(--link);font-weight:600;font-size:15px;list-style:none;display:inline-flex;align-items:center;gap:8px}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"";width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;
+  transform:rotate(-45deg);transition:transform .15s}
+details[open] summary::before{transform:rotate(45deg)}
+details[open]>*:not(summary){margin-top:12px}
+
+/* 頁尾 */
+.site-foot{border-top:1px solid var(--border);margin-top:24px;padding:28px 0 40px;font-size:14px;color:var(--muted)}
+.site-foot .wrap{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+.site-foot a{color:var(--ink-2)}
+
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+/* 分段長條 */
+.seg{display:flex;gap:2px;height:40px;border-radius:8px;overflow:hidden}
+.seg>div{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;min-width:0}
+.seg-legend{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:10px;font-size:15px;color:var(--ink-2)}
+.seg-legend b{color:var(--ink);font-variant-numeric:tabular-nums;margin-left:4px}
+
+/* 橫條圖 */
+.bars{display:grid;grid-template-columns:minmax(120px,max-content) 1fr;gap:6px 14px;align-items:center}
+.bars .bl{font-size:14px;color:var(--ink);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
+.bars .bl code{background:none;padding:0;font-size:14px}
+.bars .bt{position:relative;height:22px;background:var(--track);border-radius:5px}
+.bars .bf{position:absolute;inset:0 auto 0 0;border-radius:5px;min-width:3px}
+.bars .bv{position:absolute;top:50%;transform:translateY(-50%);font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap}
+.bars .na .bt{background:repeating-linear-gradient(135deg,var(--track) 0 6px,var(--surface-2) 6px 9px)}
+@media (max-width:640px){.bars{grid-template-columns:minmax(96px,40%) 1fr}.bars .bl{max-width:none}}
+
+/* 範圍圖（每個任務：最低—最高，點為中位數） */
+.range{display:grid;grid-template-columns:minmax(150px,max-content) 1fr 7.5em;gap:10px 16px;align-items:center}
+.range .rl{font-size:15px;line-height:1.35}
+.range .rl small{display:block;font-size:14px;color:var(--muted)}
+.range .rt{position:relative;height:28px}
+.range .rt::before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:var(--grid)}
+.range .rspan{position:absolute;top:50%;height:8px;transform:translateY(-50%);border-radius:4px;background:var(--accent);opacity:.35}
+.range .rmin,.range .rmax,.range .rmed{position:absolute;top:50%;transform:translate(-50%,-50%);border-radius:50%}
+.range .rmin,.range .rmax{width:10px;height:10px;background:var(--surface);border:2px solid var(--accent)}
+.range .rmed{width:12px;height:12px;background:var(--accent);box-shadow:0 0 0 2px var(--surface)}
+.range .rv{font-size:14px;color:var(--ink-2);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.range .axis{grid-column:2;display:flex;justify-content:space-between;font-size:14px;color:var(--muted)}
+@media (max-width:640px){.range{grid-template-columns:1fr 6.5em}.range .rl{grid-column:1 / -1;margin-bottom:-6px}.range .axis{grid-column:1}}
+
+/* 分組橫條 */
+.groups{display:grid;gap:18px}
+.group h4{font-size:15px;font-weight:650;margin:0 0 8px}
+
+/* 發散長條 */
+.div{display:grid;grid-template-columns:minmax(120px,max-content) 1fr 1fr 5.5em;gap:6px 0;align-items:center}
+.div .dl{font-size:14px;text-align:right;padding-right:14px;white-space:nowrap}
+.div .dl code{background:none;padding:0}
+.div .dn,.div .dp{position:relative;height:20px}
+.div .dn{border-right:1px solid var(--border-strong)}
+.div .dn i,.div .dp i{position:absolute;top:2px;bottom:2px;border-radius:4px}
+.div .dn i{right:0;background:var(--neg)}
+.div .dp i{left:0;background:var(--pos)}
+.div .dv{font-size:14px;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink-2)}
+.div .dh{font-size:14px;color:var(--muted);padding-bottom:4px}
+@media (max-width:640px){.div{grid-template-columns:minmax(92px,36%) 1fr 1fr 4.2em}}
+
+/* 量尺（每個模型一條刻度） */
+.strip{position:relative;height:150px;margin:8px 4px 0}
+.strip .base{position:absolute;left:0;right:0;bottom:34px;height:2px;background:var(--border-strong)}
+.strip .tick{position:absolute;bottom:34px;width:3px;margin-left:-1.5px;border-radius:2px 2px 0 0}
+.strip .tick:hover{filter:brightness(1.2)}
+.strip .lab{position:absolute;font-size:14px;color:var(--ink);white-space:nowrap;transform:translateX(-50%);font-weight:600}
+.strip .lab::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:10px;background:var(--border-strong)}
+.strip .ax{position:absolute;bottom:6px;font-size:14px;color:var(--muted);transform:translateX(-50%);font-variant-numeric:tabular-nums}
+
+/* 散佈圖（SVG；寬度不足時在框內水平捲動，文字不縮小） */
+.svg-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.svg-wrap svg{display:block;min-width:600px;width:100%;height:auto}
+.svg-wrap text{font-family:inherit;font-size:14px;fill:var(--ink-2)}
+.svg-wrap .lbl{fill:var(--ink);font-weight:600}
+.svg-wrap .gl{stroke:var(--grid)}
+.svg-wrap .bl{stroke:var(--border-strong)}
+.svg-wrap .pt{stroke:var(--surface);stroke-width:2}
+
+.hero{position:relative;padding:72px 0 40px;overflow:hidden}
+.hero .wrap{position:relative;z-index:1}
+.hero-copy{max-width:31rem}
+.hero h1{margin-bottom:20px}
+.hero-art{position:absolute;inset:0 0 0 auto;width:min(68%,880px);pointer-events:none}
+.hero-art img{width:100%;height:100%;object-fit:cover;object-position:right center;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 28%),linear-gradient(180deg,#000 62%,transparent 100%);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(90deg,transparent 0,#000 28%),linear-gradient(180deg,#000 62%,transparent 100%);mask-composite:intersect}
+.hero-art .dark{display:none}
+:root[data-theme="dark"] .hero-art .light{display:none}
+:root[data-theme="dark"] .hero-art .dark{display:block}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .hero-art .light{display:none}
+  :root:not([data-theme="light"]) .hero-art .dark{display:block}}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 20px;border-radius:12px;font-weight:650;
+  font-size:16px;text-decoration:none;border:1px solid var(--border-strong);color:var(--ink);background:var(--surface)}
+.btn:hover{background:var(--surface-2);text-decoration:none}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08);background:var(--accent)}
+@media (max-width:860px){
+  .hero{padding:40px 0 8px}
+  .hero-art{position:relative;inset:auto;width:auto;height:220px;margin:28px -16px 0}
+  .hero-art img{-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 25%,#000 70%,transparent 100%);
+    mask-image:linear-gradient(180deg,transparent 0,#000 25%,#000 70%,transparent 100%);object-position:center}
+  .hero-copy{max-width:none}
+}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:860px){.split{grid-template-columns:1fr}}
+.finding h3{margin-bottom:6px}
+.finding p{color:var(--ink-2);font-size:16px;margin-bottom:18px}
+.scen{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.scen article{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 20px 20px;display:flex;flex-direction:column}
+.scen img{width:84px;height:84px;object-fit:contain;margin:-4px 0 6px -6px}
+.scen h3{margin-bottom:4px}
+.scen p{font-size:15px;color:var(--ink-2);margin:0 0 14px}
+.scen .best{margin-top:auto;font-size:14px;color:var(--ink-2);border-top:1px solid var(--border);padding-top:12px}
+.scen .best b{color:var(--ink);font-variant-numeric:tabular-nums;font-size:16px}
+.archive{list-style:none;margin:0;padding:0;border-top:1px solid var(--border)}
+.archive li{border-bottom:1px solid var(--border)}
+.archive a{display:grid;grid-template-columns:1fr auto;gap:4px 24px;padding:18px 4px;text-decoration:none;color:var(--ink)}
+.archive a:hover strong{color:var(--accent)}
+.archive strong{font-weight:650}
+.archive span{color:var(--ink-2);font-size:15px;grid-column:1}
+.archive em{font-style:normal;font-size:14px;color:var(--muted);grid-row:1 / span 2;grid-column:2;align-self:center}
+@media (max-width:640px){.archive em{display:none}}
+
+</style>
+
+</head>
+<body>
+<header class="site-head"><div class="wrap"><a class="brand" href="index.html"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="2" y="13" width="4" height="11" rx="2" fill="var(--tier-text)"/><rect x="8" y="7" width="4" height="17" rx="2" fill="var(--accent)"/><rect x="14" y="2" width="4" height="22" rx="2" fill="var(--ink)"/><rect x="20" y="10" width="4" height="14" rx="2" fill="var(--tier-audio)"/></svg><span>Decision Arena</span></a><nav class="nav" aria-label="主要頁面"><a href="index.html" aria-current="page">首頁</a><a href="bench-dashboard.html">Dashboard</a><a href="bench-report.html">評測報告</a><a href="index.html#archive">早期研究</a></nav><button class="theme-btn" id="theme-btn" type="button" aria-label="切換主題"><svg class="sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg><svg class="moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.5 8.5 0 1 0 11.1 11.1z"/></svg></button></div></header>
+<main>
+<section class="hero"><div class="hero-art" aria-hidden="true">
+<img class="light" src="assets/site/hero-light.webp" alt="" width="1536" height="864" fetchpriority="high">
+<img class="dark" src="assets/site/hero-dark.webp" alt="" width="1536" height="864"></div>
+<div class="wrap"><div class="hero-copy">
+<h1>34 個決策模型，<br>同一套考題。</h1>
+<p class="lede">決策模型（decision models）不生成文字，一次就回傳每個答案的機率。我們用語音、影像、繁中文字、Agent 守門與台灣政經五類情境測它們，並先確認模型真的看得到圖、聽得到聲音才計分。</p>
+<div class="cta"><a class="btn primary" href="bench-dashboard.html">開啟 Dashboard</a><a class="btn" href="bench-report.html">閱讀評測報告</a></div>
+</div></div></section>
+<div class="wrap"><dl class="stats">
+<div><dt>模型</dt><dd>34</dd></div><div><dt>任務</dt><dd>20</dd></div>
+<div><dt>請求數</dt><dd>7,327</dd></div><div><dt>總花費</dt><dd>US$0.28</dd></div></dl>
+<section class="section"><div class="section-head"><h2>誰的分數比較高</h2>
+<p>每條刻度是一個支援影像的模型，位置是它在 4 個最拉得開差距的任務（形近字、注音字卡、台灣選擇題、台灣是非題）上的平均正確率。高度越高表示同分的模型越多。</p></div>
+<div class="panel"><div class="strip" role="img" aria-label="25 個模型的綜合分數分布，最高 jev-1.14 69%"><div class="base"></div><span class="ax" style="left:0%">0%</span><span class="ax" style="left:25%">25%</span><span class="ax" style="left:50%">50%</span><span class="ax" style="left:75%">75%</span><span class="ax" style="left:100%">100%</span><span class="tick" style="left:37.49%;height:46px;background:var(--tier-image)" title="clef-flash：37%"></span><span class="lab" style="left:37.49%;bottom:98px">clef-flash</span><span class="tick" style="left:38.37%;height:46px;background:var(--tier-image)" title="pplx-decider-flash-v1.3：38%"></span><span class="tick" style="left:39.88%;height:46px;background:var(--tier-image)" title="joey-1：40%"></span><span class="tick" style="left:42.54%;height:46px;background:var(--tier-image)" title="classify-1：43%"></span><span class="tick" style="left:43.10%;height:56px;background:var(--tier-audio)" title="clef-omni：43%"></span><span class="tick" style="left:46.17%;height:46px;background:var(--tier-image)" title="clef：46%"></span><span class="tick" style="left:47.58%;height:46px;background:var(--tier-image)" title="mammoth-1：48%"></span><span class="tick" style="left:48.10%;height:56px;background:var(--tier-image)" title="pplx-decider-flash-v1.2：48%"></span><span class="tick" style="left:53.57%;height:46px;background:var(--tier-image)" title="elephant-1：54%"></span><span class="tick" style="left:53.60%;height:56px;background:var(--tier-image)" title="gpt-6-luna-decisions：54%"></span><span class="tick" style="left:55.12%;height:46px;background:var(--tier-image)" title="microsoft-decision-1.1：55%"></span><span class="tick" style="left:56.00%;height:46px;background:var(--tier-image)" title="d1.2：56%"></span><span class="tick" style="left:56.70%;height:46px;background:var(--tier-image)" title="span-02：57%"></span><span class="tick" style="left:57.42%;height:56px;background:var(--tier-image)" title="groundhog-1：57%"></span><span class="tick" style="left:57.62%;height:46px;background:var(--tier-audio)" title="gemini-decision-1：58%"></span><span class="lab" style="left:57.62%;bottom:98px">gemini-decision-1</span><span class="tick" style="left:57.78%;height:56px;background:var(--tier-image)" title="bison-1：58%"></span><span class="tick" style="left:58.51%;height:46px;background:var(--tier-audio)" title="heygen-decision-1-turbo：59%"></span><span class="tick" style="left:58.94%;height:56px;background:var(--tier-image)" title="d1.2-ultra：59%"></span><span class="tick" style="left:59.82%;height:46px;background:var(--tier-audio)" title="heygen-decision-1：60%"></span><span class="tick" style="left:60.35%;height:56px;background:var(--tier-image)" title="pplx-decider-v1.2：60%"></span><span class="tick" style="left:60.38%;height:66px;background:var(--tier-image)" title="reflex：60%"></span><span class="tick" style="left:61.67%;height:46px;background:var(--tier-image)" title="drex-max：62%"></span><span class="tick" style="left:62.62%;height:46px;background:var(--tier-image)" title="pplx-decider-v1.3：63%"></span><span class="tick" style="left:64.86%;height:46px;background:var(--tier-image)" title="drex-max-finance：65%"></span><span class="lab" style="left:64.86%;bottom:124px">drex-max-finance</span><span class="tick" style="left:69.33%;height:46px;background:var(--tier-image)" title="jev-1.14：69%"></span><span class="lab" style="left:69.33%;bottom:150px">jev-1.14</span></div>
+<div style="margin-top:10px"><div class="legend"><span><i style="background:var(--tier-text)"></i>純文字</span><span><i style="background:var(--tier-image)"></i>文字＋影像</span><span><i style="background:var(--tier-audio)"></i>文字＋影像＋音訊</span></div></div>
+<p class="small" style="margin:12px 0 0">純文字模型只能跑其中 2 個任務，所以不列入這條量尺；它們的分數請見 Dashboard。</p></div></section>
+<section class="section"><div class="section-head"><h2>三個重點</h2>
+<p>完整的分析與每個任務的數據在評測報告裡。</p></div>
+<div class="panel finding"><h3>大部分任務分不出高下</h3>
+<p>中文文字與 Agent 守門的題目幾乎全員滿分；真正拉開差距的是繁中細節（形近字、注音）與 2025 年後的台灣新事實。下圖依「最高減最低」排序，橫線是所有模型的範圍，實心點是中位數。</p>
+<div class="range"><div class="rl">數方塊（1–5 個）<small>25 個模型</small></div><div class="rt" role="img" aria-label="數方塊（1–5 個）：最低 20%、中位數 100%、最高 100%" title="最低 20%｜中位數 100%｜最高 100%"><span class="rspan" style="left:20.0%;width:80.0%"></span><span class="rmin" style="left:20.0%"></span><span class="rmax" style="left:100.0%"></span><span class="rmed" style="left:100.0%"></span></div><div class="rv">20%–100%</div><div class="rl">台灣政經事實（是非題）<small>33 個模型</small></div><div class="rt" role="img" aria-label="台灣政經事實（是非題）：最低 20%、中位數 60%、最高 100%" title="最低 20%｜中位數 60%｜最高 100%"><span class="rspan" style="left:20.0%;width:80.0%"></span><span class="rmin" style="left:20.0%"></span><span class="rmax" style="left:100.0%"></span><span class="rmed" style="left:60.0%"></span></div><div class="rv">20%–100%</div><div class="rl">注音字卡（含聲調符號）<small>25 個模型</small></div><div class="rt" role="img" aria-label="注音字卡（含聲調符號）：最低 0%、中位數 38%、最高 75%" title="最低 0%｜中位數 38%｜最高 75%"><span class="rspan" style="left:0.0%;width:75.0%"></span><span class="rmin" style="left:0.0%"></span><span class="rmax" style="left:75.0%"></span><span class="rmed" style="left:37.5%"></span></div><div class="rv">0%–75%</div><div class="rl">形近繁中字辨識<small>25 個模型</small></div><div class="rt" role="img" aria-label="形近繁中字辨識：最低 26%、中位數 57%、最高 83%" title="最低 26%｜中位數 57%｜最高 83%"><span class="rspan" style="left:26.1%;width:56.5%"></span><span class="rmin" style="left:26.1%"></span><span class="rmax" style="left:82.6%"></span><span class="rmed" style="left:56.5%"></span></div><div class="rv">26%–83%</div><div class="rl">台灣政經事實（選擇題）<small>31 個模型</small></div><div class="rt" role="img" aria-label="台灣政經事實（選擇題）：最低 32%、中位數 63%、最高 84%" title="最低 32%｜中位數 63%｜最高 84%"><span class="rspan" style="left:31.6%;width:52.6%"></span><span class="rmin" style="left:31.6%"></span><span class="rmax" style="left:84.2%"></span><span class="rmed" style="left:63.2%"></span></div><div class="rv">32%–84%</div><div class="rl">單音節辨音：是不是 ㄌㄨˊ<small>4 個模型</small></div><div class="rt" role="img" aria-label="單音節辨音：是不是 ㄌㄨˊ：最低 36%、中位數 79%、最高 86%" title="最低 36%｜中位數 79%｜最高 86%"><span class="rspan" style="left:35.7%;width:50.0%"></span><span class="rmin" style="left:35.7%"></span><span class="rmax" style="left:85.7%"></span><span class="rmed" style="left:78.6%"></span></div><div class="rv">36%–86%</div><div class="rl">圖文是否一致<small>25 個模型</small></div><div class="rt" role="img" aria-label="圖文是否一致：最低 50%、中位數 100%、最高 100%" title="最低 50%｜中位數 100%｜最高 100%"><span class="rspan" style="left:50.0%;width:50.0%"></span><span class="rmin" style="left:50.0%"></span><span class="rmax" style="left:100.0%"></span><span class="rmed" style="left:100.0%"></span></div><div class="rv">50%–100%</div><div class="rl">客服 Agent 是否應轉真人<small>33 個模型</small></div><div class="rt" role="img" aria-label="客服 Agent 是否應轉真人：最低 58%、中位數 100%、最高 100%" title="最低 58%｜中位數 100%｜最高 100%"><span class="rspan" style="left:58.3%;width:41.7%"></span><span class="rmin" style="left:58.3%"></span><span class="rmax" style="left:100.0%"></span><span class="rmed" style="left:100.0%"></span></div><div class="rv">58%–100%</div><div class="rl">LLM-as-judge：回答是否正確且切題<small>33 個模型</small></div><div class="rt" role="img" aria-label="LLM-as-judge：回答是否正確且切題：最低 75%、中位數 100%、最高 100%" title="最低 75%｜中位數 100%｜最高 100%"><span class="rspan" style="left:75.0%;width:25.0%"></span><span class="rmin" style="left:75.0%"></span><span class="rmax" style="left:100.0%"></span><span class="rmed" style="left:100.0%"></span></div><div class="rv">75%–100%</div><div class="axis"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div></div></div>
+<div class="split">
+<div class="panel finding"><h3>聽得到的只有 4 個</h3>
+<p>34 個模型中只有這幾個能處理音訊。發音練習 50 段的鑑別力（AUC，1 代表完全分得開）：</p>
+<div class="bars"><div class="bl"><code>clef-omni</code></div><div title="clef-omni：發音練習 AUC"><div class="bt"><div class="bf" style="width:91.83%;background:var(--tier-audio)"></div><span class="bv" style="right:calc(8.17% + 8px);color:#fff">0.92</span></div></div><div class="bl"><code>heygen-decision-1</code></div><div title="heygen-decision-1：發音練習 AUC"><div class="bt"><div class="bf" style="width:85.83%;background:var(--tier-audio)"></div><span class="bv" style="right:calc(14.17% + 8px);color:#fff">0.86</span></div></div><div class="bl"><code>heygen-decision-1-turbo</code></div><div title="heygen-decision-1-turbo：發音練習 AUC"><div class="bt"><div class="bf" style="width:84.83%;background:var(--tier-audio)"></div><span class="bv" style="right:calc(15.17% + 8px);color:#fff">0.85</span></div></div><div class="bl"><code>gemini-decision-1</code></div><div title="gemini-decision-1：發音練習 AUC"><div class="bt"><div class="bf" style="width:77.67%;background:var(--tier-audio)"></div><span class="bv" style="left:calc(77.67% + 8px)">0.78</span></div></div></div></div>
+<div class="panel finding"><h3>模態覆蓋</h3>
+<p>依實測結果分層，每一層都包含上一層的能力。純文字模型無法處理影像與音訊題。</p>
+<div class="seg" role="img" aria-label="模態覆蓋"><div style="flex:9;background:var(--tier-text)" title="純文字：9">9</div><div style="flex:21;background:var(--tier-image)" title="文字＋影像：21">21</div><div style="flex:4;background:var(--tier-audio)" title="文字＋影像＋音訊：4">4</div></div><div class="seg-legend"><span><i class="dot" style="background:var(--tier-text);border-radius:3px;margin-right:6px"></i>純文字<b>9</b></span><span><i class="dot" style="background:var(--tier-image);border-radius:3px;margin-right:6px"></i>文字＋影像<b>21</b></span><span><i class="dot" style="background:var(--tier-audio);border-radius:3px;margin-right:6px"></i>文字＋影像＋音訊<b>4</b></span></div></div></div></section>
+<section class="section"><div class="section-head"><h2>五類情境</h2>
+<p>同一個模型在不同情境的表現差很多，請依你的用途挑模型。Dashboard 可以直接依情境排序與篩選。</p></div>
+<div class="scen"><article><img src="assets/site/spot-audio.webp" alt="" width="84" height="84" loading="lazy"><h3>語音與音訊</h3><p>辨音、音場分類、發音練習判斷（4 個計分任務）</p><div class="best">最高平均 <b>89%</b>｜<code>clef-omni</code></div></article><article><img src="assets/site/spot-image.webp" alt="" width="84" height="84" loading="lazy"><h3>影像判斷</h3><p>形近字、注音字卡、數方塊、App 錯誤畫面、圖文一致（6 個計分任務）</p><div class="best">最高平均 <b>91%</b>｜<code>jev-1.14</code></div></article><article><img src="assets/site/spot-text.webp" alt="" width="84" height="84" loading="lazy"><h3>中文文字決策</h3><p>繁中評論情緒、詐騙簡訊、客服意圖路由（3 個計分任務）</p><div class="best">最高平均 <b>100%</b>，共 20 個模型同分</div></article><article><img src="assets/site/spot-agent.webp" alt="" width="84" height="84" loading="lazy"><h3>Agent 守門／路由</h3><p>工具選擇、是否轉真人、LLM-as-judge（3 個計分任務）</p><div class="best">最高平均 <b>100%</b>，共 27 個模型同分</div></article><article><img src="assets/site/spot-taiwan.webp" alt="" width="84" height="84" loading="lazy"><h3>台灣政經</h3><p>政治制度與經濟數據、新聞分類、立場對稱（3 個計分任務）</p><div class="best">最高平均 <b>86%</b>｜<code>gpt-6-luna-decisions</code></div></article></div></section>
+<section class="section" id="archive"><div class="section-head"><h2>早期研究</h2>
+<p>這個專案一開始只研究 Gemini Decision 1，以下報告保留原貌。</p></div>
+<ul class="archive">
+<li><a href="report.html"><strong>Gemini Decision 1 的三項音訊研究</strong><span>單音節辨音、42 段音場分類、50 段發音判斷，與 Gemini 4 Argon 對照。</span><em>2026-11-17</em></a></li>
+<li><a href="audit-report.html"><strong>注音音檔稽核</strong><span>以 flash-lite 全量檢查 2,934 個注音音檔。</span><em>2026-11-17</em></a></li>
+<li><a href="ms-decision-report.html"><strong>Microsoft Decision 1.1 實測</strong><span>音訊支援查證與純文字任務對照。</span><em>2026-11-19</em></a></li>
+</ul></section></div>
+</main>
+<footer class="site-foot"><div class="wrap"><span>Decision Arena｜資料產生於 2026-11-22 05:39</span><span>雲端模型會持續更新，數字只代表測試當天的行為。</span></div></footer>
+<script>(()=>{
+  const root=document.documentElement, btn=document.getElementById('theme-btn');
+  if(!btn) return;
+  const cur=()=>root.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+  const label=()=>btn.setAttribute('aria-label', cur()==='dark'?'切換為淺色主題':'切換為深色主題');
+  label();
+  btn.addEventListener('click',()=>{const n=cur()==='dark'?'light':'dark';root.dataset.theme=n;
+    try{localStorage.setItem('da-theme',n)}catch(e){} label(); dispatchEvent(new CustomEvent('themechange',{detail:n}));});
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{label();dispatchEvent(new CustomEvent('themechange'));});
+})();</script>
+
+</body>
+</html>

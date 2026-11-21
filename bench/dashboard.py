@@ -103,9 +103,23 @@ def build_data() -> dict:
     }
 
 
+def _section(text: str, name: str) -> str:
+    start, end = f"<!--{name}-->", f"<!--/{name}-->"
+    return text[text.index(start) + len(start):text.index(end)]
+
+
+def _section(text: str, name: str) -> str:
+    start, end = f"<!--{name}-->", f"<!--/{name}-->"
+    return text[text.index(start) + len(start):text.index(end)]
+
+
 def build_dashboard(out: Path = OUT) -> Path:
+    from .site import page
     data = build_data()
+    tpl = TEMPLATE.read_text(encoding="utf-8")
     payload = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
-    html = TEMPLATE.read_text(encoding="utf-8").replace("/*__DATA__*/null", payload)
-    out.write_text(html, encoding="utf-8")
+    script = _section(tpl, "SCRIPT").replace("/*__DATA__*/null", payload)
+    out.write_text(page(title="Dashboard｜Decision Arena", active="dashboard", generated=data["generated"],
+                        description="互動式 Decision 模型 Dashboard：依模態、情境、分數與價格篩選可用模型。",
+                        body=_section(tpl, "BODY"), extra_css=_section(tpl, "CSS"), scripts=script), encoding="utf-8")
     return out

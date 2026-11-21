@@ -21,8 +21,11 @@
 
 <https://decision-arena.gh.miniasp.com>：首頁、Dashboard、評測報告與早期研究報告。
 
+- **產生方式**：三個主要頁面（`index.html`、`bench-report.html`、`bench-dashboard.html`）由 `python3 -m bench site` 從 `results/` 產生。它們共用 `bench/site.py` 的設計系統：色彩 token、頁首導覽、深淺色主題切換與圖表元件。
+- **圖片**：`assets/site/` 的主視覺與情境插圖是用 Azure OpenAI 圖像模型（gpt-image-2.5-flare）生成後壓縮成 WebP。生成的原始 PNG 放在 `output/imagegen/`，不進版控。
+
 - **部署方式**：每次 push 到 `main`，由 `.github/workflows/pages.yml` 自動部署到 GitHub Pages。
-- **部署內容**：只有 `pages/`（首頁、`robots.txt`、`CNAME`）與根目錄的 HTML 報告，不含原始資料與程式碼。repo 是私人的，但 Pages 網站本身公開。
+- **部署內容**：只有根目錄的 HTML 頁面、`assets/site/` 的圖片，以及 `pages/` 裡的 `robots.txt` 與 `CNAME`，不含原始資料與程式碼。repo 是私人的，但 Pages 網站本身公開。
 - **robots.txt**：封鎖所有爬蟲。這只是請爬蟲別抓，不是存取控制，知道網址的人仍然看得到。
 
 ## 重點結論（2026-11-22）
@@ -51,6 +54,8 @@ bench/                     # 評測框架（純 Python 標準函式庫）
 ├── metrics.py             # 正確率、AUC、Brier、ECE、log loss、立場對稱 |Δ|
 ├── report.py              # 產生 bench-report.html
 ├── dashboard.py           # 產生 bench-dashboard.html（資料內嵌，樣板在 dashboard_template.html）
+├── home.py                # 產生網站首頁 index.html
+├── site.py                # 網站共用設計系統：色彩 token、頁首、主題切換、圖表元件
 ├── build_assets.py        # 用 ffmpeg 合成影像題，並把既有音訊研究轉成任務
 └── build_taiwan.py        # data/taiwan/items.json（附一手來源）→ 任務檔
 tasks/<情境>/<任務>.json   # 20 個任務，所有模型共用
@@ -77,6 +82,7 @@ python3 -m bench run --tasks zh_text,agent --budget 1
 python3 -m bench run --models clef-omni,gemini-decision-1 --tasks audio --limit 10
 python3 -m bench report                       # 合併 results/runs/* → bench-report.html
 python3 -m bench dashboard                    # 合併 results/runs/* → bench-dashboard.html
+python3 -m bench site                         # 一次產生 index.html、bench-report.html、bench-dashboard.html
 python3 -m unittest discover -s tests         # 離線測試
 ```
 

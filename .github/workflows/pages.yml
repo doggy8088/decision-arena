@@ -1,4 +1,4 @@
-# 只把 HTML 報告、首頁、robots.txt 與 CNAME 部署到 GitHub Pages。
+# 只把 HTML 頁面、網站圖片（assets/site）、robots.txt 與 CNAME 部署到 GitHub Pages。
 # repo 是私人的，但 Pages 網站是公開的，所以刻意不部署原始資料與程式碼。
 name: Deploy GitHub Pages
 
@@ -28,8 +28,9 @@ jobs:
       - name: 組出網站內容
         run: |
           mkdir -p _site
-          cp pages/index.html pages/robots.txt pages/CNAME _site/
-          cp bench-dashboard.html bench-report.html report.html audit-report.html ms-decision-report.html _site/
+          cp pages/robots.txt pages/CNAME _site/
+          cp index.html bench-dashboard.html bench-report.html report.html audit-report.html ms-decision-report.html _site/
+          mkdir -p _site/assets && cp -r assets/site _site/assets/site
           touch _site/.nojekyll
           ls -la _site
 

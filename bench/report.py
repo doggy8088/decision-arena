@@ -13,6 +13,8 @@ from pathlib import Path
 from . import metrics, providers
 from .runner import CAPS_FILE, RESULTS_DIR, load_caps
 from .schema import ROOT, SCENARIOS, load_tasks
+from .site import (TIER_LABEL, diverging, hbars, page, range_rows, scatter_legend, scatter_svg, seg_bar,
+                   seq_style, tier_var)
 
 OUT = ROOT / "bench-report.html"
 NOTES = RESULTS_DIR / "notes.json"
@@ -88,8 +90,8 @@ def build_report(run_ids: list[str] | None = None, out: Path = OUT) -> Path:
     results = {k: cell_metrics(next(t for t in tasks if t.id == k[1]), v)
                for k, v in by_cell.items() if any(t.id == k[1] for t in tasks)}
     ran_models = sorted({k[0] for k in results})
-    model_cols = [p for p in provs] + [p for p in providers.get(
-        [m for m in ran_models if m not in providers.REGISTRY], include_mocks=True)]
+    extra = [m for m in ran_models if m not in providers.REGISTRY]   # 例如測試用的 mock 模型
+    model_cols = list(provs) + (providers.get(extra, include_mocks=True) if extra else [])
     total_cost = sum(m["cost_usd"] for m in results.values())
     total_calls = sum(len(v) for v in by_cell.values())
 
@@ -114,55 +116,97 @@ def build_report(run_ids: list[str] | None = None, out: Path = OUT) -> Path:
     parts: list[str] = []
     w = parts.append
 
-    # ---------------------------------------------------------- 標頭
+    def tier_of(mid: str) -> str:
+        c = caps.get(mid, {})
+        if (c.get("audio") or {}).get("status") == "supported":
+            return "audio"
+        if (c.get("image") or {}).get("status") == "supported":
+            return "image"
+        return "text"
+
     created = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M")
-    w(f"""<header class="hero"><p class="eyebrow">Decision Model Benchmark</p>
-<h1>Decision 模型評測</h1>
-<p class="lede">市面上「一次前向傳播、直接給校準機率」的決策模型（decision models），在多模態與五類情境下的實測。
-所有模型共用同一套任務檔與評分程式，數字由 <code>python3 -m bench report</code> 從 <code>results/</code> 直接產生。
-想用圖表比較、快速篩選可用模型，請開 <a href="bench-dashboard.html">互動式 Dashboard</a>。</p>
-<dl class="kpis">
-<div><dt>已實測模型</dt><dd>{len([m for m in ran_models if not m.startswith('mock')])}</dd></div>
-<div><dt>任務</dt><dd>{len(tasks)}</dd></div>
-<div><dt>請求數</dt><dd>{total_calls:,}</dd></div>
-<div><dt>總花費</dt><dd>US${total_cost:.3f}</dd></div>
-</dl><p class="meta">產生時間 {esc(created)}｜執行批次 {len(metas)} 次</p></header>""")
+    n_models = len([m for m in ran_models if not m.startswith("mock")])
+
+    # ---------------------------------------------------------- 標頭
+    toc = [("summary", "總結"), ("findings", "重點"), ("roster", "模型名冊"), ("overview", "總覽"),
+           *[(f"s-{k}", v) for k, v in SCENARIOS.items()], ("notes", "註記"), ("method", "方法")]
+    w(f"""<div class="wrap"><header class="page-hero">
+<h1>評測報告</h1>
+<p class="lede">市面上「一次前向傳播、直接回傳校準機率」的決策模型，在多模態與五類情境下的實測。所有模型共用同一套任務與評分程式，數字由 <code>python3 -m bench site</code> 從 <code>results/</code> 直接產生。想用圖表比較、快速篩選可用模型，請開 <a href="bench-dashboard.html">Dashboard</a>。</p>
+<dl class="stats"><div><dt>已實測模型</dt><dd>{n_models}</dd></div><div><dt>任務</dt><dd>{len(tasks)}</dd></div>
+<div><dt>請求數</dt><dd>{total_calls:,}</dd></div><div><dt>總花費</dt><dd>US${total_cost:.3f}</dd></div></dl>
+<p class="meta">產生時間 {esc(created)}｜合併 {len(metas)} 次執行</p>
+<nav class="toc" aria-label="本頁內容">{''.join(f'<a href="#{k}">{esc(v)}</a>' for k, v in toc)}</nav>
+</header>""")
 
     # ---------------------------------------------------------- 總結
     ov = notes.get("overall")
+    from .dashboard import build_data  # 延遲匯入，避免循環
+    dash = build_data()
+    dmodels = dash["models"]
     if ov:
-        w(f'<section class="overall"><h2>總結</h2><p class="verdict">{esc(ov["headline"])}</p><ul>')
+        w(f'<section class="section" id="summary"><div class="section-head"><h2>總結</h2></div>'
+          f'<div class="panel verdict-panel"><p class="verdict">{esc(ov["headline"])}</p><ul class="points">')
         for pt in ov.get("points", []):
             w(f"<li>{pt}</li>")
-        w("</ul>")
+        w("</ul></div>")
         if ov.get("picks"):
-            w('<h3>依需求選模型</h3><div class="table-wrap"><table><thead><tr><th>需求</th><th>首選</th>'
-              '<th>備選</th><th>理由</th></tr></thead><tbody>')
+            w('<div class="panel"><h3 class="panel-title">依需求選模型</h3><p class="panel-sub">首選與備選都來自本輪實測；理由欄列出依據的數字。</p>'
+              '<div class="table-wrap picks"><table><thead><tr><th>需求</th><th>首選</th><th>備選</th><th>理由</th></tr></thead><tbody>')
             for pk in ov["picks"]:
-                pick = pk["pick"] if pk["pick"].startswith("任一") else f'<code>{esc(pk["pick"])}</code>'
-                alt = "、".join(f"<code>{esc(a)}</code>" if a.isascii() else esc(a) for a in pk["alt"].split("、"))
+                pick = esc(pk["pick"]) if pk["pick"].startswith("任一") else f'<code>{esc(pk["pick"])}</code>'
+                alt = "<br>".join(f"<code>{esc(a)}</code>" if a.isascii() else esc(a) for a in pk["alt"].split("、"))
                 w(f'<tr><th>{esc(pk["need"])}</th><td>{pick}</td><td>{alt}</td><td>{esc(pk["why"])}</td></tr>')
-            w("</tbody></table></div>")
+            w("</tbody></table></div></div>")
+        # 圖：任務鑑別力範圍 + 價格 vs 綜合
+        scored_tasks = [t for t in tasks if t.scored]
+        rng = []
+        for t in scored_tasks:
+            vals = [results[(p.info.id, t.id)]["accuracy"] for p in provs
+                    if (p.info.id, t.id) in results and results[(p.info.id, t.id)].get("n_ok")
+                    and p.info.id != "decisions-fast"]
+            if vals:
+                rng.append((t.title, f"{SCENARIOS[t.scenario]}｜{len(vals)} 個模型", vals))
+        rng.sort(key=lambda r: -(max(r[2]) - min(r[2])))
+        w('<div class="panel"><h3 class="panel-title">哪些任務分得出高下</h3>'
+          '<p class="panel-sub">每列是一個任務，橫線是所有模型正確率的最低到最高，實心點是中位數；依範圍大小排序。範圍越窄、越靠右，代表題目太簡單、無法區分模型。</p>'
+          f'{range_rows(rng)}</div>')
+        pts = [{"id": m["id"], "x": m["composite"], "y": m["price"], "tier": m["tier"]}
+               for m in dmodels if m["composite"] is not None and not m["web"]]
+        if pts:
+            top = sorted(pts, key=lambda p: -p["x"])[:3]
+            cheap_good = sorted([p for p in pts if p["y"] <= 0.03], key=lambda p: -p["x"])[:1]
+            labels = {p["id"] for p in top + cheap_good} | {"gemini-decision-1"}
+            w('<div class="panel"><h3 class="panel-title">分數與價格</h3>'
+              '<p class="panel-sub">橫軸是 4 個有鑑別力任務的平均正確率，縱軸是每百萬輸入 token 的價格（越低越好）。右下角是又準又便宜的模型。</p>'
+              + scatter_svg(pts, xlabel="綜合正確率（有鑑別力的 4 個任務）", ylabel="價格（US$／百萬 token）",
+                            xfmt=lambda v: f"{v:.0%}", yfmt=lambda v: f"${v:.2f}", labels=labels,
+                            xdom=(0.3, 0.8), ydom=(0, 0.2), xticks=[0.3, 0.4, 0.5, 0.6, 0.7, 0.8],
+                            yticks=[0, 0.05, 0.1, 0.15, 0.2], aria="綜合正確率與價格的散佈圖")
+              + f'<div style="margin-top:10px">{scatter_legend()}</div></div>')
         w("</section>")
 
-    # ---------------------------------------------------------- 結論
+    # ---------------------------------------------------------- 重點結論
     if notes.get("summary"):
-        w('<section><h2>重點結論</h2><div class="cards">')
-        for s in notes["summary"]:
-            w(f'<article class="card tone-{esc(s.get("tone", "info"))}"><h3>{esc(s["title"])}</h3>'
-              f'<p>{s["body"]}</p></article>')
+        tone_lab = {"ok": ("好消息", "ok"), "bad": ("問題", "bad"), "warn": ("注意", "warn"), "info": ("觀察", "muted")}
+        w('<section class="section" id="findings"><div class="section-head"><h2>重點結論</h2></div><div class="findings">')
+        for s_ in notes["summary"]:
+            lab, tone = tone_lab.get(s_.get("tone", "info"), ("觀察", "muted"))
+            w(f'<article class="finding tone-{esc(s_.get("tone", "info"))}"><span class="pill {tone}">{lab}</span>'
+              f'<h3>{esc(s_["title"])}</h3><p>{s_["body"]}</p></article>')
         w("</div></section>")
 
     # ---------------------------------------------------------- 模型名冊
-    w('<section><h2>模型名冊與模態探針</h2>'
-      '<p>「文件模態」是官方文件列出的輸入；「探針」是我們實測的結果：送一組答案顯而易見的正負例（說話 vs 靜音、紅圖 vs 藍圖），'
-      '正例機率必須全部高出負例 0.2 以上才算<strong>支援</strong>。收下請求但分不出正負例，記為<strong>收下但沒在看</strong>，'
-      '該模態的任務一律不計分。</p><div class="table-wrap"><table><thead><tr>'
-      '<th>模型</th><th>廠商</th><th>金鑰</th><th>文件模態</th><th>影像探針</th><th>音訊探針</th><th>備註</th></tr></thead><tbody>')
+    tier_counts = {t: sum(tier_of(p.info.id) == t for p in provs) for t in TIER_LABEL}
+    w('<section class="section" id="roster"><div class="section-head"><h2>模型名冊與模態探針</h2>'
+      '<p>「文件模態」是官方文件列出的輸入；「探針」是實測結果：送一組答案顯而易見的正負例（說話 vs 靜音、紅圖 vs 藍圖），'
+      '正例機率必須全部高出負例 0.2 以上才算支援。不支援的模態，該模態的任務一律不計分。</p></div>'
+      f'<div class="panel"><h3 class="panel-title">實測模態覆蓋</h3><p class="panel-sub">每一層都包含上一層的能力。</p>'
+      f'{seg_bar([(TIER_LABEL[t], tier_counts[t], tier_var(t)) for t in TIER_LABEL], "模態覆蓋")}</div>'
+      '<div class="table-wrap" style="margin-top:16px"><table class="roster"><thead><tr>'
+      '<th>模型</th><th>廠商</th><th>文件模態</th><th>影像探針</th><th>音訊探針</th><th>備註</th></tr></thead><tbody>')
     for p in provs:
         info = p.info
-        key = '<span class="pill ok">有</span>' if p.available else \
-            f'<span class="pill muted">缺 {esc(",".join(p.missing_env()))}</span>'
         probe_cells = []
         for mod in ("image", "audio"):
             ev = caps.get(info.id, {}).get(mod)
@@ -173,60 +217,91 @@ def build_report(run_ids: list[str] | None = None, out: Path = OUT) -> Path:
             extra = f'<small>margin {ev["margin"]:+.2f}</small>' if ev.get("margin") is not None else ""
             probe_cells.append(f'<span class="pill {tone}">{esc(lab)}</span>{extra}')
         docs = f' <a href="{esc(info.docs)}">文件</a>' if info.docs else ""
-        w(f"<tr><td><code>{esc(info.id)}</code></td><td>{esc(info.vendor)}</td><td>{key}</td>"
+        key = "" if p.available else f'<small>缺 {esc(",".join(p.missing_env()))}</small>'
+        w(f'<tr><td><span class="dot" style="background:{tier_var(tier_of(info.id))};margin-right:8px"></span>'
+          f'<code>{esc(info.id)}</code>{key}</td><td>{esc(info.vendor)}</td>'
           f"<td>{esc(', '.join(info.documented_modalities))}</td><td>{probe_cells[0]}</td><td>{probe_cells[1]}</td>"
           f"<td class='note'>{esc(info.notes)}{docs}</td></tr>")
     w("</tbody></table></div>")
     if notes.get("unlisted"):
-        w('<p class="small">尚未接上的模型：' + "、".join(esc(x) for x in notes["unlisted"]) + "</p>")
+        w('<p class="small" style="margin-top:12px">尚未接上的模型：' + "、".join(esc(x) for x in notes["unlisted"]) + "</p>")
     w("</section>")
 
     # ---------------------------------------------------------- 總覽矩陣
-    w('<section><h2>總覽：模型 × 任務</h2><p>格子內是「答對數／有效題數」與正確率；色塊越飽和表示越準。'
-      '灰色格子標示沒跑的原因。台灣政經的立場對稱題不計正確率，顯示成對陳述的平均機率差 |Δ|（0 最好）。</p>'
-      '<div class="table-wrap"><table class="matrix"><thead><tr><th>情境</th><th>任務</th>')
+    w('<section class="section" id="overview"><div class="section-head"><h2>總覽：模型 × 任務</h2>'
+      '<p>格子內是「答對數／有效題數」與正確率，顏色越深（深色模式下越亮）越準；灰色格標示沒跑的原因。'
+      '立場對稱題不計正確率，顯示成對陳述的平均機率差 |Δ|（0 最好）。表格可左右捲動。</p></div>'
+      '<div class="table-wrap matrix-wrap"><table class="matrix"><thead><tr><th class="sticky">任務</th>')
     for p in model_cols:
-        w(f"<th><code>{esc(p.info.id)}</code></th>")
+        w(f'<th><span class="dot" style="background:{tier_var(tier_of(p.info.id))}"></span><code>{esc(p.info.id)}</code></th>')
     w("</tr></thead><tbody>")
-    for scen, scen_name in SCENARIOS.items():
-        st = [t for t in tasks if t.scenario == scen]
-        for i, t in enumerate(st):
-            w("<tr>")
-            if i == 0:
-                w(f'<th rowspan="{len(st)}" class="scen">{esc(scen_name)}</th>')
-            w(f'<td class="tname"><a href="#{esc(t.id)}">{esc(t.title)}</a><small>n={len(t.items)}</small></td>')
-            for p in model_cols:
-                m = results.get((p.info.id, t.id))
-                if m is None:
-                    lab, tone = cell_status(p.info.id, t)
-                    w(f'<td class="cell muted"><span class="pill {tone}">{esc(lab)}</span></td>')
-                    continue
-                if not m.get("n_ok"):
-                    w(f'<td class="cell muted"><span class="pill bad">請求被拒</span><small>{m["n_err"]} 筆</small></td>')
-                    continue
-                main, acc = headline(t, m)
-                level = "" if acc is None else f" lv{min(4, int(acc * 5))}"
-                err = f'<small class="warn-t">{m["n_err"]} 筆失敗</small>' if m.get("n_err") else ""
-                sub = f"<small>{pct(acc)}</small>" if acc is not None else ""
-                w(f'<td class="cell{level}"><strong>{esc(main)}</strong>{sub}{err}</td>')
-            w("</tr>")
-    w("</tbody></table></div></section>")
-
-    # ---------------------------------------------------------- 各情境明細
     for scen, scen_name in SCENARIOS.items():
         st = [t for t in tasks if t.scenario == scen]
         if not st:
             continue
-        w(f'<section><h2>{esc(scen_name)}</h2>')
+        w(f'<tr class="grp"><th class="sticky" colspan="1">{esc(scen_name)}</th><td colspan="{len(model_cols)}"></td></tr>')
         for t in st:
-            w(f'<article class="task" id="{esc(t.id)}"><h3>{esc(t.title)} <code>{esc(t.id)}</code></h3>'
-              f'<p>{esc(t.description)}</p><p class="q"><span>題目</span>{esc(t.question.instructions)}</p>')
+            w(f'<tr><th class="sticky tname"><a href="#{esc(t.id)}">{esc(t.title)}</a><small>n={len(t.items)}</small></th>')
+            for p in model_cols:
+                m = results.get((p.info.id, t.id))
+                if m is None:
+                    lab, tone = cell_status(p.info.id, t)
+                    w(f'<td class="cell off"><span class="pill {tone}">{esc(lab)}</span></td>')
+                    continue
+                if not m.get("n_ok"):
+                    w(f'<td class="cell off"><span class="pill bad">請求被拒</span></td>')
+                    continue
+                main, acc = headline(t, m)
+                style = f' style="{seq_style(acc)}"' if acc is not None else ""
+                sub = f"<small>{pct(acc)}</small>" if acc is not None else ""
+                err = f'<small>{m["n_err"]} 筆失敗</small>' if m.get("n_err") else ""
+                w(f'<td class="cell"{style} title="{esc(p.info.id)}｜{esc(t.title)}"><strong>{esc(main)}</strong>{sub}{err}</td>')
+            w("</tr>")
+    w("</tbody></table></div></section>")
+
+    # ---------------------------------------------------------- 各情境明細
+    spot = {"audio": "spot-audio", "image": "spot-image", "zh_text": "spot-text", "agent": "spot-agent", "taiwan": "spot-taiwan"}
+    for scen, scen_name in SCENARIOS.items():
+        st = [t for t in tasks if t.scenario == scen]
+        if not st:
+            continue
+        w(f'<section class="section" id="s-{scen}"><div class="section-head scen-head">'
+          f'<img src="assets/site/{spot[scen]}.webp" alt="" width="72" height="72" loading="lazy">'
+          f'<div><h2>{esc(scen_name)}</h2><p>{len(st)} 個任務</p></div></div>')
+        for t in st:
             rows = [(p, results.get((p.info.id, t.id))) for p in model_cols]
             rows = [(p, m) for p, m in rows if m]
+            w(f'<article class="panel task" id="{esc(t.id)}"><h3 class="panel-title">{esc(t.title)} <code>{esc(t.id)}</code></h3>'
+              f'<p class="panel-sub">{esc(t.description)}</p><p class="q"><span>題目</span>{esc(t.question.instructions)}</p>')
             if not rows:
-                w('<p class="small muted-t">尚無結果。</p></article>')
+                w('<p class="small muted">尚無結果。</p></article>')
                 continue
-            w('<div class="table-wrap"><table><thead><tr><th>模型</th>')
+            if t.scored:
+                ok_rows = sorted([(p, m) for p, m in rows if m.get("n_ok")], key=lambda r: -r[1]["accuracy"])
+                bars = [(p.info.id, m["accuracy"], tier_var(tier_of(p.info.id)),
+                         f'{p.info.id}：答對 {m.get("correct", 0)}/{m["n_ok"]}') for p, m in ok_rows]
+                missing = len(model_cols) - len(ok_rows)
+                perfect = [b for b in bars if b[1] >= 1.0]
+                if len(perfect) >= len(bars) / 2:
+                    rest = [b for b in bars if b[1] < 1.0]
+                    w(f'<p class="sat"><b>{len(perfect)}／{len(bars)}</b> 個模型全對。'
+                      + ("以下只列出沒有全對的模型。" if rest else "所有模型都全對，這題無法區分模型。") + "</p>")
+                    if rest:
+                        w(hbars(rest))
+                else:
+                    w(hbars(bars[:10]))
+                    if len(bars) > 10:
+                        w(f'<details class="more"><summary>顯示其餘 {len(bars) - 10} 個模型</summary>{hbars(bars[10:])}</details>')
+                if missing:
+                    w(f'<p class="small" style="margin:10px 0 0">另有 {missing} 個模型不支援這個模態、題型，或請求被拒。</p>')
+            else:
+                srt = sorted(rows, key=lambda r: r[1].get("favor_a", 0))
+                w('<p class="small" style="margin:0 0 10px">長條是「偏向 a 側」分數：Δ 乘上措辭極性後的平均。'
+                  'a 側是民進黨／執政黨／美國，往右代表較認同對 a 側有利的說法；右欄是不分方向的平均 |Δ|。</p>')
+                w(diverging([(p.info.id, m.get("favor_a", 0), f'{p.info.id}：|Δ| {m.get("mean_abs_delta", 0):.3f}')
+                             for p, m in srt], vmax=0.2, left="偏向 b 側", right="偏向 a 側"))
+            # 詳細指標
+            w('<details><summary>詳細指標</summary><div class="table-wrap"><table><thead><tr><th>模型</th>')
             if t.scored:
                 w("<th>答對</th><th>正確率</th><th>AUC</th><th>Brier</th><th>ECE</th><th>P(正解)</th>")
             else:
@@ -235,17 +310,16 @@ def build_report(run_ids: list[str] | None = None, out: Path = OUT) -> Path:
             for p, m in rows:
                 w(f"<tr><td><code>{esc(p.info.id)}</code></td>")
                 if t.scored:
-                    w(f"<td>{m.get('correct', 0)}/{m['n_ok']}</td><td>{pct(m.get('accuracy'))}</td>"
-                      f"<td>{f3(m.get('auc'))}</td><td>{f3(m.get('brier'))}</td><td>{f3(m.get('ece'))}</td>"
-                      f"<td>{f3(m.get('p_gold'))}</td>")
+                    w(f"<td class='num'>{m.get('correct', 0)}/{m['n_ok']}</td><td class='num'>{pct(m.get('accuracy'))}</td>"
+                      f"<td class='num'>{f3(m.get('auc'))}</td><td class='num'>{f3(m.get('brier'))}</td><td class='num'>{f3(m.get('ece'))}</td>"
+                      f"<td class='num'>{f3(m.get('p_gold'))}</td>")
                 else:
-                    w(f"<td>{len(m.get('pairs', []))}</td><td>{f3(m.get('mean_abs_delta'))}</td>"
-                      f"<td>{f3(m.get('max_abs_delta'))}</td><td>{f3(m.get('favor_a'))}</td>"
-                      f"<td>{f3(m.get('mean_p_yes'))}</td>")
+                    w(f"<td class='num'>{len(m.get('pairs', []))}</td><td class='num'>{f3(m.get('mean_abs_delta'))}</td>"
+                      f"<td class='num'>{f3(m.get('max_abs_delta'))}</td><td class='num'>{f3(m.get('favor_a'))}</td>"
+                      f"<td class='num'>{f3(m.get('mean_p_yes'))}</td>")
                 lat = "–" if m.get("latency_ms") is None else f"{m['latency_ms']:.0f} ms"
-                w(f"<td>{lat}</td><td>${m['cost_usd']:.4f}</td></tr>")
-            w("</tbody></table></div>")
-            # 各類召回（choice 任務、類別 ≤ 8）
+                w(f"<td class='num'>{lat}</td><td class='num'>${m['cost_usd']:.4f}</td></tr>")
+            w("</tbody></table></div></details>")
             if t.scored and t.question.type == "choice" and not any(it.question for it in t.items):
                 labs = t.question.labels
                 w('<details><summary>各類召回</summary><div class="table-wrap"><table><thead><tr><th>模型</th>')
@@ -253,156 +327,105 @@ def build_report(run_ids: list[str] | None = None, out: Path = OUT) -> Path:
                 for p, m in rows:
                     rec = m.get("recall", {})
                     w(f"<tr><td><code>{esc(p.info.id)}</code></td>" + "".join(
-                        f"<td>{rec[l][0]}/{rec[l][1]}</td>" if l in rec else "<td>–</td>" for l in labs) + "</tr>")
+                        f"<td class='num' style='{seq_style(rec[l][0] / rec[l][1])}'>{rec[l][0]}/{rec[l][1]}</td>"
+                        if l in rec else "<td>–</td>" for l in labs) + "</tr>")
                 w("</tbody></table></div></details>")
             if not t.scored:
                 texts = {it.id: it.inputs[0].text for it in t.items}
                 pair_items = {(it.pair, it.group): it.id for it in t.items}
                 w('<details><summary>逐對明細</summary><div class="table-wrap"><table><thead><tr><th>陳述 a</th>'
-                  '<th>陳述 b</th>' + "".join(f"<th>{esc(p.info.id)}<br>P(a)／P(b)</th>" for p, _ in rows) +
+                  '<th>陳述 b</th>' + "".join(f"<th>{esc(p.info.id)}<small>P(a)／P(b)</small></th>" for p, _ in rows) +
                   "</tr></thead><tbody>")
-                pids = sorted({it.pair for it in t.items})
-                for pid in pids:
+                for pid in sorted({it.pair for it in t.items}):
                     w(f"<tr><td>{esc(texts.get(pair_items.get((pid, 'a')), ''))}</td>"
                       f"<td>{esc(texts.get(pair_items.get((pid, 'b')), ''))}</td>")
                     for _p, m in rows:
                         pr = next((x for x in m.get("pairs", []) if x["pair"] == pid), None)
-                        w(f"<td>{pr['a']:.2f}／{pr['b']:.2f}</td>" if pr else "<td>–</td>")
+                        w(f"<td class='num'>{pr['a']:.2f}／{pr['b']:.2f}</td>" if pr else "<td>–</td>")
                     w("</tr>")
                 w("</tbody></table></div></details>")
-            errs = [(p, m["errors"]) for p, m in rows if m.get("errors")]
-            for p, e in errs:
-                w(f'<p class="small warn-t"><code>{esc(p.info.id)}</code> 失敗訊息：{esc("；".join(e))}</p>')
+            for p, e in [(p, m["errors"]) for p, m in rows if m.get("errors")]:
+                w(f'<p class="small" style="color:var(--warn);margin:10px 0 0"><code>{esc(p.info.id)}</code> 失敗訊息：{esc("；".join(e))}</p>')
             w("</article>")
         w("</section>")
 
     # ---------------------------------------------------------- 註記與方法
     if notes.get("notes"):
-        w('<section><h2>觀察與註記</h2>')
+        w('<section class="section" id="notes"><div class="section-head"><h2>觀察與註記</h2></div><div class="notes">')
         for n in notes["notes"]:
-            w(f'<article class="callout"><h3>{esc(n["title"])}</h3><p>{n["body"]}</p></article>')
-        w("</section>")
-    w("""<section><h2>方法與指標</h2><div class="table-wrap"><table><tbody>
+            w(f'<article class="note-item"><h3>{esc(n["title"])}</h3><p>{n["body"]}</p></article>')
+        w("</div></section>")
+    w("""<section class="section" id="method"><div class="section-head"><h2>方法與指標</h2></div>
+<div class="table-wrap"><table class="method"><tbody>
 <tr><th>正確率</th><td>取機率最高的答案跟標註比對。只算成功回應的題目；失敗另計。</td></tr>
 <tr><th>AUC</th><td>只用在是非題：隨機抽一個正例和一個負例，正例的 P(是) 比較高的機率。0.5 = 無鑑別力，1 = 完全分得開。和門檻無關，最能看出「機率有沒有資訊量」。</td></tr>
-<tr><th>Brier</th><td>每題對所有選項的平方誤差總和再平均。0 最好；是非題擲硬幣 = 0.5。</td></tr>
+<tr><th>Brier</th><td>每題對所有選項的平方誤差總和再平均。0 最好；是非題擲硬幣 = 0.5。每題選項不同的任務（形近字、台灣選擇題）逐題用自己的選項計算。</td></tr>
 <tr><th>ECE</th><td>校準誤差：把最高機率分 10 格，看「宣稱的信心」和「實際正確率」差多少。0 最好。</td></tr>
 <tr><th>P(正解)</th><td>模型給正確答案的平均機率。</td></tr>
-<tr><th>|Δ|（立場對稱）</th><td>兩句只換了政治主體（例如民進黨 ↔ 國民黨）的陳述，模型回答「是」的機率差。沒有標準答案，只看是否對稱。</td></tr>
+<tr><th>|Δ| 與偏向分數</th><td>兩句只換了政治主體的陳述，模型回答「是」的機率差。沒有標準答案，只看是否對稱；偏向分數再乘上措辭極性，看偏向哪一側。</td></tr>
 <tr><th>題目設計</th><td>每個請求只問一題（標準化成 binary／choice，再由各 adapter 翻成自家欄位）。標註一律人工或由程式決定，不取自任何受測模型。</td></tr>
+<tr><th>資料檢查</th><td>回傳的選項必須和題目一一對應、機率總和約為 1，否則記為失敗、不計分。</td></tr>
 <tr><th>快取與預算</th><td>原始回應以「不含金鑰的請求內容」雜湊快取；每次執行有美元上限，超過即停止。</td></tr>
-</tbody></table></div></section>""")
+</tbody></table></div></section></div>""")
 
     body = "\n".join(parts)
-    out.write_text(PAGE.replace("{{BODY}}", body), encoding="utf-8")
+    out.write_text(page(title="評測報告｜Decision Arena", active="report", generated=created,
+                        description="Decision 模型多模態評測的完整報告：總結與選型建議、模型名冊與模態探針、每個任務的正確率與校準。",
+                        body=body, extra_css=REPORT_CSS), encoding="utf-8")
     return out
 
 
-PAGE = """<!doctype html>
-<html lang="zh-Hant-TW">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Decision 模型評測</title>
-<style>
-:root{
-  --bg:#f7f7f5; --surface:#ffffff; --surface-2:#f0f1ef; --text:#1c1f22; --text-2:#4a5057; --border:#dcdfe2;
-  --accent:#0f6e6e; --accent-soft:#e2f1f0; --link:#0b5f5f;
-  --ok:#1f7a3d; --ok-bg:#e3f4e8; --bad:#a3261e; --bad-bg:#fbe7e5; --warn:#8a5a00; --warn-bg:#fdf1d9;
-  --muted:#5b6168; --muted-bg:#eceef0;
-  --lv0:#ffffff; --lv1:#e6f3f2; --lv2:#c9e6e3; --lv3:#a3d4cf; --lv4:#7cc2bb;
-  --code-bg:#eef0ee;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#121416; --surface:#1a1d20; --surface-2:#22262a; --text:#e8eaec; --text-2:#b4bac0; --border:#33383d;
-    --accent:#5cc4bb; --accent-soft:#163331; --link:#7dd6cd;
-    --ok:#7ed69a; --ok-bg:#16301f; --bad:#ff9a90; --bad-bg:#3a1a17; --warn:#f0c46a; --warn-bg:#352a12;
-    --muted:#a6adb4; --muted-bg:#262a2e;
-    --lv0:#1a1d20; --lv1:#173230; --lv2:#1c4440; --lv3:#225852; --lv4:#2a6e66;
-    --code-bg:#262a2e;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#121416; --surface:#1a1d20; --surface-2:#22262a; --text:#e8eaec; --text-2:#b4bac0; --border:#33383d;
-  --accent:#5cc4bb; --accent-soft:#163331; --link:#7dd6cd;
-  --ok:#7ed69a; --ok-bg:#16301f; --bad:#ff9a90; --bad-bg:#3a1a17; --warn:#f0c46a; --warn-bg:#352a12;
-  --muted:#a6adb4; --muted-bg:#262a2e;
-  --lv0:#1a1d20; --lv1:#173230; --lv2:#1c4440; --lv3:#225852; --lv4:#2a6e66;
-  --code-bg:#262a2e;
-}
-*{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--text);
-  font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
-  font-size:17px;line-height:1.75}
-main{max-width:960px;margin:0 auto;padding:48px 32px 96px}
-@media (max-width:640px){main{padding:32px 16px 64px}}
-h1,h2,h3{line-height:1.35;margin:0 0 .6em}
-h1{font-size:2.2rem;letter-spacing:.01em}
-h2{font-size:1.55rem;padding-top:8px;border-top:2px solid var(--border);padding-top:24px}
-h3{font-size:1.15rem}
-section{margin-top:56px}
-p{margin:0 0 1em}
-a{color:var(--link)}
-code{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:max(14px,.88em);background:var(--code-bg);
-  padding:.1em .4em;border-radius:4px;word-break:break-all}
-small,.small{font-size:14px;color:var(--text-2)}
-.hero .eyebrow{color:var(--accent);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:14px;margin:0 0 8px}
-.lede{font-size:1.08rem;color:var(--text-2);max-width:68ch}
-.meta{font-size:14px;color:var(--text-2)}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:24px 0}
-.kpis div{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px}
-.kpis dt{font-size:14px;color:var(--text-2)}
-.kpis dd{margin:0;font-size:1.6rem;font-weight:700;color:var(--accent)}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-.card{background:var(--surface);border:1px solid var(--border);border-left:5px solid var(--accent);border-radius:12px;padding:18px 20px}
-.card p{margin:0;color:var(--text-2)}
-.card.tone-bad{border-left-color:var(--bad)} .card.tone-ok{border-left-color:var(--ok)} .card.tone-warn{border-left-color:var(--warn)}
-.callout{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:16px}
-.callout p:last-child{margin:0}
-.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--border);border-radius:12px;background:var(--surface);margin:12px 0 16px}
-table{border-collapse:collapse;width:100%;font-size:15px;line-height:1.55}
-th,td{padding:12px 16px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border)}
-thead th{background:var(--surface-2);font-weight:600;white-space:nowrap}
-tbody tr:last-child td,tbody tr:last-child th{border-bottom:0}
-td.note{color:var(--text-2);font-size:14px;min-width:200px}
-td small,th small{display:block}
-.matrix th{text-align:center}
-.matrix td.cell{text-align:center}
-.matrix td.tname{text-align:left;min-width:10em}
-.matrix th.scen{background:var(--surface-2);writing-mode:horizontal-tb;white-space:nowrap;text-align:left}
-.matrix td a{font-weight:600;text-decoration:none}
-.cell{min-width:120px;background:var(--lv0)}
-.cell strong{display:block;font-size:16px}
-.cell.lv0{background:var(--lv0)} .cell.lv1{background:var(--lv1)} .cell.lv2{background:var(--lv2)}
-.cell.lv3{background:var(--lv3)} .cell.lv4{background:var(--lv4)}
-.cell.muted{background:var(--surface)}
-.pill{display:inline-block;font-size:14px;padding:2px 10px;border-radius:999px;white-space:nowrap;font-weight:600}
-.pill.ok{background:var(--ok-bg);color:var(--ok)} .pill.bad{background:var(--bad-bg);color:var(--bad)}
-.pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.muted{background:var(--muted-bg);color:var(--muted)}
-.warn-t{color:var(--warn)} .muted-t{color:var(--muted)}
-.task{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin:20px 0}
-.task .table-wrap{background:var(--bg)}
-.q{background:var(--accent-soft);border-radius:8px;padding:12px 16px}
-.q span{display:inline-block;font-size:14px;font-weight:700;color:var(--accent);margin-right:10px}
-details{margin:8px 0}
-summary{cursor:pointer;color:var(--link);font-weight:600}
-.overall{background:var(--surface);border:1px solid var(--border);border-top:5px solid var(--accent);
-  border-radius:14px;padding:24px 28px}
-@media (max-width:640px){.overall{padding:20px 16px}}
-.overall h2{border-top:0;padding-top:0}
-.overall .verdict{font-size:1.25rem;font-weight:700;line-height:1.5;color:var(--accent)}
-.overall ul{margin:0 0 24px;padding-left:1.2em}
-.overall li{margin-bottom:.7em}
-.overall h3{margin-top:8px}
-.overall tbody th{white-space:nowrap;background:var(--surface-2)}
-.overall table{min-width:860px}
-.overall td:last-child{min-width:18em}
-.overall td code{white-space:nowrap;word-break:normal}
-</style>
-</head>
-<body><main>
-{{BODY}}
-</main></body></html>
+REPORT_CSS = r"""
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.toc a{font-size:14px;font-weight:600;color:var(--ink-2);text-decoration:none;padding:6px 12px;border:1px solid var(--border);
+  border-radius:999px;background:var(--surface)}
+.toc a:hover{color:var(--accent);border-color:var(--accent)}
+.verdict-panel{border-left:4px solid var(--accent)}
+.verdict{font-size:1.3rem;font-weight:700;line-height:1.5;margin:0 0 16px;color:var(--ink)}
+.points{margin:0;padding-left:1.15em}
+.points li{margin-bottom:.75em;color:var(--ink-2)}
+.points li strong{color:var(--ink)}
+.picks table{min-width:720px}
+.picks td code{white-space:nowrap;word-break:normal;display:inline-block;margin:1px 0}
+.picks td:last-child{width:40%}
+.picks td code{white-space:nowrap}
+.picks tbody th{background:var(--surface-2);font-size:15px;color:var(--ink);min-width:7.5em}
+.findings{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media (max-width:760px){.findings{grid-template-columns:1fr}}
+.finding{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px 22px}
+.finding h3{margin:10px 0 6px}
+.finding p{margin:0;color:var(--ink-2);font-size:16px}
+.scen-head{display:flex;align-items:center;gap:16px}
+.scen-head img{width:72px;height:72px;object-fit:contain;flex:none}
+.scen-head p{margin:2px 0 0;color:var(--muted);font-size:15px}
+.task{margin-top:16px}
+.task .panel-title code{font-size:14px;font-weight:500;margin-left:6px;color:var(--muted)}
+.q{background:var(--accent-soft);border-radius:10px;padding:12px 16px;font-size:15px;margin:0 0 18px}
+.q span{font-weight:700;color:var(--accent);margin-right:10px}
+.sat{font-size:15px;color:var(--ink-2);margin:0 0 12px}
+.sat b{color:var(--ink);font-size:17px;font-variant-numeric:tabular-nums}
+details.more{border-top:0;padding-top:0;margin-top:10px}
+.matrix-wrap{max-height:none}
+.matrix{font-size:14px;border-collapse:separate;border-spacing:0}
+.matrix th,.matrix td{padding:10px 12px;border-bottom:1px solid var(--border)}
+.matrix thead th{text-align:center;vertical-align:bottom}
+.matrix thead th .dot{display:block;margin:0 auto 6px}
+.matrix thead th code{background:none;padding:0;font-size:14px;writing-mode:horizontal-tb}
+.matrix .sticky{position:sticky;left:0;z-index:2;background:var(--surface);text-align:left;min-width:11em;max-width:14em}
+.matrix thead .sticky{z-index:3;background:var(--surface-2)}
+.matrix .tname a{font-weight:600;text-decoration:none;color:var(--ink)}
+.matrix .tname a:hover{color:var(--accent)}
+.matrix tr.grp th,.matrix tr.grp td{background:var(--surface-2);font-size:14px;color:var(--ink-2);font-weight:650;padding:8px 12px}
+.matrix .cell{text-align:center;min-width:92px;font-variant-numeric:tabular-nums;border-left:2px solid var(--surface)}
+.matrix .cell strong{display:block;font-size:15px}
+.matrix .cell small{color:inherit;opacity:.85}
+.matrix .cell.off{background:var(--surface)}
+.notes{display:grid;gap:12px}
+.note-item{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 22px}
+.note-item h3{margin-bottom:6px}
+.note-item p{margin:0;color:var(--ink-2)}
+.method th{white-space:nowrap;width:9em;background:var(--surface-2);font-size:15px}
+.roster{min-width:880px}
+.roster td:first-child{white-space:nowrap}
+.roster td:first-child code{word-break:normal}
 """
