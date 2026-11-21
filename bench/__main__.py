@@ -6,6 +6,7 @@
     python3 -m bench probe --modalities image,audio
     python3 -m bench run --models gemini-decision-1 --tasks zh_text --limit 8 --budget 5
     python3 -m bench report                    # 由 results/ 產生 bench-report.html
+    python3 -m bench dashboard                 # 由 results/ 產生互動式 bench-dashboard.html
 """
 from __future__ import annotations
 
@@ -59,6 +60,11 @@ def cmd_report(args) -> None:
     print(f"報告：{path}")
 
 
+def cmd_dashboard(_args) -> None:
+    from .dashboard import build_dashboard
+    print(f"Dashboard：{build_dashboard()}")
+
+
 def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser(prog="python3 -m bench", description="Decision 模型評測")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -85,6 +91,7 @@ def main(argv: list[str] | None = None) -> None:
     p = sub.add_parser("report")
     p.add_argument("--runs", help="逗號分隔的 run id；預設合併全部")
     p.set_defaults(fn=cmd_report)
+    sub.add_parser("dashboard", help="由 results/ 產生 bench-dashboard.html").set_defaults(fn=cmd_dashboard)
     args = ap.parse_args(argv)
     args.fn(args)
 

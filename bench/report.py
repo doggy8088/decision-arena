@@ -119,7 +119,8 @@ def build_report(run_ids: list[str] | None = None, out: Path = OUT) -> Path:
     w(f"""<header class="hero"><p class="eyebrow">Decision Model Benchmark</p>
 <h1>Decision 模型評測</h1>
 <p class="lede">市面上「一次前向傳播、直接給校準機率」的決策模型（decision models），在多模態與五類情境下的實測。
-所有模型共用同一套任務檔與評分程式，數字由 <code>python3 -m bench report</code> 從 <code>results/</code> 直接產生。</p>
+所有模型共用同一套任務檔與評分程式，數字由 <code>python3 -m bench report</code> 從 <code>results/</code> 直接產生。
+想用圖表比較、快速篩選可用模型，請開 <a href="bench-dashboard.html">互動式 Dashboard</a>。</p>
 <dl class="kpis">
 <div><dt>已實測模型</dt><dd>{len([m for m in ran_models if not m.startswith('mock')])}</dd></div>
 <div><dt>任務</dt><dd>{len(tasks)}</dd></div>

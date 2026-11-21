@@ -27,7 +27,7 @@ class GeminiDecision(Provider):
         env_keys=("GEMINI_API_KEY",),
         usd_per_m_input=0.10,
         docs="https://aistudio.google.com/docs/decisions-api",
-        notes="2026-11-11 推出；本專案研究一～三的主角。",
+        notes="DI 66.0；2026-11-11 推出；本專案研究一～三的主角。",
     )
 
     def part(self, p: Part) -> dict:

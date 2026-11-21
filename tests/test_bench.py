@@ -174,6 +174,23 @@ class RunnerTests(unittest.TestCase):
         self.assertIn("500", rec["error"])
 
 
+class DashboardTests(unittest.TestCase):
+    def test_build_data_shape_and_composite_rule(self):
+        from bench import dashboard
+        data = dashboard.build_data()
+        self.assertEqual(len(data["models"]), len(REGISTRY))
+        for m in data["models"]:
+            self.assertIn(m["tier"], ("text", "image", "audio"))
+            has_all = all("acc" in m["tasks"].get(t, {}) for t in dashboard.DISCRIMINATIVE)
+            self.assertEqual(m["composite"] is not None, has_all, m["id"])
+            if m["tier"] == "text":
+                self.assertIsNone(m["composite"], f"{m['id']} 是純文字模型，不應有綜合分數")
+
+    def test_template_has_placeholder(self):
+        from bench import dashboard
+        self.assertIn("/*__DATA__*/null", dashboard.TEMPLATE.read_text(encoding="utf-8"))
+
+
 class ProviderShapeTests(unittest.TestCase):
     """各 adapter 的請求／回應轉換（不連網）。"""
 

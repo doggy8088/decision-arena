@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Decision 模型 Dashboard</title>
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f7f7f5; --surface:#fcfcfb; --surface-2:#f0f1ef; --border:#dcdfe2; --grid:#e6e7e4;
+  --text:#1c1f22; --text-2:#4a5057; --muted:#6a7077;
+  --accent:#0f6e6e; --accent-soft:#e2f1f0; --link:#0b5f5f; --focus:#0f6e6e;
+  --tier-text:#2a78d6; --tier-image:#eb6834; --tier-audio:#1baf7a;
+  --seq-0:#cde2fb; --seq-1:#9ec5f4; --seq-2:#6da7ec; --seq-3:#3987e5; --seq-4:#256abf; --seq-5:#184f95; --seq-6:#0d366b;
+  --na:#eceeef; --na-stripe:#dde0e2;
+  --ok:#1f7a3d; --ok-bg:#e3f4e8; --bad:#a3261e; --bad-bg:#fbe7e5; --code-bg:#eef0ee;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#121416; --surface:#1a1a19; --surface-2:#232624; --border:#34383b; --grid:#2c2f30;
+    --text:#ecedef; --text-2:#b9bec3; --muted:#9aa1a7;
+    --accent:#5cc4bb; --accent-soft:#163331; --link:#7dd6cd; --focus:#7dd6cd;
+    --tier-text:#3987e5; --tier-image:#d95926; --tier-audio:#199e70;
+    --seq-0:#1a2a3d; --seq-1:#184f95; --seq-2:#1c5cab; --seq-3:#256abf; --seq-4:#3987e5; --seq-5:#6da7ec; --seq-6:#b7d3f6;
+    --na:#222524; --na-stripe:#2b2e2d;
+    --ok:#7ed69a; --ok-bg:#16301f; --bad:#ff9a90; --bad-bg:#3a1a17; --code-bg:#262a2e;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#121416; --surface:#1a1a19; --surface-2:#232624; --border:#34383b; --grid:#2c2f30;
+  --text:#ecedef; --text-2:#b9bec3; --muted:#9aa1a7;
+  --accent:#5cc4bb; --accent-soft:#163331; --link:#7dd6cd; --focus:#7dd6cd;
+  --tier-text:#3987e5; --tier-image:#d95926; --tier-audio:#199e70;
+  --seq-0:#1a2a3d; --seq-1:#184f95; --seq-2:#1c5cab; --seq-3:#256abf; --seq-4:#3987e5; --seq-5:#6da7ec; --seq-6:#b7d3f6;
+  --na:#222524; --na-stripe:#2b2e2d;
+  --ok:#7ed69a; --ok-bg:#16301f; --bad:#ff9a90; --bad-bg:#3a1a17; --code-bg:#262a2e;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;font-size:17px;line-height:1.7}
+main{max-width:960px;margin:0 auto;padding:40px 32px 96px}
+@media (max-width:640px){main{padding:28px 16px 64px}}
+h1{font-size:2rem;line-height:1.3;margin:0 0 8px}
+h2{font-size:1.3rem;line-height:1.4;margin:0 0 4px}
+p{margin:0 0 1em}
+a{color:var(--link)}
+code,.mono{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:max(14px,.88em)}
+.eyebrow{color:var(--accent);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:14px;margin:0 0 6px}
+.lede{color:var(--text-2);max-width:68ch}
+.meta{font-size:14px;color:var(--muted)}
+section{margin-top:48px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px}
+@media (max-width:640px){.card{padding:16px}}
+.card-head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:flex-end;justify-content:space-between;margin-bottom:12px}
+.card-head p{margin:0;color:var(--text-2);font-size:15px;max-width:60ch}
+.small{font-size:14px;color:var(--text-2)}
+
+/* 篩選列 */
+.filters{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);
+  backdrop-filter:blur(6px);border-bottom:1px solid var(--border);margin:24px -32px 0;padding:14px 32px}
+@media (max-width:640px){.filters{margin:20px -16px 0;padding:12px 16px;position:static}}
+.filter-row{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field>span{font-size:14px;color:var(--text-2);font-weight:600}
+select,input[type=search],button{font:inherit;font-size:15px;color:var(--text);background:var(--surface);
+  border:1px solid var(--border);border-radius:8px;padding:7px 10px;min-height:40px}
+select{max-width:15em}
+input[type=search]{width:11em}
+input[type=range]{width:9em;accent-color:var(--accent)}
+button{cursor:pointer}
+button:hover{background:var(--surface-2)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:999px;
+  padding:6px 12px;font-size:15px;cursor:pointer;background:var(--surface);min-height:40px;user-select:none}
+.chip input{accent-color:var(--accent);width:16px;height:16px;margin:0}
+.chip:has(input:checked){border-color:var(--accent);background:var(--accent-soft);font-weight:600}
+.range-wrap{display:flex;align-items:center;gap:8px;min-height:40px}
+.range-wrap output{font-variant-numeric:tabular-nums;min-width:3.2em;font-size:15px}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px}
+@media (max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px}
+.kpi dt{font-size:14px;color:var(--text-2)}
+.kpi dd{margin:2px 0 0;font-size:1.65rem;font-weight:700;line-height:1.25;font-variant-numeric:tabular-nums}
+.kpi dd small{font-size:15px;font-weight:500;color:var(--text-2)}
+.kpi .sub{font-size:14px;color:var(--text-2);margin-top:2px;overflow-wrap:anywhere}
+
+/* 圖例 */
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--text-2);align-items:center}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.legend svg{vertical-align:-2px;margin-right:6px}
+.ramp{display:inline-flex;border-radius:4px;overflow:hidden;margin:0 6px;vertical-align:-2px}
+.ramp b{display:block;width:16px;height:12px}
+
+/* 層級長條 */
+.tierbar{display:flex;gap:2px;height:36px;border-radius:6px;overflow:hidden;margin:8px 0 6px}
+.tierbar div{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;min-width:0}
+.tier-labels{display:flex;flex-wrap:wrap;gap:4px 20px;font-size:15px}
+.tier-labels span{color:var(--text-2)}
+.tier-labels b{color:var(--text);font-variant-numeric:tabular-nums}
+
+/* 能力地圖 */
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.map{border-collapse:separate;border-spacing:2px;width:100%;min-width:720px;font-size:14px}
+.map th{font-weight:600;color:var(--text-2);padding:6px 4px;text-align:center;white-space:nowrap;vertical-align:bottom}
+.map th.model{text-align:left;padding-left:2px}
+.map th.grp{font-size:14px;color:var(--muted);font-weight:500;border-bottom:1px solid var(--border)}
+.map td{text-align:center;padding:0;height:34px;border-radius:5px;font-variant-numeric:tabular-nums}
+.map td.name{text-align:left;white-space:nowrap;padding:0 10px 0 2px;font-size:14px;background:none}
+.map td.name .v{display:block;font-size:14px;color:var(--muted);line-height:1.2}
+.map td.name b{font-weight:600;line-height:1.3}
+.map td.dot{background:none;width:44px}
+.map td.cell{min-width:58px;font-weight:600;cursor:default}
+.map td.na{background:repeating-linear-gradient(135deg,var(--na) 0 6px,var(--na-stripe) 6px 8px);color:var(--muted);font-weight:400}
+.map td.sep{width:6px;background:none}
+.map td.cell:hover,.map td.cell:focus{outline:2px solid var(--text);outline-offset:-2px}
+.map tr.focus-row td.name b{color:var(--accent)}
+
+/* 圖表 */
+.chart{width:100%;display:block}
+.chart text{fill:var(--text-2);font-size:14px;font-family:inherit}
+.chart .axis-title{fill:var(--text-2);font-weight:600}
+.chart .grid line{stroke:var(--grid);stroke-width:1}
+.chart .baseline{stroke:var(--border);stroke-width:1}
+.chart .lbl{fill:var(--text);font-size:14px}
+.chart .val{fill:var(--text);font-size:14px;font-variant-numeric:tabular-nums}
+.chart .hit{fill:transparent;cursor:pointer}
+.chart .mark{stroke:var(--surface);stroke-width:2}
+.chart g.pt:hover .mark,.chart g.pt:focus .mark{stroke:var(--text)}
+.chart g.bar:hover rect.fill,.chart g.bar:focus rect.fill{filter:brightness(1.12)}
+.axis-ctl{display:flex;flex-wrap:wrap;gap:8px 14px}
+.axis-ctl label{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--text-2);font-weight:600}
+.axis-ctl select{font-size:14px;min-height:36px;padding:5px 8px}
+
+/* 表格 */
+table.list{border-collapse:collapse;width:100%;min-width:760px;font-size:15px}
+.list th,.list td{padding:12px 14px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+.list thead th{background:var(--surface-2);font-weight:600;white-space:nowrap;font-size:14px}
+.list td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.list td.note{color:var(--text-2);font-size:14px;min-width:14em}
+.tag{display:inline-block;font-size:14px;padding:1px 8px;border-radius:999px;margin:0 4px 4px 0;white-space:nowrap;
+  border:1px solid var(--border);color:var(--text-2)}
+.tag.on{border-color:transparent;background:var(--ok-bg);color:var(--ok);font-weight:600}
+.swatch{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;vertical-align:1px}
+.empty{padding:28px;text-align:center;color:var(--text-2)}
+
+/* tooltip */
+#tip{position:fixed;z-index:20;pointer-events:none;background:var(--surface);color:var(--text);border:1px solid var(--border);
+  border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.5;box-shadow:0 6px 24px rgba(0,0,0,.18);max-width:280px;opacity:0;
+  transition:opacity .08s}
+#tip .tv{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+#tip .tl{color:var(--text-2)}
+#tip .row{display:flex;gap:8px;align-items:center}
+#tip .key{display:inline-block;width:14px;height:3px;border-radius:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="eyebrow">Decision Model Dashboard</p>
+    <h1>Decision 模型 Dashboard</h1>
+    <p class="lede">用篩選列縮小到符合需求的模型，下方所有圖表與清單會跟著更新。完整的方法說明與逐題數據請見 <a href="bench-report.html">評測報告</a>。</p>
+    <p class="meta" id="meta"></p>
+  </header>
+
+  <div class="filters" role="region" aria-label="篩選">
+    <div class="filter-row">
+      <div class="field"><span>需要的模態</span>
+        <div class="chips">
+          <label class="chip"><input type="checkbox" id="f-image">影像</label>
+          <label class="chip"><input type="checkbox" id="f-audio">音訊</label>
+        </div>
+      </div>
+      <label class="field"><span>焦點指標（排序依據）</span><select id="f-focus"></select></label>
+      <div class="field"><span>焦點最低分數</span>
+        <div class="range-wrap"><input type="range" id="f-min" min="0" max="100" step="5" value="0" aria-label="焦點最低分數"><output id="f-min-out">不限</output></div>
+      </div>
+      <label class="field"><span>價格上限（每百萬 token）</span>
+        <select id="f-price">
+          <option value="any">不限</option>
+          <option value="0.1">≤ US$0.10</option>
+          <option value="0.05">≤ US$0.05</option>
+          <option value="0.02">≤ US$0.02</option>
+          <option value="free">免費</option>
+        </select>
+      </label>
+      <div class="field"><span>其他</span>
+        <div class="chips"><label class="chip"><input type="checkbox" id="f-noweb">排除會上網查證的模型</label></div>
+      </div>
+      <label class="field"><span>搜尋</span><input type="search" id="f-q" placeholder="模型或廠商"></label>
+      <div class="field"><span>&nbsp;</span><button type="button" id="f-reset">重設</button></div>
+    </div>
+  </div>
+
+  <dl class="kpis" id="kpis"></dl>
+
+  <section>
+    <div class="card">
+      <div class="card-head"><div><h2>模態覆蓋</h2><p>符合條件的模型中，實測能處理哪些輸入。依模態探針結果分成三層：每一層都包含上一層的能力。</p></div></div>
+      <div class="tierbar" id="tierbar" role="img"></div>
+      <div class="tier-labels" id="tierlabels"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="card">
+      <div class="card-head">
+        <div><h2>能力地圖：模型 × 模態 × 情境</h2>
+          <p>左側三欄是實測模態（● 支援、○ 不支援），右側是各情境的平均正確率。依焦點指標排序；斜線格表示模型不支援該模態、無法測。</p></div>
+        <div class="legend"><span>正確率</span><span>0%</span><span class="ramp" id="ramp"></span><span>100%</span></div>
+      </div>
+      <div class="scroll"><table class="map" id="map"></table></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="card">
+      <div class="card-head">
+        <div><h2>關係散佈圖</h2><p>任選兩個指標看模型之間的關係，例如影像與台灣知識是否相關、公開排行榜（AA Decision Index）和本專案的分數是否一致。</p></div>
+        <div class="axis-ctl">
+          <label>X 軸 <select id="ax-x"></select></label>
+          <label>Y 軸 <select id="ax-y"></select></label>
+        </div>
+      </div>
+      <div class="legend" id="sc-legend"></div>
+      <div id="scatter"></div>
+      <p class="small" id="sc-note"></p>
+    </div>
+  </section>
+
+  <section>
+    <div class="card">
+      <div class="card-head"><div><h2 id="rank-title">焦點排行</h2><p id="rank-sub"></p></div>
+        <div class="legend" id="rank-legend"></div></div>
+      <div id="rank"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="card">
+      <div class="card-head"><div><h2>可用模型清單</h2><p id="list-sub"></p></div></div>
+      <div class="scroll"><table class="list" id="list"></table></div>
+    </div>
+  </section>
+</main>
+<div id="tip" role="tooltip"></div>
+
+<script>
+const DATA = {"generated": "2026-11-22 04:46", "runs": 6, "requests": 7327, "cost": 0.2774, "scenarios": {"audio": "語音與音訊", "image": "影像判斷", "zh_text": "中文文字決策", "agent": "Agent 守門／路由", "taiwan": "台灣政經"}, "discriminative": ["image-zh-char", "image-zhuyin", "tw-facts-choice", "tw-facts-binary"], "tasks": [{"id": "agent-escalate", "title": "客服 Agent 是否應轉真人", "scenario": "agent", "scored": true, "n": 12, "modalities": ["text"]}, {"id": "agent-judge", "title": "LLM-as-judge：回答是否正確且切題", "scenario": "agent", "scored": true, "n": 12, "modalities": ["text"]}, {"id": "agent-tool-select", "title": "Agent 工具選擇（6 選 1）", "scenario": "agent", "scored": true, "n": 14, "modalities": ["text"]}, {"id": "audio-has-voice", "title": "有沒有人聲（守門）", "scenario": "audio", "scored": true, "n": 42, "modalities": ["audio"]}, {"id": "audio-pron-ok", "title": "發音練習：有沒有唸對目標句", "scenario": "audio", "scored": true, "n": 50, "modalities": ["audio"]}, {"id": "audio-scene-7class", "title": "音場分類（7 類 × 6 段）", "scenario": "audio", "scored": true, "n": 42, "modalities": ["audio"]}, {"id": "audio-syllable-lu2", "title": "單音節辨音：是不是 ㄌㄨˊ", "scenario": "audio", "scored": true, "n": 14, "modalities": ["audio"]}, {"id": "image-caption-match", "title": "圖文是否一致", "scenario": "image", "scored": true, "n": 20, "modalities": ["image", "text"]}, {"id": "image-color", "title": "主色辨識（健全性檢查）", "scenario": "image", "scored": true, "n": 8, "modalities": ["image"]}, {"id": "image-count", "title": "數方塊（1–5 個）", "scenario": "image", "scored": true, "n": 10, "modalities": ["image"]}, {"id": "image-ui-error", "title": "App 畫面是否為錯誤狀態", "scenario": "image", "scored": true, "n": 10, "modalities": ["image"]}, {"id": "image-zh-char", "title": "形近繁中字辨識", "scenario": "image", "scored": true, "n": 23, "modalities": ["image"]}, {"id": "image-zhuyin", "title": "注音字卡（含聲調符號）", "scenario": "image", "scored": true, "n": 8, "modalities": ["image"]}, {"id": "tw-econ-headline", "title": "台灣經濟新聞主題分類", "scenario": "taiwan", "scored": true, "n": 8, "modalities": ["text"]}, {"id": "tw-facts-binary", "title": "台灣政經事實（是非題）", "scenario": "taiwan", "scored": true, "n": 5, "modalities": ["text"]}, {"id": "tw-facts-choice", "title": "台灣政經事實（選擇題）", "scenario": "taiwan", "scored": true, "n": 19, "modalities": ["text"]}, {"id": "tw-stance-swap", "title": "政治立場對稱性（不計分）", "scenario": "taiwan", "scored": false, "n": 16, "modalities": ["text"]}, {"id": "zh-intent-routing", "title": "客服意圖路由（6 類）", "scenario": "zh_text", "scored": true, "n": 18, "modalities": ["text"]}, {"id": "zh-scam-sms", "title": "台灣詐騙簡訊判斷", "scenario": "zh_text", "scored": true, "n": 20, "modalities": ["text"]}, {"id": "zh-sentiment", "title": "繁中商品評論：整體是否正面", "scenario": "zh_text", "scored": true, "n": 16, "modalities": ["text"]}], "models": [{"id": "gemini-decision-1", "vendor": "Google", "tier": "audio", "mods": {"text": true, "image": true, "audio": true}, "doc_mods": ["text", "image", "audio", "video", "pdf"], "price": 0.1, "free": false, "web": false, "latency": 604, "di": 66.0, "notes": "DI 66.0；2026-11-11 推出；本專案研究一～三的主角。", "composite": 0.5762, "neutral": 0.9703, "scenarios": {"audio": 0.6897, "image": 0.8877, "zh_text": 1.0, "agent": 1.0, "taiwan": 0.6596}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.021}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0011}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0112}, "audio-has-voice": {"acc": 1.0, "n": 42, "auc": 1.0, "brier": 0.0514}, "audio-pron-ok": {"acc": 0.64, "n": 50, "auc": 0.7767, "brier": 0.4475}, "audio-scene-7class": {"acc": 0.7619, "n": 42, "auc": null, "brier": 0.2918}, "audio-syllable-lu2": {"acc": 0.3571, "n": 14, "auc": 0.5417, "brier": 0.71}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0532}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0007}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0309}, "image-zh-char": {"acc": 0.8261, "n": 23, "auc": null, "brier": 0.2219}, "image-zhuyin": {"acc": 0.5, "n": 8, "auc": null, "brier": 0.649}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "tw-facts-binary": {"acc": 0.4, "n": 5, "auc": 0.3333, "brier": 0.5997}, "tw-facts-choice": {"acc": 0.5789, "n": 19, "auc": null, "brier": 0.4693}, "tw-stance-swap": {"delta": 0.0297, "favor": 0.008, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0037}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0265}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0008}}}, {"id": "bison-1", "vendor": "Base Labs (Baseten)", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image"], "price": 0.1, "free": false, "web": false, "latency": 827, "di": 75.9, "notes": "DI v2.1 75.9（榜首）；開放權重，基底 Gemma 4 31B", "composite": 0.5778, "neutral": 0.8322, "scenarios": {"audio": null, "image": 0.8379, "zh_text": 1.0, "agent": 1.0, "taiwan": 0.7614}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0083}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0022}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0039}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.002}, "image-zh-char": {"acc": 0.6522, "n": 23, "auc": null, "brier": 0.4468}, "image-zhuyin": {"acc": 0.375, "n": 8, "auc": null, "brier": 0.6842}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0002}, "tw-facts-binary": {"acc": 0.6, "n": 5, "auc": 0.0, "brier": 0.7155}, "tw-facts-choice": {"acc": 0.6842, "n": 19, "auc": null, "brier": 0.3706}, "tw-stance-swap": {"delta": 0.1678, "favor": -0.0786, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0036}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0032}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0009}}}, {"id": "d1.2-ultra", "vendor": "Liquid AI", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image", "audio"], "price": 0.042, "free": false, "web": false, "latency": 798, "di": 74.8, "notes": "DI 74.8；官方文件列音訊，但 OpenRouter 標 text+image", "composite": 0.5894, "neutral": 0.8775, "scenarios": {"audio": null, "image": 0.8035, "zh_text": 1.0, "agent": 1.0, "taiwan": 0.8456}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0019}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0002}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0021}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0001}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0109}, "image-zh-char": {"acc": 0.6957, "n": 23, "auc": null, "brier": 0.4516}, "image-zhuyin": {"acc": 0.125, "n": 8, "auc": null, "brier": 0.8037}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0008}, "tw-facts-binary": {"acc": 0.8, "n": 5, "auc": 0.6667, "brier": 0.3919}, "tw-facts-choice": {"acc": 0.7368, "n": 19, "auc": null, "brier": 0.4511}, "tw-stance-swap": {"delta": 0.1225, "favor": -0.0299, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0051}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0196}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.002}}}, {"id": "drex-max", "vendor": "Nace.AI", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image"], "price": 0.06, "free": false, "web": false, "latency": 1026, "di": 72.6, "notes": "DI 72.6（Drex Max v1.1）", "composite": 0.6167, "neutral": 0.8818, "scenarios": {"audio": null, "image": 0.8795, "zh_text": 1.0, "agent": 1.0, "taiwan": 0.7298}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0005}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0012}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0001}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0002}, "image-zh-char": {"acc": 0.6522, "n": 23, "auc": null, "brier": 0.3969}, "image-zhuyin": {"acc": 0.625, "n": 8, "auc": null, "brier": 0.6571}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "tw-facts-binary": {"acc": 0.4, "n": 5, "auc": 0.3333, "brier": 0.6351}, "tw-facts-choice": {"acc": 0.7895, "n": 19, "auc": null, "brier": 0.4028}, "tw-stance-swap": {"delta": 0.1182, "favor": -0.0157, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0002}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0044}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0027}}}, {"id": "mammoth-1", "vendor": "Base Labs (Baseten)", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image"], "price": 0.1, "free": false, "web": false, "latency": 750, "di": 71.4, "notes": "DI 71.4；tech report 稱只用文字訓練，與文件矛盾", "composite": 0.4758, "neutral": 0.8381, "scenarios": {"audio": null, "image": 0.7944, "zh_text": 1.0, "agent": 1.0, "taiwan": 0.7123}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0008}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0001}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.001}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.001}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0007}, "image-zh-char": {"acc": 0.3913, "n": 23, "auc": null, "brier": 0.6392}, "image-zhuyin": {"acc": 0.375, "n": 8, "auc": null, "brier": 0.8379}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "tw-facts-binary": {"acc": 0.4, "n": 5, "auc": 0.6667, "brier": 0.4878}, "tw-facts-choice": {"acc": 0.7368, "n": 19, "auc": null, "brier": 0.4363}, "tw-stance-swap": {"delta": 0.1619, "favor": -0.0506, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.001}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0}}}, {"id": "pplx-decider-v1.3", "vendor": "Perplexity", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image"], "price": 0.0, "free": true, "web": false, "latency": 709, "di": 70.4, "notes": "DI 70.4；開放權重；OpenRouter 免費版", "composite": 0.6262, "neutral": 0.9011, "scenarios": {"audio": null, "image": 0.8859, "zh_text": 1.0, "agent": 1.0, "taiwan": 0.7298}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0003}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0003}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0001}, "image-zh-char": {"acc": 0.5652, "n": 23, "auc": null, "brier": 0.4947}, "image-zhuyin": {"acc": 0.75, "n": 8, "auc": null, "brier": 0.4322}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "tw-facts-binary": {"acc": 0.4, "n": 5, "auc": 0.1667, "brier": 0.6712}, "tw-facts-choice": {"acc": 0.7895, "n": 19, "auc": null, "brier": 0.3652}, "tw-stance-swap": {"delta": 0.0989, "favor": -0.0104, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0013}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0085}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0004}}}, {"id": "d1.2", "vendor": "Liquid AI", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image", "audio"], "price": 0.02, "free": false, "web": false, "latency": 853, "di": 68.7, "notes": "DI 68.7", "composite": 0.56, "neutral": 0.8055, "scenarios": {"audio": null, "image": 0.7944, "zh_text": 0.9833, "agent": 1.0, "taiwan": 0.8246}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0251}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0006}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0086}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0006}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0002}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.006}, "image-zh-char": {"acc": 0.3913, "n": 23, "auc": null, "brier": 0.7395}, "image-zhuyin": {"acc": 0.375, "n": 8, "auc": null, "brier": 0.7123}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0004}, "tw-facts-binary": {"acc": 1.0, "n": 5, "auc": 1.0, "brier": 0.2829}, "tw-facts-choice": {"acc": 0.4737, "n": 19, "auc": null, "brier": 0.5496}, "tw-stance-swap": {"delta": 0.1945, "favor": -0.123, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0265}, "zh-scam-sms": {"acc": 0.95, "n": 20, "auc": 1.0, "brier": 0.0879}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0134}}}, {"id": "microsoft-decision-1.1", "vendor": "Microsoft", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image"], "price": 0.042, "free": false, "web": false, "latency": 812, "di": 67.8, "notes": "DI 67.8；本專案先前證實無音訊通道", "composite": 0.5512, "neutral": 0.9265, "scenarios": {"audio": null, "image": 0.8025, "zh_text": 1.0, "agent": 1.0, "taiwan": 0.7965}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0005}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0003}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0156}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0154}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0001}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0}, "image-zh-char": {"acc": 0.5652, "n": 23, "auc": null, "brier": 0.4653}, "image-zhuyin": {"acc": 0.25, "n": 8, "auc": null, "brier": 0.6967}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "tw-facts-binary": {"acc": 0.6, "n": 5, "auc": 0.5, "brier": 0.496}, "tw-facts-choice": {"acc": 0.7895, "n": 19, "auc": null, "brier": 0.3512}, "tw-stance-swap": {"delta": 0.0735, "favor": -0.0055, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0023}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0013}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0001}}}, {"id": "elephant-1", "vendor": "Base Labs (Baseten)", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image"], "price": 0.035, "free": false, "web": false, "latency": 650, "di": 66.4, "notes": "DI 66.4；9B", "composite": 0.5357, "neutral": 0.8476, "scenarios": {"audio": null, "image": 0.8098, "zh_text": 1.0, "agent": 1.0, "taiwan": 0.7614}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0127}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0004}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0116}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0006}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0001}, "image-zh-char": {"acc": 0.6087, "n": 23, "auc": null, "brier": 0.5328}, "image-zhuyin": {"acc": 0.25, "n": 8, "auc": null, "brier": 0.7495}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "tw-facts-binary": {"acc": 0.6, "n": 5, "auc": 0.5, "brier": 0.4652}, "tw-facts-choice": {"acc": 0.6842, "n": 19, "auc": null, "brier": 0.5108}, "tw-stance-swap": {"delta": 0.1524, "favor": -0.0635, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0004}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0237}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0001}}}, {"id": "jev-1.14", "vendor": "TypeSafe", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image"], "price": 0.042, "free": false, "web": false, "latency": 563, "di": 66.2, "notes": "DI 66.2；System One 格式原型；圖片為實驗性", "composite": 0.6933, "neutral": 0.91, "scenarios": {"audio": null, "image": 0.9148, "zh_text": 1.0, "agent": 1.0, "taiwan": 0.7614}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0508}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0015}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0044}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0025}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0005}, "image-zh-char": {"acc": 0.7391, "n": 23, "auc": null, "brier": 0.3569}, "image-zhuyin": {"acc": 0.75, "n": 8, "auc": null, "brier": 0.2976}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "tw-facts-binary": {"acc": 0.6, "n": 5, "auc": 0.5, "brier": 0.5228}, "tw-facts-choice": {"acc": 0.6842, "n": 19, "auc": null, "brier": 0.4661}, "tw-stance-swap": {"delta": 0.09, "favor": -0.0775, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.001}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0302}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0192}}}, {"id": "pplx-decider-flash-v1.3", "vendor": "Perplexity", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image"], "price": 0.0, "free": true, "web": false, "latency": 486, "di": 64.1, "notes": "DI 64.1；4B", "composite": 0.3837, "neutral": 0.8177, "scenarios": {"audio": null, "image": 0.7102, "zh_text": 0.9792, "agent": 1.0, "taiwan": 0.7579}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0011}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0002}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.006}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.006}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0001}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0008}, "image-zh-char": {"acc": 0.2609, "n": 23, "auc": null, "brier": 0.8512}, "image-zhuyin": {"acc": 0.0, "n": 8, "auc": null, "brier": 0.8222}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0001}, "tw-facts-binary": {"acc": 0.8, "n": 5, "auc": 0.6667, "brier": 0.3499}, "tw-facts-choice": {"acc": 0.4737, "n": 19, "auc": null, "brier": 0.6198}, "tw-stance-swap": {"delta": 0.1823, "favor": -0.1142, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0006}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.016}, "zh-sentiment": {"acc": 0.9375, "n": 16, "auc": 1.0, "brier": 0.0713}}}, {"id": "microsoft-decision-1", "vendor": "Microsoft", "tier": "text", "mods": {"text": true, "image": false, "audio": false}, "doc_mods": ["text"], "price": 0.042, "free": false, "web": false, "latency": 624, "di": 62.1, "notes": "DI 62.1；上一代", "composite": null, "neutral": 0.9196, "scenarios": {"audio": null, "image": null, "zh_text": 0.9792, "agent": 1.0, "taiwan": 0.7439}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0036}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.001}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "tw-facts-binary": {"acc": 0.6, "n": 5, "auc": 0.5, "brier": 0.4823}, "tw-facts-choice": {"acc": 0.6316, "n": 19, "auc": null, "brier": 0.47}, "tw-stance-swap": {"delta": 0.0804, "favor": -0.0075, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0154}, "zh-sentiment": {"acc": 0.9375, "n": 16, "auc": 1.0, "brier": 0.0589}}}, {"id": "drex-v2.0", "vendor": "Nace.AI", "tier": "text", "mods": {"text": true, "image": false, "audio": false}, "doc_mods": ["text"], "price": 0.06, "free": false, "web": false, "latency": 997, "di": 61.6, "notes": "DI 61.6；開放權重", "composite": null, "neutral": 0.9366, "scenarios": {"audio": null, "image": null, "zh_text": 0.9833, "agent": 1.0, "taiwan": 0.7439}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.1781}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0074}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0209}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "tw-facts-binary": {"acc": 0.6, "n": 5, "auc": 0.5, "brier": 0.4946}, "tw-facts-choice": {"acc": 0.6316, "n": 19, "auc": null, "brier": 0.4877}, "tw-stance-swap": {"delta": 0.0634, "favor": -0.0406, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0335}, "zh-scam-sms": {"acc": 0.95, "n": 20, "auc": 1.0, "brier": 0.0867}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0304}}}, {"id": "clef", "vendor": "Cloudflare", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image"], "price": 0.192, "free": false, "web": false, "latency": 851, "di": 60.3, "notes": "DI 60.3；只讀 state 前約 2,000 文字 token", "composite": 0.4617, "neutral": 0.8476, "scenarios": {"audio": null, "image": 0.7942, "zh_text": 0.95, "agent": 1.0, "taiwan": 0.6772}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0008}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0005}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.002}, "image-caption-match": {"acc": 0.95, "n": 20, "auc": 1.0, "brier": 0.0451}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0001}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0003}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0001}, "image-zh-char": {"acc": 0.5652, "n": 23, "auc": null, "brier": 0.4882}, "image-zhuyin": {"acc": 0.25, "n": 8, "auc": null, "brier": 0.6295}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0005}, "tw-facts-binary": {"acc": 0.4, "n": 5, "auc": 0.5, "brier": 0.8362}, "tw-facts-choice": {"acc": 0.6316, "n": 19, "auc": null, "brier": 0.5496}, "tw-stance-swap": {"delta": 0.1524, "favor": -0.0181, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0018}, "zh-scam-sms": {"acc": 0.85, "n": 20, "auc": 1.0, "brier": 0.1915}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0122}}}, {"id": "gpt-6-luna-decisions", "vendor": "OpenAI", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image"], "price": 0.1, "free": false, "web": false, "latency": 651, "di": 60.2, "notes": "DI 60.2；不支援音訊", "composite": 0.536, "neutral": 0.9975, "scenarios": {"audio": null, "image": 0.759, "zh_text": 1.0, "agent": 1.0, "taiwan": 0.8632}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0006}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0001}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0325}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.002}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0001}, "image-zh-char": {"acc": 0.3043, "n": 23, "auc": null, "brier": 0.811}, "image-zhuyin": {"acc": 0.25, "n": 8, "auc": null, "brier": 0.777}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "tw-facts-binary": {"acc": 0.8, "n": 5, "auc": 0.6667, "brier": 0.5113}, "tw-facts-choice": {"acc": 0.7895, "n": 19, "auc": null, "brier": 0.3033}, "tw-stance-swap": {"delta": 0.0025, "favor": 0.0025, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0133}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0256}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0036}}}, {"id": "clef-omni", "vendor": "Cloudflare", "tier": "audio", "mods": {"text": true, "image": true, "audio": true}, "doc_mods": ["text", "image", "audio", "video"], "price": 0.15, "free": false, "web": false, "latency": 670, "di": 57.8, "notes": "DI 57.8；全模態", "composite": 0.431, "neutral": 0.757, "scenarios": {"audio": 0.8895, "image": 0.5496, "zh_text": 1.0, "agent": 1.0, "taiwan": 0.7088}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0266}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0007}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.009}, "audio-has-voice": {"acc": 1.0, "n": 42, "auc": 1.0, "brier": 0.0011}, "audio-pron-ok": {"acc": 0.82, "n": 50, "auc": 0.9183, "brier": 0.3366}, "audio-scene-7class": {"acc": 0.881, "n": 42, "auc": null, "brier": 0.2641}, "audio-syllable-lu2": {"acc": 0.8571, "n": 14, "auc": 1.0, "brier": 0.1806}, "image-caption-match": {"acc": 0.5, "n": 20, "auc": 0.58, "brier": 0.9091}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0051}, "image-count": {"acc": 0.2, "n": 10, "auc": null, "brier": 0.9577}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0033}, "image-zh-char": {"acc": 0.3478, "n": 23, "auc": null, "brier": 0.7283}, "image-zhuyin": {"acc": 0.25, "n": 8, "auc": null, "brier": 0.76}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0068}, "tw-facts-binary": {"acc": 0.6, "n": 5, "auc": 0.6667, "brier": 0.5565}, "tw-facts-choice": {"acc": 0.5263, "n": 19, "auc": null, "brier": 0.5378}, "tw-stance-swap": {"delta": 0.243, "favor": -0.1421, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0212}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0378}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0007}}}, {"id": "heygen-decision-1", "vendor": "HeyGen", "tier": "audio", "mods": {"text": true, "image": true, "audio": true}, "doc_mods": ["text", "image", "audio", "video"], "price": 0.07, "free": false, "web": false, "latency": 1341, "di": null, "notes": "未列入 AA 榜；全模態", "composite": 0.5982, "neutral": 0.8711, "scenarios": {"audio": 0.8357, "image": 0.8514, "zh_text": 1.0, "agent": 1.0, "taiwan": 0.7614}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.017}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0139}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0131}, "audio-has-voice": {"acc": 1.0, "n": 42, "auc": 1.0, "brier": 0.0196}, "audio-pron-ok": {"acc": 0.7, "n": 50, "auc": 0.8583, "brier": 0.5223}, "audio-scene-7class": {"acc": 0.8571, "n": 42, "auc": null, "brier": 0.2176}, "audio-syllable-lu2": {"acc": 0.7857, "n": 14, "auc": 1.0, "brier": 0.2944}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0001}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0143}, "image-zh-char": {"acc": 0.6087, "n": 23, "auc": null, "brier": 0.4843}, "image-zhuyin": {"acc": 0.5, "n": 8, "auc": null, "brier": 0.7012}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0005}, "tw-facts-binary": {"acc": 0.6, "n": 5, "auc": 0.0, "brier": 0.8451}, "tw-facts-choice": {"acc": 0.6842, "n": 19, "auc": null, "brier": 0.4353}, "tw-stance-swap": {"delta": 0.1289, "favor": -0.0047, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0054}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0259}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0097}}}, {"id": "heygen-decision-1-turbo", "vendor": "HeyGen", "tier": "audio", "mods": {"text": true, "image": true, "audio": true}, "doc_mods": ["text", "image", "audio", "video"], "price": 0.042, "free": false, "web": false, "latency": 1261, "di": null, "notes": "未列入 AA 榜", "composite": 0.5851, "neutral": 0.8649, "scenarios": {"audio": 0.8357, "image": 0.8514, "zh_text": 0.9833, "agent": 1.0, "taiwan": 0.7439}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0128}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0121}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0193}, "audio-has-voice": {"acc": 1.0, "n": 42, "auc": 1.0, "brier": 0.0196}, "audio-pron-ok": {"acc": 0.7, "n": 50, "auc": 0.8483, "brier": 0.5224}, "audio-scene-7class": {"acc": 0.8571, "n": 42, "auc": null, "brier": 0.2176}, "audio-syllable-lu2": {"acc": 0.7857, "n": 14, "auc": 1.0, "brier": 0.2938}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0003}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0238}, "image-zh-char": {"acc": 0.6087, "n": 23, "auc": null, "brier": 0.4663}, "image-zhuyin": {"acc": 0.5, "n": 8, "auc": null, "brier": 0.6434}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0003}, "tw-facts-binary": {"acc": 0.6, "n": 5, "auc": 0.0, "brier": 0.8423}, "tw-facts-choice": {"acc": 0.6316, "n": 19, "auc": null, "brier": 0.4119}, "tw-stance-swap": {"delta": 0.1351, "favor": 0.0256, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0091}, "zh-scam-sms": {"acc": 0.95, "n": 20, "auc": 1.0, "brier": 0.0935}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0039}}}, {"id": "solar-decide", "vendor": "Upstage", "tier": "text", "mods": {"text": true, "image": false, "audio": false}, "doc_mods": ["text"], "price": 0.05, "free": false, "web": false, "latency": 1152, "di": null, "notes": "未列入 AA 榜；韓國廠商", "composite": null, "neutral": 0.8692, "scenarios": {"audio": null, "image": null, "zh_text": 0.9065, "agent": 1.0, "taiwan": 0.5895}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0005}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.001}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0052}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "tw-facts-binary": {"acc": 0.4, "n": 5, "auc": 0.8333, "brier": 0.8338}, "tw-facts-choice": {"acc": 0.3684, "n": 19, "auc": null, "brier": 1.0484}, "tw-stance-swap": {"delta": 0.1308, "favor": 0.083, "n": 8}, "zh-intent-routing": {"acc": 0.9444, "n": 18, "auc": null, "brier": 0.1054}, "zh-scam-sms": {"acc": 0.9, "n": 20, "auc": 0.92, "brier": 0.1796}, "zh-sentiment": {"acc": 0.875, "n": 16, "auc": 0.9683, "brier": 0.2396}}}, {"id": "clef-flash", "vendor": "Cloudflare", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image"], "price": 0.019, "free": false, "web": false, "latency": 795, "di": null, "notes": "未列入 AA 榜；9B 開放權重", "composite": 0.3749, "neutral": 0.9228, "scenarios": {"audio": null, "image": 0.7464, "zh_text": 0.9125, "agent": 1.0, "taiwan": 0.6737}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0197}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0107}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0043}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0069}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.001}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0033}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0056}, "image-zh-char": {"acc": 0.4783, "n": 23, "auc": null, "brier": 0.6188}, "image-zhuyin": {"acc": 0.0, "n": 8, "auc": null, "brier": 0.7758}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0049}, "tw-facts-binary": {"acc": 0.6, "n": 5, "auc": 0.6667, "brier": 0.4752}, "tw-facts-choice": {"acc": 0.4211, "n": 19, "auc": null, "brier": 0.7088}, "tw-stance-swap": {"delta": 0.0772, "favor": -0.0234, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0041}, "zh-scam-sms": {"acc": 0.8, "n": 20, "auc": 1.0, "brier": 0.1824}, "zh-sentiment": {"acc": 0.9375, "n": 16, "auc": 1.0, "brier": 0.0994}}}, {"id": "span-02", "vendor": "Respan", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image"], "price": 0.01, "free": false, "web": false, "latency": 918, "di": null, "notes": "未列入 AA 榜", "composite": 0.567, "neutral": 0.8398, "scenarios": {"audio": null, "image": 0.8306, "zh_text": 1.0, "agent": 1.0, "taiwan": 0.7614}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0079}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0004}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0104}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0012}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0}, "image-zh-char": {"acc": 0.6087, "n": 23, "auc": null, "brier": 0.5349}, "image-zhuyin": {"acc": 0.375, "n": 8, "auc": null, "brier": 0.7958}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "tw-facts-binary": {"acc": 0.6, "n": 5, "auc": 0.6667, "brier": 0.5596}, "tw-facts-choice": {"acc": 0.6842, "n": 19, "auc": null, "brier": 0.3925}, "tw-stance-swap": {"delta": 0.1602, "favor": 0.1331, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0004}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0035}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0007}}}, {"id": "reflex", "vendor": "Morph", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image"], "price": 0.042, "free": false, "web": false, "latency": 564, "di": null, "notes": "未列入 AA 榜", "composite": 0.6038, "neutral": 0.8798, "scenarios": {"audio": null, "image": 0.8306, "zh_text": 1.0, "agent": 1.0, "taiwan": 0.8105}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0031}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0}, "image-zh-char": {"acc": 0.6087, "n": 23, "auc": null, "brier": 0.4633}, "image-zhuyin": {"acc": 0.375, "n": 8, "auc": null, "brier": 0.6585}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "tw-facts-binary": {"acc": 0.8, "n": 5, "auc": 0.6667, "brier": 0.4794}, "tw-facts-choice": {"acc": 0.6316, "n": 19, "auc": null, "brier": 0.4893}, "tw-stance-swap": {"delta": 0.1202, "favor": -0.1202, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0008}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0005}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0001}}}, {"id": "classify-1", "vendor": "ScaleDown", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image", "pdf"], "price": 0.04, "free": false, "web": false, "latency": 697, "di": null, "notes": "未列入 AA 榜；1M context", "composite": 0.4254, "neutral": 0.9513, "scenarios": {"audio": null, "image": 0.7288, "zh_text": 1.0, "agent": 0.9722, "taiwan": 0.6596}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.1328}, "agent-judge": {"acc": 0.9167, "n": 12, "auc": 0.9722, "brier": 0.1472}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0137}, "image-caption-match": {"acc": 0.95, "n": 20, "auc": 1.0, "brier": 0.102}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0073}, "image-count": {"acc": 0.7, "n": 10, "auc": null, "brier": 0.4512}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0311}, "image-zh-char": {"acc": 0.3478, "n": 23, "auc": null, "brier": 0.7664}, "image-zhuyin": {"acc": 0.375, "n": 8, "auc": null, "brier": 0.6631}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0009}, "tw-facts-binary": {"acc": 0.4, "n": 5, "auc": 0.5, "brier": 0.4728}, "tw-facts-choice": {"acc": 0.5789, "n": 19, "auc": null, "brier": 0.6656}, "tw-stance-swap": {"delta": 0.0487, "favor": -0.0162, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0129}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0781}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0392}}}, {"id": "pplx-decider-v1.2", "vendor": "Perplexity", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image"], "price": 0.02, "free": false, "web": false, "latency": 576, "di": 69.8, "notes": "DI 69.8；上一版", "composite": 0.6035, "neutral": 0.8199, "scenarios": {"audio": null, "image": 0.8795, "zh_text": 1.0, "agent": 1.0, "taiwan": 0.7123}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0031}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0021}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0003}, "image-zh-char": {"acc": 0.6522, "n": 23, "auc": null, "brier": 0.4675}, "image-zhuyin": {"acc": 0.625, "n": 8, "auc": null, "brier": 0.41}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "tw-facts-binary": {"acc": 0.4, "n": 5, "auc": 0.3333, "brier": 0.6209}, "tw-facts-choice": {"acc": 0.7368, "n": 19, "auc": null, "brier": 0.4134}, "tw-stance-swap": {"delta": 0.1801, "favor": -0.0292, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0022}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0067}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0119}}}, {"id": "pplx-decider-flash-v1.2", "vendor": "Perplexity", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image"], "price": 0.01, "free": false, "web": false, "latency": 499, "di": 60.1, "notes": "DI 60.1；上一版 4B", "composite": 0.481, "neutral": 0.8618, "scenarios": {"audio": null, "image": 0.7663, "zh_text": 0.9125, "agent": 0.9722, "taiwan": 0.7754}, "tasks": {"agent-escalate": {"acc": 0.9167, "n": 12, "auc": 1.0, "brier": 0.1085}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0126}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.012}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0004}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0054}, "image-zh-char": {"acc": 0.3478, "n": 23, "auc": null, "brier": 0.7393}, "image-zhuyin": {"acc": 0.25, "n": 8, "auc": null, "brier": 0.7523}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0008}, "tw-facts-binary": {"acc": 0.8, "n": 5, "auc": 0.8333, "brier": 0.3361}, "tw-facts-choice": {"acc": 0.5263, "n": 19, "auc": null, "brier": 0.6287}, "tw-stance-swap": {"delta": 0.1382, "favor": -0.1036, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0021}, "zh-scam-sms": {"acc": 0.8, "n": 20, "auc": 1.0, "brier": 0.1837}, "zh-sentiment": {"acc": 0.9375, "n": 16, "auc": 1.0, "brier": 0.0944}}}, {"id": "drex-max-finance", "vendor": "Nace.AI", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image"], "price": 0.06, "free": false, "web": false, "latency": 637, "di": null, "notes": "未列入 AA 榜；金融領域版", "composite": 0.6486, "neutral": 0.8686, "scenarios": {"audio": null, "image": 0.8587, "zh_text": 1.0, "agent": 1.0, "taiwan": 0.814}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.008}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0003}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0006}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0004}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0008}, "image-zh-char": {"acc": 0.6522, "n": 23, "auc": null, "brier": 0.3879}, "image-zhuyin": {"acc": 0.5, "n": 8, "auc": null, "brier": 0.4848}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0001}, "tw-facts-binary": {"acc": 0.6, "n": 5, "auc": 0.3333, "brier": 0.6328}, "tw-facts-choice": {"acc": 0.8421, "n": 19, "auc": null, "brier": 0.2563}, "tw-stance-swap": {"delta": 0.1314, "favor": -0.0452, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0171}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0234}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0082}}}, {"id": "groundhog-1", "vendor": "Base Labs (Baseten)", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image"], "price": 0.035, "free": false, "web": false, "latency": 537, "di": null, "notes": "未列入 AA 榜；開放權重", "composite": 0.5742, "neutral": 0.9091, "scenarios": {"audio": null, "image": 0.8442, "zh_text": 1.0, "agent": 1.0, "taiwan": 0.7439}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0141}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0004}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0125}, "image-caption-match": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0002}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0014}, "image-zh-char": {"acc": 0.5652, "n": 23, "auc": null, "brier": 0.4122}, "image-zhuyin": {"acc": 0.5, "n": 8, "auc": null, "brier": 0.5966}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0001}, "tw-facts-binary": {"acc": 0.6, "n": 5, "auc": 0.4167, "brier": 0.6195}, "tw-facts-choice": {"acc": 0.6316, "n": 19, "auc": null, "brier": 0.4624}, "tw-stance-swap": {"delta": 0.0909, "favor": 0.0231, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0144}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0081}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0029}}}, {"id": "joey-1", "vendor": "Base Labs (Baseten)", "tier": "image", "mods": {"text": true, "image": true, "audio": false}, "doc_mods": ["text", "image"], "price": 0.01, "free": false, "web": false, "latency": 476, "di": null, "notes": "未列入 AA 榜；開放權重", "composite": 0.3988, "neutral": 0.9116, "scenarios": {"audio": null, "image": 0.7549, "zh_text": 0.9148, "agent": 0.8889, "taiwan": 0.6386}, "tasks": {"agent-escalate": {"acc": 0.9167, "n": 12, "auc": 1.0, "brier": 0.1422}, "agent-judge": {"acc": 0.75, "n": 12, "auc": 0.8889, "brier": 0.3491}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0602}, "image-caption-match": {"acc": 0.85, "n": 20, "auc": 0.91, "brier": 0.2696}, "image-color": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "image-count": {"acc": 1.0, "n": 10, "auc": null, "brier": 0.0188}, "image-ui-error": {"acc": 1.0, "n": 10, "auc": 1.0, "brier": 0.0251}, "image-zh-char": {"acc": 0.3043, "n": 23, "auc": null, "brier": 0.7144}, "image-zhuyin": {"acc": 0.375, "n": 8, "auc": null, "brier": 0.7862}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0002}, "tw-facts-binary": {"acc": 0.6, "n": 5, "auc": 0.6667, "brier": 0.4241}, "tw-facts-choice": {"acc": 0.3158, "n": 19, "auc": null, "brier": 0.7407}, "tw-stance-swap": {"delta": 0.0884, "favor": 0.029, "n": 8}, "zh-intent-routing": {"acc": 0.9444, "n": 18, "auc": null, "brier": 0.0808}, "zh-scam-sms": {"acc": 0.8, "n": 20, "auc": 0.95, "brier": 0.2869}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0438}}}, {"id": "solar-decide-flash", "vendor": "Upstage", "tier": "text", "mods": {"text": true, "image": false, "audio": false}, "doc_mods": ["text"], "price": 0.05, "free": false, "web": false, "latency": 612, "di": null, "notes": "未列入 AA 榜", "composite": null, "neutral": 0.8668, "scenarios": {"audio": null, "image": null, "zh_text": 0.8648, "agent": 0.8611, "taiwan": 0.5719}, "tasks": {"agent-escalate": {"acc": 0.5833, "n": 12, "auc": 1.0, "brier": 0.5072}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0012}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0087}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "tw-facts-binary": {"acc": 0.4, "n": 5, "auc": 0.8333, "brier": 0.8237}, "tw-facts-choice": {"acc": 0.3158, "n": 19, "auc": null, "brier": 0.8367}, "tw-stance-swap": {"delta": 0.1332, "favor": 0.1189, "n": 8}, "zh-intent-routing": {"acc": 0.9444, "n": 18, "auc": null, "brier": 0.1149}, "zh-scam-sms": {"acc": 0.9, "n": 20, "auc": 0.93, "brier": 0.1939}, "zh-sentiment": {"acc": 0.75, "n": 16, "auc": 0.9048, "brier": 0.3511}}}, {"id": "span-01", "vendor": "Respan", "tier": "text", "mods": {"text": true, "image": false, "audio": false}, "doc_mods": ["text"], "price": 0.02, "free": false, "web": false, "latency": 863, "di": null, "notes": "未列入 AA 榜", "composite": null, "neutral": 0.8171, "scenarios": {"audio": null, "image": null, "zh_text": 1.0, "agent": 1.0, "taiwan": 0.6}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0145}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0011}, "agent-tool-select": {"status": "rejected", "n": 14}, "tw-econ-headline": {"status": "rejected", "n": 8}, "tw-facts-binary": {"acc": 0.6, "n": 5, "auc": 0.8333, "brier": 0.4928}, "tw-facts-choice": {"status": "rejected", "n": 19}, "tw-stance-swap": {"delta": 0.1829, "favor": 0.1285, "n": 8}, "zh-intent-routing": {"status": "rejected", "n": 18}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0058}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0013}}}, {"id": "span-01-lite", "vendor": "Respan", "tier": "text", "mods": {"text": true, "image": false, "audio": false}, "doc_mods": ["text"], "price": 0.0, "free": true, "web": false, "latency": 851, "di": null, "notes": "未列入 AA 榜", "composite": null, "neutral": 0.8171, "scenarios": {"audio": null, "image": null, "zh_text": 1.0, "agent": 1.0, "taiwan": 0.6}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0145}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0011}, "agent-tool-select": {"status": "rejected", "n": 14}, "tw-econ-headline": {"status": "rejected", "n": 8}, "tw-facts-binary": {"acc": 0.6, "n": 5, "auc": 0.8333, "brier": 0.4928}, "tw-facts-choice": {"status": "rejected", "n": 19}, "tw-stance-swap": {"delta": 0.1829, "favor": 0.1285, "n": 8}, "zh-intent-routing": {"status": "rejected", "n": 18}, "zh-scam-sms": {"acc": 1.0, "n": 20, "auc": 1.0, "brier": 0.0058}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0013}}}, {"id": "tev1-4b-experimental", "vendor": "Together AI", "tier": "text", "mods": {"text": true, "image": false, "audio": false}, "doc_mods": ["text"], "price": 0.042, "free": false, "web": false, "latency": 501, "di": null, "notes": "未列入 AA 榜；實驗性 4B 開放權重", "composite": null, "neutral": 0.9751, "scenarios": {"audio": null, "image": null, "zh_text": 0.925, "agent": 0.8611, "taiwan": 0.6421}, "tasks": {"agent-escalate": {"acc": 0.75, "n": 12, "auc": 1.0, "brier": 0.3075}, "agent-judge": {"acc": 0.8333, "n": 12, "auc": 1.0, "brier": 0.245}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0181}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0}, "tw-facts-binary": {"acc": 0.4, "n": 5, "auc": 0.6667, "brier": 0.6053}, "tw-facts-choice": {"acc": 0.5263, "n": 19, "auc": null, "brier": 0.6338}, "tw-stance-swap": {"delta": 0.0249, "favor": -0.0097, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0003}, "zh-scam-sms": {"acc": 0.9, "n": 20, "auc": 0.96, "brier": 0.1947}, "zh-sentiment": {"acc": 0.875, "n": 16, "auc": 0.9683, "brier": 0.2185}}}, {"id": "kev-4b", "vendor": "Jared Palmer", "tier": "text", "mods": {"text": true, "image": false, "audio": false}, "doc_mods": ["text"], "price": 0.042, "free": false, "web": false, "latency": 874, "di": null, "notes": "未列入 AA 榜；個人發布的 4B 開放權重", "composite": null, "neutral": 0.9463, "scenarios": {"audio": null, "image": null, "zh_text": 0.925, "agent": 0.8889, "taiwan": 0.5754}, "tasks": {"agent-escalate": {"acc": 0.8333, "n": 12, "auc": 0.9722, "brier": 0.2845}, "agent-judge": {"acc": 0.8333, "n": 12, "auc": 1.0, "brier": 0.1716}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0886}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0032}, "tw-facts-binary": {"acc": 0.2, "n": 5, "auc": 0.5, "brier": 0.7627}, "tw-facts-choice": {"acc": 0.5263, "n": 19, "auc": null, "brier": 0.5926}, "tw-stance-swap": {"delta": 0.0537, "favor": -0.0132, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.1311}, "zh-scam-sms": {"acc": 0.9, "n": 20, "auc": 0.94, "brier": 0.2507}, "zh-sentiment": {"acc": 0.875, "n": 16, "auc": 1.0, "brier": 0.1523}}}, {"id": "decisions-fast", "vendor": "Parallel", "tier": "text", "mods": {"text": true, "image": false, "audio": false}, "doc_mods": ["text"], "price": 0.0, "free": false, "web": true, "latency": 1138, "di": null, "notes": "未列入 AA 榜；會上網查證，每次請求 US$0.001", "composite": null, "neutral": 0.6965, "scenarios": {"audio": null, "image": null, "zh_text": 0.9833, "agent": 1.0, "taiwan": 1.0}, "tasks": {"agent-escalate": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.0197}, "agent-judge": {"acc": 1.0, "n": 12, "auc": 1.0, "brier": 0.003}, "agent-tool-select": {"acc": 1.0, "n": 14, "auc": null, "brier": 0.0356}, "tw-econ-headline": {"acc": 1.0, "n": 8, "auc": null, "brier": 0.0001}, "tw-facts-binary": {"acc": 1.0, "n": 5, "auc": 1.0, "brier": 0.009}, "tw-facts-choice": {"acc": 1.0, "n": 19, "auc": null, "brier": 0.0008}, "tw-stance-swap": {"delta": 0.3035, "favor": 0.0595, "n": 8}, "zh-intent-routing": {"acc": 1.0, "n": 18, "auc": null, "brier": 0.0005}, "zh-scam-sms": {"acc": 0.95, "n": 20, "auc": 1.0, "brier": 0.1066}, "zh-sentiment": {"acc": 1.0, "n": 16, "auc": 1.0, "brier": 0.0639}}}]};
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const el = (tag, attrs = {}, text) => {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+    if (text != null) n.textContent = text;
+    return n;
+  };
+  const SVG = "http://www.w3.org/2000/svg";
+  const sv = (tag, attrs = {}, text) => {
+    const n = document.createElementNS(SVG, tag);
+    for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+    if (text != null) n.textContent = text;
+    return n;
+  };
+  const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const pct = (v) => v == null ? "—" : `${Math.round(v * 100)}%`;
+  const TIERS = {
+    text: {label: "純文字", color: "--tier-text", shape: "square"},
+    image: {label: "文字＋影像", color: "--tier-image", shape: "circle"},
+    audio: {label: "文字＋影像＋音訊", color: "--tier-audio", shape: "diamond"},
+  };
+  const SCEN = DATA.scenarios;
+  const scored = DATA.tasks.filter((t) => t.scored);
+
+  // ---------------------------------------------------------------- 指標定義
+  const METRICS = [
+    {key: "composite", label: "綜合（有鑑別力的 4 個任務）", get: (m) => m.composite, fmt: pct, max: 1, higher: true,
+     desc: "形近字、注音字卡、台灣選擇題、台灣是非題的平均；四項都要有數據，所以只有支援影像的模型才有綜合分數"},
+    ...Object.entries(SCEN).map(([k, v]) => ({key: `scen:${k}`, label: `情境：${v}`, get: (m) => m.scenarios[k], fmt: pct,
+      max: 1, higher: true, desc: `${v}各任務的平均正確率`})),
+    {key: "neutral", label: "政治中立度", get: (m) => m.neutral, fmt: pct, max: 1, higher: true,
+     desc: "1 − 立場對稱題的平均機率差 |Δ|，越高越中立"},
+    ...scored.map((t) => ({key: `task:${t.id}`, label: `任務：${t.title}`, group: SCEN[t.scenario],
+      get: (m) => (m.tasks[t.id] || {}).acc ?? null, fmt: pct, max: 1, higher: true, desc: `${t.title}（${t.n} 題）的正確率`})),
+  ];
+  const AXES = [
+    METRICS[0], ...METRICS.filter((x) => x.key.startsWith("scen:")), METRICS.find((x) => x.key === "neutral"),
+    {key: "price", label: "價格（US$／百萬 token）", get: (m) => m.web ? null : m.price, fmt: (v) => v == null ? "—" : `$${v.toFixed(3)}`, higher: false,
+     desc: "OpenRouter 標價；會上網查證的模型另按次計費，不列入"},
+    {key: "latency", label: "延遲中位數（ms）", get: (m) => m.latency, fmt: (v) => v == null ? "—" : `${v.toLocaleString()} ms`, higher: false,
+     desc: "非快取請求的端到端延遲中位數"},
+    {key: "di", label: "AA Decision Index v2.1", get: (m) => m.di, fmt: (v) => v == null ? "—" : v.toFixed(1), higher: true,
+     desc: "Artificial Analysis 公開排行榜分數（未上榜者不顯示）"},
+  ];
+  const metric = (key) => METRICS.find((x) => x.key === key) || AXES.find((x) => x.key === key);
+
+  // ---------------------------------------------------------------- 篩選器
+  const fFocus = $("#f-focus");
+  let curGroup = null, groupEl = fFocus;
+  for (const mtr of METRICS) {
+    if (mtr.group && mtr.group !== curGroup) {
+      curGroup = mtr.group; groupEl = el("optgroup", {label: `任務｜${mtr.group}`}); fFocus.append(groupEl);
+    }
+    (mtr.group ? groupEl : fFocus).append(el("option", {value: mtr.key}, mtr.group ? mtr.label.replace("任務：", "") : mtr.label));
+  }
+  for (const [id, def] of [["#ax-x", "composite"], ["#ax-y", "di"]]) {
+    const s = $(id);
+    for (const a of AXES) s.append(el("option", {value: a.key}, a.label));
+    s.value = def;
+  }
+
+  const DEFAULTS = {image: false, audio: false, focus: "composite", min: 0, price: "any", noweb: false, q: ""};
+  const state = {...DEFAULTS};
+  const sync = () => {
+    $("#f-image").checked = state.image; $("#f-audio").checked = state.audio; fFocus.value = state.focus;
+    $("#f-min").value = state.min; $("#f-price").value = state.price; $("#f-noweb").checked = state.noweb; $("#f-q").value = state.q;
+    $("#f-min-out").textContent = state.min ? `≥ ${state.min}%` : "不限";
+  };
+  const bind = (id, key, read) => $(id).addEventListener("input", (e) => { state[key] = read(e.target); render(); });
+  bind("#f-image", "image", (t) => t.checked);
+  bind("#f-audio", "audio", (t) => t.checked);
+  bind("#f-focus", "focus", (t) => t.value);
+  bind("#f-min", "min", (t) => +t.value);
+  bind("#f-price", "price", (t) => t.value);
+  bind("#f-noweb", "noweb", (t) => t.checked);
+  bind("#f-q", "q", (t) => t.value.trim().toLowerCase());
+  $("#f-reset").addEventListener("click", () => { Object.assign(state, DEFAULTS); render(); });
+  $("#ax-x").addEventListener("input", () => drawScatter(lastRows));
+  $("#ax-y").addEventListener("input", () => drawScatter(lastRows));
+
+  const pass = (m) => {
+    if (state.image && !m.mods.image) return false;
+    if (state.audio && !m.mods.audio) return false;
+    if (state.noweb && m.web) return false;
+    if (state.price === "free" && !m.free) return false;
+    if (!["any", "free"].includes(state.price) && (m.web || m.price > +state.price)) return false;
+    if (state.q && !(`${m.id} ${m.vendor}`.toLowerCase().includes(state.q))) return false;
+    if (state.min) {
+      const v = metric(state.focus).get(m);
+      if (v == null || v * 100 < state.min) return false;
+    }
+    return true;
+  };
+  const sortByFocus = (rows) => {
+    const g = metric(state.focus).get;
+    return [...rows].sort((a, b) => (g(b) ?? -1) - (g(a) ?? -1) || a.id.localeCompare(b.id));
+  };
+
+  // ---------------------------------------------------------------- tooltip
+  const tip = $("#tip");
+  const showTip = (evt, lines) => {
+    tip.replaceChildren();
+    for (const ln of lines) {
+      const row = el("div", {class: ln.cls || "row"});
+      if (ln.key) row.append(el("span", {class: "key", style: `background:var(${ln.key})`}));
+      row.append(el("span", {class: ln.cls === "tv" ? "" : "tl"}, ln.text));
+      if (ln.cls === "tv") row.className = "tv";
+      tip.append(row);
+    }
+    const r = evt.target.getBoundingClientRect?.();
+    const x = evt.clientX ?? (r ? r.left + r.width / 2 : 0), y = evt.clientY ?? (r ? r.top : 0);
+    tip.style.opacity = 1;
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = `${Math.min(innerWidth - w - 8, Math.max(8, x + 14))}px`;
+    tip.style.top = `${y - h - 12 < 8 ? y + 18 : y - h - 12}px`;
+  };
+  const hideTip = () => { tip.style.opacity = 0; };
+  const hover = (node, lines) => {
+    node.setAttribute("tabindex", "0");
+    node.addEventListener("pointermove", (e) => showTip(e, lines()));
+    node.addEventListener("pointerleave", hideTip);
+    node.addEventListener("focus", (e) => showTip(e, lines()));
+    node.addEventListener("blur", hideTip);
+  };
+
+  // ---------------------------------------------------------------- 色階
+  const SEQ = [0, 1, 2, 3, 4, 5, 6].map((i) => `--seq-${i}`);
+  const seqVar = (v) => SEQ[Math.max(0, Math.min(6, Math.round(v * 6)))];
+  const seqInk = (v) => {
+    const dark = document.documentElement.dataset.theme === "dark" ||
+      (!document.documentElement.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
+    const idx = Math.round(v * 6);
+    return dark ? (idx >= 5 ? "#0d1b2a" : "#ecedef") : (idx >= 3 ? "#ffffff" : "#13233a");
+  };
+  $("#ramp").append(...SEQ.map((s) => el("b", {style: `background:var(${s})`})));
+
+  // ---------------------------------------------------------------- KPI
+  function drawKpis(rows) {
+    const k = $("#kpis"); k.replaceChildren();
+    const best = sortByFocus(rows).find((m) => metric(state.focus).get(m) != null);
+    const items = [
+      ["符合條件的模型", `${rows.length}`, `／ ${DATA.models.length}`, ""],
+      ["支援影像", `${rows.filter((m) => m.mods.image).length}`, " 個", "模態探針實測"],
+      ["支援音訊", `${rows.filter((m) => m.mods.audio).length}`, " 個", "模態探針實測"],
+      ["焦點最佳", best ? metric(state.focus).fmt(metric(state.focus).get(best)) : "—", "", best ? best.id : "沒有符合的模型"],
+    ];
+    for (const [t, v, s, sub] of items) {
+      const d = el("div", {class: "kpi"});
+      const dd = el("dd", {}, v); if (s) dd.append(el("small", {}, s));
+      d.append(el("dt", {}, t), dd); if (sub) d.append(el("div", {class: "sub"}, sub));
+      k.append(d);
+    }
+  }
+
+  // ---------------------------------------------------------------- 模態層級
+  function drawTiers(rows) {
+    const bar = $("#tierbar"), lab = $("#tierlabels"); bar.replaceChildren(); lab.replaceChildren();
+    const counts = Object.keys(TIERS).map((t) => [t, rows.filter((m) => m.tier === t).length]);
+    const total = rows.length || 1;
+    bar.setAttribute("aria-label", counts.map(([t, n]) => `${TIERS[t].label} ${n} 個`).join("，"));
+    for (const [t, n] of counts) {
+      if (!n) continue;
+      const seg = el("div", {style: `flex:${n};background:var(${TIERS[t].color})`}, n / total > 0.08 ? `${n}` : "");
+      hover(seg, () => [{cls: "tv", text: `${n} 個模型`}, {key: TIERS[t].color, text: TIERS[t].label},
+        {text: rows.filter((m) => m.tier === t).map((m) => m.id).slice(0, 8).join("、") + (n > 8 ? "…" : "")}]);
+      bar.append(seg);
+    }
+    if (!rows.length) bar.append(el("div", {style: "flex:1;background:var(--na);color:var(--text-2)"}, "沒有符合條件的模型"));
+    for (const [t, n] of counts) {
+      const s = el("span"); s.append(el("i", {style: `background:var(${TIERS[t].color})`}), document.createTextNode(`${TIERS[t].label} `), el("b", {}, `${n}`));
+      s.querySelector("i").setAttribute("style", `display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;background:var(${TIERS[t].color})`);
+      lab.append(s);
+    }
+  }
+
+  // ---------------------------------------------------------------- 能力地圖
+  function drawMap(rows) {
+    const t = $("#map"); t.replaceChildren();
+    const thead = el("thead"), g = el("tr"), h = el("tr");
+    g.append(el("th", {}), el("th", {class: "grp", colspan: 3}, "實測模態"), el("th", {}),
+      el("th", {class: "grp", colspan: Object.keys(SCEN).length}, "情境平均正確率"), el("th", {}), el("th", {class: "grp", colspan: 2}, "彙總"));
+    h.append(el("th", {class: "model"}, "模型"), el("th", {}, "文字"), el("th", {}, "影像"), el("th", {}, "音訊"), el("th", {}));
+    for (const v of Object.values(SCEN)) h.append(el("th", {}, v.replace("／路由", "").replace("與音訊", "")));
+    h.append(el("th", {}), el("th", {}, "綜合"), el("th", {}, "中立度"));
+    thead.append(g, h); t.append(thead);
+    const tb = el("tbody");
+    if (!rows.length) { const tr = el("tr"); tr.append(el("td", {colspan: 14, class: "empty"}, "沒有符合條件的模型，請放寬篩選。")); tb.append(tr); }
+    for (const m of sortByFocus(rows)) {
+      const tr = el("tr");
+      const name = el("td", {class: "name"});
+      name.append(el("b", {}, m.id), el("span", {class: "v"}, m.vendor));
+      tr.append(name);
+      for (const mod of ["text", "image", "audio"]) {
+        const on = m.mods[mod];
+        const td = el("td", {class: "dot", "aria-label": on ? "支援" : "不支援"});
+        const s = sv("svg", {width: 16, height: 16, viewBox: "0 0 16 16", "aria-hidden": "true"});
+        s.append(sv("circle", {cx: 8, cy: 8, r: on ? 6 : 5, fill: on ? `var(${TIERS[m.tier].color})` : "none",
+          stroke: on ? "none" : "var(--muted)", "stroke-width": 1.5}));
+        td.append(s); tr.append(td);
+      }
+      tr.append(el("td", {class: "sep"}));
+      const cell = (v, label, extra) => {
+        const td = el("td", {class: v == null ? "cell na" : "cell"}, v == null ? "—" : pct(v));
+        if (v != null) td.setAttribute("style", `background:var(${seqVar(v)});color:${seqInk(v)}`);
+        hover(td, () => [{cls: "tv", text: v == null ? "無資料" : pct(v)}, {text: `${m.id}｜${label}`}, ...(extra ? [{text: extra}] : [])]);
+        return td;
+      };
+      for (const [k, v] of Object.entries(SCEN)) {
+        const ids = scored.filter((x) => x.scenario === k).map((x) => x.id);
+        const detail = ids.map((id) => { const r = m.tasks[id]; const tt = DATA.tasks.find((x) => x.id === id);
+          return r && r.acc != null ? `${tt.title} ${pct(r.acc)}` : r && r.status === "rejected" ? `${tt.title} 請求被拒` : null; })
+          .filter(Boolean).join("；");
+        tr.append(cell(m.scenarios[k], v, detail || (k === "audio" || k === "image" ? "不支援此模態" : "")));
+      }
+      tr.append(el("td", {class: "sep"}));
+      tr.append(cell(m.composite, "綜合（有鑑別力的 4 個任務）"));
+      tr.append(cell(m.neutral, "政治中立度（1 − |Δ|）"));
+      tb.append(tr);
+    }
+    t.append(tb);
+  }
+
+  // ---------------------------------------------------------------- 散佈圖
+  const shapePath = (shape, x, y, r) => {
+    if (shape === "square") return `M${x - r},${y - r}h${2 * r}v${2 * r}h${-2 * r}z`;
+    if (shape === "diamond") { const d = r * 1.3; return `M${x},${y - d}L${x + d},${y}L${x},${y + d}L${x - d},${y}z`; }
+    return `M${x - r},${y}a${r},${r} 0 1,0 ${2 * r},0a${r},${r} 0 1,0 ${-2 * r},0`;
+  };
+  const legendShape = (tier) => {
+    const s = sv("svg", {width: 14, height: 14, viewBox: "0 0 14 14", "aria-hidden": "true"});
+    s.append(sv("path", {d: shapePath(TIERS[tier].shape, 7, 7, 5), fill: `var(${TIERS[tier].color})`})); return s;
+  };
+  for (const id of ["#sc-legend", "#rank-legend"]) {
+    for (const t of Object.keys(TIERS)) { const sp = el("span"); sp.append(legendShape(t), document.createTextNode(TIERS[t].label)); $(id).append(sp); }
+  }
+  const nice = (lo, hi) => {
+    const span = hi - lo || 1, step = Math.pow(10, Math.floor(Math.log10(span / 4)));
+    const s = [1, 2, 2.5, 5, 10].map((k) => k * step).find((k) => span / k <= 6) || step * 10;
+    return {lo: Math.floor(lo / s) * s, hi: Math.ceil(hi / s) * s, step: s};
+  };
+  let lastRows = [];
+  function drawScatter(rows) {
+    const box = $("#scatter"); box.replaceChildren();
+    const ax = metric($("#ax-x").value), ay = metric($("#ax-y").value);
+    const pts = rows.map((m) => ({m, x: ax.get(m), y: ay.get(m)})).filter((p) => p.x != null && p.y != null);
+    const missing = rows.length - pts.length;
+    $("#sc-note").textContent = `X：${ax.desc}。Y：${ay.desc}。` + (missing ? `有 ${missing} 個模型缺少其中一項數據，未畫出。` : "");
+    const W = Math.max(320, box.clientWidth || 880), narrow = W < 560;
+    const H = narrow ? 340 : 420, P = {l: narrow ? 52 : 64, r: 18, t: 14, b: 52};
+    const svg = sv("svg", {class: "chart", viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img",
+      "aria-label": `${ax.label} 與 ${ay.label} 的散佈圖，${pts.length} 個模型`});
+    if (!pts.length) { svg.append(sv("text", {x: W / 2, y: H / 2, "text-anchor": "middle"}, "沒有可畫的資料")); box.append(svg); return; }
+    const rng = (vals, isPct) => { let lo = Math.min(...vals), hi = Math.max(...vals);
+      if (isPct) { lo = Math.max(0, lo - 0.05); hi = Math.min(1, hi + 0.05); } else { const pad = (hi - lo || 1) * 0.08; lo = Math.max(0, lo - pad); hi += pad; }
+      return nice(lo, hi); };
+    const isPct = (a) => a.max === 1;
+    const sx = rng(pts.map((p) => p.x), isPct(ax)), sy = rng(pts.map((p) => p.y), isPct(ay));
+    const X = (v) => P.l + (v - sx.lo) / (sx.hi - sx.lo) * (W - P.l - P.r);
+    const Y = (v) => H - P.b - (v - sy.lo) / (sy.hi - sy.lo) * (H - P.t - P.b);
+    const tickFmt = (a, v) => isPct(a) ? `${Math.round(v * 100)}%` : a.key === "price" ? `$${+v.toFixed(3)}` : `${+v.toFixed(1)}`;
+    const grid = sv("g", {class: "grid"});
+    for (let v = sy.lo; v <= sy.hi + 1e-9; v += sy.step) {
+      grid.append(sv("line", {x1: P.l, x2: W - P.r, y1: Y(v), y2: Y(v)}));
+      svg.append(sv("text", {x: P.l - 8, y: Y(v) + 5, "text-anchor": "end"}, tickFmt(ay, v)));
+    }
+    const xTicks = []; for (let v = sx.lo; v <= sx.hi + 1e-9; v += sx.step) xTicks.push(v);
+    xTicks.forEach((v, i) => { if (narrow && i % 2) return;
+      svg.append(sv("text", {x: X(v), y: H - P.b + 22, "text-anchor": "middle"}, tickFmt(ax, v))); });
+    svg.prepend(grid);
+    svg.append(sv("line", {class: "baseline", x1: P.l, x2: W - P.r, y1: H - P.b, y2: H - P.b}));
+    svg.append(sv("text", {class: "axis-title", x: (P.l + W - P.r) / 2, y: H - 6, "text-anchor": "middle"}, ax.label + (ax.higher === false ? "（越低越好）" : "")));
+    const yt = sv("text", {class: "axis-title", x: 14, y: (P.t + H - P.b) / 2, "text-anchor": "middle",
+      transform: `rotate(-90 14 ${(P.t + H - P.b) / 2})`}, ay.label + (ay.higher === false ? "（越低越好）" : ""));
+    svg.append(yt);
+    // 直接標註：X 與 Y 皆「較好」的前 3 名
+    const goodness = (p) => (ax.higher === false ? -1 : 1) * (p.x - sx.lo) / (sx.hi - sx.lo) + (ay.higher === false ? -1 : 1) * (p.y - sy.lo) / (sy.hi - sy.lo);
+    const labeled = new Set([...pts].sort((a, b) => goodness(b) - goodness(a)).slice(0, 3).map((p) => p.m.id));
+    const placed = [], labelQueue = [];
+    for (const p of pts) {
+      const g = sv("g", {class: "pt", "aria-label": `${p.m.id}：${ax.label} ${ax.fmt(p.x)}，${ay.label} ${ay.fmt(p.y)}`});
+      g.append(sv("circle", {class: "hit", cx: X(p.x), cy: Y(p.y), r: 13}));
+      g.append(sv("path", {class: "mark", d: shapePath(TIERS[p.m.tier].shape, X(p.x), Y(p.y), 5.5), fill: `var(${TIERS[p.m.tier].color})`}));
+      hover(g, () => [{cls: "tv", text: p.m.id}, {key: TIERS[p.m.tier].color, text: `${TIERS[p.m.tier].label}｜${p.m.vendor}`},
+        {text: `${ax.label}：${ax.fmt(p.x)}`}, {text: `${ay.label}：${ay.fmt(p.y)}`}]);
+      svg.append(g);
+      if (labeled.has(p.m.id)) labelQueue.push(p);
+    }
+    // 標籤：依序嘗試右、左、上、下，避開其他標籤與資料點
+    const dots = pts.map((q) => ({x: X(q.x), y: Y(q.y)}));
+    for (const p of labelQueue) {
+      const cx = X(p.x), cy = Y(p.y), w = p.m.id.length * 7.6 + 4, h = 16;
+      const cands = [[cx + 10, cy + 5, "start"], [cx - 10, cy + 5, "end"], [cx, cy - 12, "middle"], [cx, cy + 22, "middle"]];
+      const box4 = ([x, y, a]) => { const x0 = a === "start" ? x : a === "end" ? x - w : x - w / 2; return {x0, x1: x0 + w, y0: y - h + 3, y1: y + 3}; };
+      const clash = (b) => b.x0 < P.l || b.x1 > W - P.r || b.y0 < P.t ||
+        placed.some((q) => b.x0 < q.x1 && b.x1 > q.x0 && b.y0 < q.y1 && b.y1 > q.y0) ||
+        dots.some((d) => !(d.x === cx && d.y === cy) && d.x > b.x0 - 6 && d.x < b.x1 + 6 && d.y > b.y0 - 6 && d.y < b.y1 + 6);
+      const pick = cands.find((c) => !clash(box4(c)));
+      if (!pick) continue;   // 放不下就交給 tooltip
+      placed.push(box4(pick));
+      svg.append(sv("text", {class: "lbl", x: pick[0], y: pick[1], "text-anchor": pick[2]}, p.m.id));
+    }
+    box.append(svg);
+  }
+
+  // ---------------------------------------------------------------- 排行
+  function drawRank(rows) {
+    const box = $("#rank"); box.replaceChildren();
+    const mt = metric(state.focus);
+    $("#rank-title").textContent = `焦點排行：${mt.label.replace(/^(情境|任務)：/, "")}`;
+    const data = sortByFocus(rows).map((m) => ({m, v: mt.get(m)})).filter((d) => d.v != null);
+    const skipped = rows.length - data.length;
+    $("#rank-sub").textContent = `${mt.desc}。` + (skipped ? `另有 ${skipped} 個模型沒有這項數據（不支援該模態或題型）。` : "");
+    const W = Math.max(320, box.clientWidth || 880), narrow = W < 560;
+    const nameW = narrow ? 150 : 210, row = 30, P = {t: 8, b: 30};
+    const H = P.t + P.b + Math.max(1, data.length) * row;
+    const svg = sv("svg", {class: "chart", viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img",
+      "aria-label": `${mt.label} 排行，${data.length} 個模型`});
+    if (!data.length) { svg.append(sv("text", {x: W / 2, y: H / 2 + 5, "text-anchor": "middle"}, "沒有可排行的資料")); box.append(svg); return; }
+    const x0 = nameW, x1 = W - 56, X = (v) => x0 + v / mt.max * (x1 - x0);
+    const grid = sv("g", {class: "grid"});
+    for (const v of [0, 0.25, 0.5, 0.75, 1]) {
+      grid.append(sv("line", {x1: X(v), x2: X(v), y1: P.t, y2: H - P.b}));
+      svg.append(sv("text", {x: X(v), y: H - 8, "text-anchor": "middle"}, `${v * 100}%`));
+    }
+    svg.append(grid);
+    data.forEach((d, i) => {
+      const y = P.t + i * row, bh = 18, by = y + (row - bh) / 2;
+      const g = sv("g", {class: "bar", "aria-label": `${d.m.id} ${mt.fmt(d.v)}`});
+      g.append(sv("rect", {class: "hit", x: 0, y, width: W, height: row}));
+      svg.append(sv("text", {class: "lbl", x: nameW - 10, y: y + row / 2 + 5, "text-anchor": "end"},
+        narrow && d.m.id.length > 17 ? d.m.id.slice(0, 16) + "…" : d.m.id));
+      const w = Math.max(2, X(d.v) - x0);
+      g.append(sv("path", {class: "fill", fill: `var(${TIERS[d.m.tier].color})`,
+        d: `M${x0},${by}h${w - 4}a4,4 0 0 1 4,4v${bh - 8}a4,4 0 0 1 -4,4h${-(w - 4)}z`}));
+      g.append(sv("text", {class: "val", x: X(d.v) + 6, y: y + row / 2 + 5}, mt.fmt(d.v)));
+      hover(g, () => [{cls: "tv", text: mt.fmt(d.v)}, {key: TIERS[d.m.tier].color, text: `${d.m.id}｜${TIERS[d.m.tier].label}`},
+        ...(d.m.tasks && state.focus.startsWith("task:") && d.m.tasks[state.focus.slice(5)]?.n ? [{text: `${d.m.tasks[state.focus.slice(5)].n} 題有效`}] : [])]);
+      svg.append(g);
+    });
+    svg.append(sv("line", {class: "baseline", x1: x0, x2: x0, y1: P.t, y2: H - P.b}));
+    box.append(svg);
+  }
+
+  // ---------------------------------------------------------------- 清單
+  function drawList(rows) {
+    const t = $("#list"); t.replaceChildren();
+    const mt = metric(state.focus);
+    $("#list-sub").textContent = `${rows.length} 個模型符合條件，依「${mt.label}」排序。這張表也是上方圖表的文字版。`;
+    const head = el("tr");
+    for (const h of ["模型", "廠商", "實測模態", "焦點", "綜合", "價格／M", "延遲", "AA DI", "備註"]) head.append(el("th", {}, h));
+    const thead = el("thead"); thead.append(head); t.append(thead);
+    const tb = el("tbody");
+    if (!rows.length) { const tr = el("tr"); tr.append(el("td", {colspan: 9, class: "empty"}, "沒有符合條件的模型，請放寬篩選。")); tb.append(tr); }
+    for (const m of sortByFocus(rows)) {
+      const tr = el("tr");
+      const name = el("td"); name.append(el("span", {class: "swatch", style: `background:var(${TIERS[m.tier].color})`}), el("code", {}, m.id));
+      const mods = el("td");
+      for (const [k, v] of [["text", "文字"], ["image", "影像"], ["audio", "音訊"]]) mods.append(el("span", {class: m.mods[k] ? "tag on" : "tag"}, m.mods[k] ? v : `無${v}`));
+      tr.append(name, el("td", {}, m.vendor), mods,
+        el("td", {class: "num"}, mt.fmt(mt.get(m))), el("td", {class: "num"}, pct(m.composite)),
+        el("td", {class: "num"}, m.web ? "按次計費" : m.price === 0 ? "免費" : `$${m.price.toFixed(3)}`),
+        el("td", {class: "num"}, m.latency == null ? "—" : `${m.latency.toLocaleString()} ms`),
+        el("td", {class: "num"}, m.di == null ? "—" : m.di.toFixed(1)), el("td", {class: "note"}, m.notes));
+      tb.append(tr);
+    }
+    t.append(tb);
+  }
+
+  // ---------------------------------------------------------------- 主流程
+  function render() {
+    sync();
+    const rows = DATA.models.filter(pass);
+    lastRows = rows;
+    drawKpis(rows); drawTiers(rows); drawMap(rows); drawScatter(rows); drawRank(rows); drawList(rows);
+  }
+  $("#meta").textContent = `資料產生於 ${DATA.generated}｜${DATA.models.length} 個模型、${DATA.tasks.length} 個任務、${DATA.requests.toLocaleString()} 次請求、總花費 US$${DATA.cost.toFixed(3)}`;
+  let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { drawScatter(lastRows); drawRank(lastRows); }, 120); });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", render);
+  render();
+})();
+</script>
+</body>
+</html>

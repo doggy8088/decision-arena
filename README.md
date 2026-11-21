@@ -10,6 +10,10 @@
 
 > 📊 **互動版報告**：[`bench-report.html`](bench-report.html)。單一 HTML 檔，支援深色模式。
 > 報告由 `python3 -m bench report` 從 `results/` 直接產生。
+>
+> 🎛️ **互動式 Dashboard**：[`bench-dashboard.html`](bench-dashboard.html)。
+> 用圖表呈現模型與模態、情境之間的關係，並能依需要的模態、焦點指標、分數與價格篩選可用模型。
+> 由 `python3 -m bench dashboard` 產生。
 
 第一輪：2026-11-22，共 **34 個模型 × 20 個任務**，7,327 次請求，總花費約 **US$0.28**。
 
@@ -38,6 +42,7 @@ bench/                     # 評測框架（純 Python 標準函式庫）
 ├── runner.py              # 執行：快取、美元上限、模態守門、多模型平行
 ├── metrics.py             # 正確率、AUC、Brier、ECE、log loss、立場對稱 |Δ|
 ├── report.py              # 產生 bench-report.html
+├── dashboard.py           # 產生 bench-dashboard.html（資料內嵌，樣板在 dashboard_template.html）
 ├── build_assets.py        # 用 ffmpeg 合成影像題，並把既有音訊研究轉成任務
 └── build_taiwan.py        # data/taiwan/items.json（附一手來源）→ 任務檔
 tasks/<情境>/<任務>.json   # 20 個任務，所有模型共用
@@ -63,6 +68,7 @@ python3 -m bench probe                        # 對所有模型探測影像／�
 python3 -m bench run --tasks zh_text,agent --budget 1
 python3 -m bench run --models clef-omni,gemini-decision-1 --tasks audio --limit 10
 python3 -m bench report                       # 合併 results/runs/* → bench-report.html
+python3 -m bench dashboard                    # 合併 results/runs/* → bench-dashboard.html
 python3 -m unittest discover -s tests         # 離線測試
 ```
 
