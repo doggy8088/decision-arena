@@ -54,7 +54,7 @@ def main() -> None:
     html = legacy.render(
         title="Microsoft Decision 1.1 實測｜Decision Arena",
         description="Microsoft Decision 1.1（Azure AI Foundry）的音訊支援查證與純文字任務對照。",
-        generated="2026-11-19", body=body, css=CSS.read_text(encoding="utf-8"))
+        path="ms-decision-report.html", generated="2026-11-19", body=body, css=CSS.read_text(encoding="utf-8"))
     (ROOT / "ms-decision-report.html").write_text(html, encoding="utf-8")
     print(f"✅ ms-decision-report.html  {len(html)/1024:.0f} KB"
           f"（殘留佔位符 {html.count('__')}）")

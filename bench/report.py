@@ -369,7 +369,7 @@ def build_report(run_ids: list[str] | None = None, out: Path = OUT) -> Path:
 </tbody></table></div></section></div>""")
 
     body = "\n".join(parts)
-    out.write_text(page(title="評測報告｜Decision Arena", active="report", generated=created,
+    out.write_text(page(title="評測報告｜Decision Arena", active="report", generated=created, path="bench-report.html", kind="report",
                         description="Decision 模型多模態評測的完整報告：總結與選型建議、模型名冊與模態探針、每個任務的正確率與校準。",
                         body=body, extra_css=REPORT_CSS), encoding="utf-8")
     return out

@@ -1,0 +1,15 @@
+{
+  "name": "Decision Arena",
+  "short_name": "Decision Arena",
+  "description": "跨廠商 Decision 模型的多模態評測。",
+  "lang": "zh-Hant-TW",
+  "start_url": "/",
+  "scope": "/",
+  "display": "browser",
+  "theme_color": "#0f1115",
+  "background_color": "#0f1115",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}
+  ]
+}

@@ -6,9 +6,31 @@
 <title>評測報告｜Decision Arena</title>
 <meta name="description" content="Decision 模型多模態評測的完整報告：總結與選型建議、模型名冊與模態探針、每個任務的正確率與校準。">
 <meta name="color-scheme" content="light dark">
+<link rel="canonical" href="https://decision-arena.gh.miniasp.com/bench-report.html">
+<meta name="robots" content="noindex, nofollow">
+<meta name="author" content="Will 保哥">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Decision Arena">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="評測報告｜Decision Arena">
+<meta property="og:description" content="Decision 模型多模態評測的完整報告：總結與選型建議、模型名冊與模態探針、每個任務的正確率與校準。">
+<meta property="og:url" content="https://decision-arena.gh.miniasp.com/bench-report.html">
+<meta property="og:image" content="https://decision-arena.gh.miniasp.com/assets/site/og-card.png">
+<meta property="og:image:secure_url" content="https://decision-arena.gh.miniasp.com/assets/site/og-card.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Decision Arena 分享卡：用同一套考題實測各家決策模型，涵蓋語音、影像、繁中文字、Agent 守門與台灣政經。">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="評測報告｜Decision Arena">
+<meta name="twitter:description" content="Decision 模型多模態評測的完整報告：總結與選型建議、模型名冊與模態探針、每個任務的正確率與校準。">
+<meta name="twitter:image" content="https://decision-arena.gh.miniasp.com/assets/site/og-card.png">
+<meta name="twitter:image:alt" content="Decision Arena 分享卡：用同一套考題實測各家決策模型，涵蓋語音、影像、繁中文字、Agent 守門與台灣政經。">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Report", "name": "評測報告｜Decision Arena", "headline": "評測報告｜Decision Arena", "description": "Decision 模型多模態評測的完整報告：總結與選型建議、模型名冊與模態探針、每個任務的正確率與校準。", "url": "https://decision-arena.gh.miniasp.com/bench-report.html", "inLanguage": "zh-Hant-TW", "isPartOf": {"@id": "https://decision-arena.gh.miniasp.com/#website"}, "author": {"@type": "Person", "name": "Will 保哥", "url": "https://www.facebook.com/will.fans/", "sameAs": ["https://www.facebook.com/will.fans/"]}, "image": "https://decision-arena.gh.miniasp.com/assets/site/og-card.png", "datePublished": "2026-11-26"}</script>
 <link rel="icon" href="assets/site/favicon.ico" sizes="32x32">
 <link rel="icon" href="assets/site/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/site/apple-touch-icon.png">
+<link rel="manifest" href="assets/site/site.webmanifest">
 <meta name="theme-color" content="#f5f6f8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)">
 <script>(()=>{try{const t=localStorage.getItem('da-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}})();</script>
@@ -258,7 +280,7 @@ details.more{border-top:0;padding-top:0;margin-top:10px}
 <p class="lede">市面上「一次前向傳播、直接回傳校準機率」的決策模型，在多模態與五類情境下的實測。所有模型共用同一套任務與評分程式，數字由 <code>python3 -m bench site</code> 從 <code>results/</code> 直接產生。想用圖表比較、快速篩選可用模型，請開 <a href="bench-dashboard.html">Dashboard</a>。</p>
 <dl class="stats"><div><dt>已實測模型</dt><dd>34</dd></div><div><dt>任務</dt><dd>20</dd></div>
 <div><dt>請求數</dt><dd>7,327</dd></div><div><dt>總花費</dt><dd>US$0.277</dd></div></dl>
-<p class="meta">產生時間 2026-11-26 10:42｜合併 6 次執行</p>
+<p class="meta">產生時間 2026-11-26 10:45｜合併 6 次執行</p>
 <nav class="toc" aria-label="本頁內容"><a href="#summary">總結</a><a href="#findings">重點</a><a href="#roster">模型名冊</a><a href="#overview">總覽</a><a href="#s-audio">語音與音訊</a><a href="#s-image">影像判斷</a><a href="#s-zh_text">中文文字決策</a><a href="#s-agent">Agent 守門／路由</a><a href="#s-taiwan">台灣政經</a><a href="#notes">註記</a><a href="#method">方法</a></nav>
 </header>
 <section class="section" id="summary"><div class="section-head"><h2>總結</h2></div><div class="panel verdict-panel"><p class="verdict">沒有一個模型全面勝出：先看要不要聽音訊，再依情境挑模型。</p><ul class="points">
@@ -3276,7 +3298,7 @@ details.more{border-top:0;padding-top:0;margin-top:10px}
 <tr><th>快取與預算</th><td>原始回應以「不含金鑰的請求內容」雜湊快取；每次執行有美元上限，超過即停止。</td></tr>
 </tbody></table></div></section></div>
 </main>
-<footer class="site-foot"><div class="wrap"><span>© 2026 <a href="https://www.facebook.com/will.fans/" rel="noopener">Will 保哥</a>｜資料產生於 2026-11-26 10:42</span><span>雲端模型會持續更新，數字只代表測試當天的行為。</span></div></footer>
+<footer class="site-foot"><div class="wrap"><span>© 2026 <a href="https://www.facebook.com/will.fans/" rel="noopener">Will 保哥</a>｜資料產生於 2026-11-26 10:45</span><span>雲端模型會持續更新，數字只代表測試當天的行為。</span></div></footer>
 <script>(()=>{
   const root=document.documentElement, btn=document.getElementById('theme-btn');
   if(!btn) return;

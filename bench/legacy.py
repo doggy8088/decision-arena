@@ -72,7 +72,7 @@ LEGACY_CSS = r"""
 """.replace("__MONO__", MONO)
 
 
-def render(*, title: str, description: str, generated: str, body: str, css: str = "", scripts: str = "") -> str:
+def render(*, title: str, description: str, generated: str, body: str, path: str, css: str = "", scripts: str = "") -> str:
     """body 是報告主體（封面＋各區塊）；css 是該報告自己的元件樣式。"""
-    return page(title=title, description=description, active="archive", generated=generated,
+    return page(title=title, description=description, active="archive", generated=generated, path=path, kind="report",
                 body=f'<div class="lg">\n{body}\n</div>', extra_css=LEGACY_CSS + css, scripts=scripts)

@@ -152,7 +152,7 @@ def main() -> None:
     html = legacy.render(
         title="注音音檔稽核｜Decision Arena",
         description="以 gemini-3.1-flash-lite 全量檢查 2,934 個注音音檔，並用 Gemini 4 Argon 仲裁抽樣結果。",
-        generated="2026-11-17", body=body, css=css, scripts=f"<script>\n{js}</script>")
+        path="audit-report.html", generated="2026-11-17", body=body, css=css, scripts=f"<script>\n{js}</script>")
     (ROOT / "audit-report.html").write_text(html, encoding="utf-8")
     print(f"✅ audit-report.html  {len(html)/1024:.0f} KB")
     print(f"   檔案 {n}、標記 {len(flags)}、仲裁 {len(arb)}")

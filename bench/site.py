@@ -289,8 +289,66 @@ def footer(generated: str) -> str:
             f'</div></footer>')
 
 
-def page(*, title: str, description: str, active: str, body: str, generated: str,
-         extra_css: str = "", extra_head: str = "", scripts: str = "") -> str:
+# ---------------------------------------------------------------- SEO／社群分享
+SITE_URL = "https://decision-arena.gh.miniasp.com/"
+SITE_NAME = "Decision Arena"
+OWNER = {"name": "Will 保哥", "url": "https://www.facebook.com/will.fans/"}
+OG_IMAGE = {"path": "assets/site/og-card.png", "type": "image/png", "width": 1200, "height": 630,
+            "alt": "Decision Arena 分享卡：用同一套考題實測各家決策模型，涵蓋語音、影像、繁中文字、Agent 守門與台灣政經。"}
+# robots.txt 依使用者要求封鎖所有爬蟲；頁面層級也宣告不索引，兩者一致。
+ROBOTS = "noindex, nofollow"
+
+
+def page_url(path: str) -> str:
+    """站內檔名 → 絕對網址；index.html 對應網站根目錄。"""
+    return SITE_URL if path in ("", "index.html") else SITE_URL + path
+
+
+def seo_head(*, title: str, description: str, path: str, kind: str, generated: str) -> str:
+    """canonical、OpenGraph、Twitter 卡片與 JSON-LD。kind：website／webpage／report。"""
+    import json
+    url, img = page_url(path), SITE_URL + OG_IMAGE["path"]
+    person = {"@type": "Person", "name": OWNER["name"], "url": OWNER["url"], "sameAs": [OWNER["url"]]}
+    site = {"@type": "WebSite", "@id": SITE_URL + "#website", "name": SITE_NAME, "url": SITE_URL,
+            "inLanguage": "zh-Hant-TW", "author": person}
+    if kind == "website":
+        ld = {"@context": "https://schema.org", **site, "description": description}
+    else:
+        ld = {"@context": "https://schema.org", "@type": "Report" if kind == "report" else "WebPage",
+              "name": title, "headline": title, "description": description, "url": url, "inLanguage": "zh-Hant-TW",
+              "isPartOf": {"@id": SITE_URL + "#website"}, "author": person, "image": img}
+        if kind == "report" and generated:
+            ld["datePublished"] = generated[:10]
+    og_type = "article" if kind == "report" else "website"
+    tags = [
+        f'<link rel="canonical" href="{esc(url)}">',
+        f'<meta name="robots" content="{ROBOTS}">',
+        f'<meta name="author" content="{esc(OWNER["name"])}">',
+        f'<meta property="og:type" content="{og_type}">',
+        f'<meta property="og:site_name" content="{SITE_NAME}">',
+        '<meta property="og:locale" content="zh_TW">',
+        f'<meta property="og:title" content="{esc(title)}">',
+        f'<meta property="og:description" content="{esc(description)}">',
+        f'<meta property="og:url" content="{esc(url)}">',
+        f'<meta property="og:image" content="{img}">',
+        f'<meta property="og:image:secure_url" content="{img}">',
+        f'<meta property="og:image:type" content="{OG_IMAGE["type"]}">',
+        f'<meta property="og:image:width" content="{OG_IMAGE["width"]}">',
+        f'<meta property="og:image:height" content="{OG_IMAGE["height"]}">',
+        f'<meta property="og:image:alt" content="{esc(OG_IMAGE["alt"])}">',
+        '<meta name="twitter:card" content="summary_large_image">',
+        f'<meta name="twitter:title" content="{esc(title)}">',
+        f'<meta name="twitter:description" content="{esc(description)}">',
+        f'<meta name="twitter:image" content="{img}">',
+        f'<meta name="twitter:image:alt" content="{esc(OG_IMAGE["alt"])}">',
+        '<script type="application/ld+json">' + json.dumps(ld, ensure_ascii=False).replace("</", "<\\/") + "</script>",
+    ]
+    return "\n".join(tags)
+
+
+def page(*, title: str, description: str, active: str, body: str, generated: str, path: str,
+         kind: str = "webpage", extra_css: str = "", extra_head: str = "", scripts: str = "") -> str:
+    """path：輸出檔名（決定 canonical 與 og:url）；kind：website／webpage／report（決定 og:type 與 JSON-LD）。"""
     return f"""<!doctype html>
 <html lang="zh-Hant-TW">
 <head>
@@ -299,9 +357,11 @@ def page(*, title: str, description: str, active: str, body: str, generated: str
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(description)}">
 <meta name="color-scheme" content="light dark">
+{seo_head(title=title, description=description, path=path, kind=kind, generated=generated)}
 <link rel="icon" href="assets/site/favicon.ico" sizes="32x32">
 <link rel="icon" href="assets/site/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/site/apple-touch-icon.png">
+<link rel="manifest" href="assets/site/site.webmanifest">
 <meta name="theme-color" content="{TOKENS["light"]["bg"]}" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="{TOKENS["dark"]["bg"]}" media="(prefers-color-scheme: dark)">
 {HEAD_SCRIPT}

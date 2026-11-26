@@ -182,7 +182,7 @@ def main() -> None:
     html = legacy.render(
         title="Gemini Decision 1 的三項音訊研究｜Decision Arena",
         description="單音節辨音、42 段音場分類、50 段發音判斷：Gemini Decision 1 與 Gemini 4 Argon 的實測對照。",
-        generated="2026-11-17", body=body, css=css, scripts=f"<script>\n{js}</script>")
+        path="report.html", generated="2026-11-17", body=body, css=css, scripts=f"<script>\n{js}</script>")
     target = ROOT / "report.html"
     target.write_text(html, encoding="utf-8")
     print(f"✅ {target.relative_to(ROOT)}  ({len(html) / 1024:.1f} KB)")

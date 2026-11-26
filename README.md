@@ -23,6 +23,7 @@
 
 - **產生方式**：三個主要頁面（`index.html`、`bench-report.html`、`bench-dashboard.html`）由 `python3 -m bench site` 從 `results/` 產生。它們共用 `bench/site.py` 的設計系統：色彩 token、頁首導覽、深淺色主題切換與圖表元件。
 - **早期研究報告**：`report.html`、`audit-report.html`、`ms-decision-report.html` 仍由 `scripts/build_*.py` 從 `out/` 產生，但透過 `bench/legacy.py` 套用同一個網站外殼（頁首、頁尾、深淺色主題）；各報告的元件樣式在 `scripts/report/style.css` 與 `scripts/report_audit/style.css`。
+- **SEO 與社群分享**：`bench/site.py` 的 `seo_head()` 為每頁產生絕對網址的 canonical、OpenGraph、Twitter 卡片與 JSON-LD（作者 Will 保哥）。分享卡 `assets/site/og-card.png`（1200×630）由 `python3 scripts/build_social_card.py` 以 HTML 排版後用 headless Chrome 截圖產生，模型數與任務數從 `results/` 讀出。圖示另有 `favicon.svg`／`favicon.ico`、`apple-touch-icon.png` 與 `site.webmanifest`。
 - **圖片**：`assets/site/` 的主視覺與情境插圖是用 Azure OpenAI 圖像模型（gpt-image-2.5-flare）生成後壓縮成 WebP。生成的原始 PNG 放在 `output/imagegen/`，不進版控。
 
 - **部署方式**：每次 push 到 `main`，由 `.github/workflows/pages.yml` 自動部署到 GitHub Pages。

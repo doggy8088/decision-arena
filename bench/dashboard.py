@@ -119,7 +119,7 @@ def build_dashboard(out: Path = OUT) -> Path:
     tpl = TEMPLATE.read_text(encoding="utf-8")
     payload = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
     script = _section(tpl, "SCRIPT").replace("/*__DATA__*/null", payload)
-    out.write_text(page(title="Dashboard｜Decision Arena", active="dashboard", generated=data["generated"],
+    out.write_text(page(title="Dashboard｜Decision Arena", active="dashboard", generated=data["generated"], path="bench-dashboard.html",
                         description="互動式 Decision 模型 Dashboard：依模態、情境、分數與價格篩選可用模型。",
                         body=_section(tpl, "BODY"), extra_css=_section(tpl, "CSS"), scripts=script), encoding="utf-8")
     return out

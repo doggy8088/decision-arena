@@ -159,7 +159,7 @@ def build_home(out: Path = OUT) -> Path:
 <li><a href="ms-decision-report.html"><strong>Microsoft Decision 1.1 實測</strong><span>音訊支援查證與純文字任務對照。</span><em>2026-11-19</em></a></li>
 </ul></section></div>""")
 
-    html_text = page(title="Decision Arena", active="home", generated=data["generated"],
+    html_text = page(title="Decision Arena｜Decision 模型多模態評測", active="home", generated=data["generated"], path="index.html", kind="website",
                      description=f"跨廠商 Decision 模型的多模態評測：{len(models)} 個模型在語音、影像、繁中文字、Agent 守門與台灣政經情境的實測。",
                      body="\n".join(parts), extra_css=HOME_CSS)
     out.write_text(html_text, encoding="utf-8")

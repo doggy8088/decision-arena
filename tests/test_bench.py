@@ -198,14 +198,34 @@ class SiteShellTests(unittest.TestCase):
 
     def test_legacy_render_uses_site_shell(self):
         from bench import legacy
-        html_text = legacy.render(title="t", description="d", generated="2026-11-17", body="<p>x</p>")
+        html_text = legacy.render(title="t", description="d", generated="2026-11-17", body="<p>x</p>", path="report.html")
         self.assertIn('class="site-head"', html_text)
         self.assertIn('<a href="index.html#archive" aria-current="page">早期研究</a>', html_text)
         self.assertIn("Will 保哥", html_text)
         self.assertIn('<div class="lg">', html_text)
-        for href in ("assets/site/favicon.ico", "assets/site/favicon.svg", "assets/site/apple-touch-icon.png"):
+        for href in ("assets/site/favicon.ico", "assets/site/favicon.svg", "assets/site/apple-touch-icon.png",
+                     "assets/site/site.webmanifest"):
             self.assertIn(f'href="{href}"', html_text)
             self.assertTrue((ROOT / href).exists(), href)
+
+    def test_seo_head_absolute_urls_and_real_og_image(self):
+        import json, re, struct
+        from bench import site
+        head = site.seo_head(title="T", description="D", path="bench-report.html", kind="report", generated="2026-11-22 11:43")
+        self.assertIn('<link rel="canonical" href="https://decision-arena.gh.miniasp.com/bench-report.html">', head)
+        self.assertIn('<meta property="og:type" content="article">', head)
+        ld = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', head).group(1))
+        self.assertEqual(ld["@type"], "Report")
+        self.assertEqual(ld["datePublished"], "2026-11-22")
+        self.assertEqual(ld["author"]["sameAs"], [site.OWNER["url"]])
+        self.assertEqual(site.page_url("index.html"), site.SITE_URL)
+        # og:image 宣告的尺寸必須等於實際檔案像素（PNG IHDR）
+        raw = (ROOT / site.OG_IMAGE["path"]).read_bytes()
+        self.assertEqual(raw[:8], b"\x89PNG\r\n\x1a\n")
+        w, h = struct.unpack(">II", raw[16:24])
+        self.assertEqual((w, h), (site.OG_IMAGE["width"], site.OG_IMAGE["height"]))
+        for prop in ("og:image", "og:image:width", "og:image:height", "og:image:alt", "twitter:image", "twitter:card"):
+            self.assertIn(prop, head)
 
 class DashboardTests(unittest.TestCase):
     def test_build_data_shape_and_composite_rule(self):
