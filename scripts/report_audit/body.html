@@ -1,61 +1,44 @@
-<div class="bar-progress" id="prog"></div>
-
-<nav>
-  <div class="inner">
-    <div class="mark">注音稽核 <b>·</b> flash-lite</div>
-    <ul id="navlist">
-      <li><a href="#verdict">結論</a></li>
-      <li><a href="#tone">聲調</a></li>
-      <li><a href="#syllable">音節</a></li>
-      <li><a href="#who">誰對誰錯</a></li>
-      <li><a href="#list">完整清單</a></li>
-      <li><a href="#cost">成本</a></li>
-      <li><a href="#method">方法</a></li>
-    </ul>
-    <button class="theme" id="themeBtn">深色</button>
-  </div>
-</nav>
-
-<header>
+<section class="page-hero">
   <div class="wrap">
-    <div class="kicker">稽核報告 · 2026-11-17 · stroke 專案</div>
-    <h1>注音音檔稽核<br><em>flash-lite 只對了一半</em></h1>
-    <p class="standfirst">
+    <p class="meta">稽核報告｜2026-11-17｜stroke 專案</p>
+    <h1>注音音檔稽核<em>flash-lite 只對了一半</em></h1>
+    <p class="lede">
       把 stroke 專案的 <b>2,934 個注音音檔</b>全部假設為正確讀音，逐一丟給
       <b class="nowrap">gemini-3.1-flash-lite</b> 辨識。它對 <b>1,721 個</b>檔案給出與檔名完全相同的答案；
       其餘 <b>1,184 個</b>，它認為有錯。
     </p>
-    <div class="stats">
-      <div class="stat">
+    <div class="kpis">
+      <div class="kpi">
         <div class="v">2,934</div>
         <div class="k">檔案總數</div>
         <div class="s">男聲 M 1,467 · 女聲 F 1,467</div>
       </div>
-      <div class="stat bad">
+      <div class="kpi bad">
         <div class="v" data-f="pct">58.7<small>%</small></div>
         <div class="k">一致率</div>
         <div class="s">音節與聲調都與檔名相同</div>
       </div>
-      <div class="stat bad">
+      <div class="kpi bad">
         <div class="v">1,184</div>
         <div class="k">被標記的檔案</div>
         <div class="s">757 個不同音節（全站 1,468 個）</div>
       </div>
-      <div class="stat">
+      <div class="kpi">
         <div class="v"><span class="cur">US$</span><span data-f="cost">0.095</span></div>
         <div class="k">全部跑完的成本</div>
         <div class="s">273,028 tokens · 2,955 次呼叫</div>
       </div>
     </div>
+    <nav class="toc" aria-label="本頁內容">
+      <a href="#verdict">結論</a><a href="#tone">聲調</a><a href="#syllable">音節</a><a href="#who">誰對誰錯</a><a href="#list">完整清單</a><a href="#cost">成本</a><a href="#method">方法</a>
+    </nav>
   </div>
-</header>
+</section>
 
-<main>
 
 <!-- ─────────── 01 結論 ─────────── -->
 <section id="verdict">
   <div class="wrap">
-    <div class="sec-label">01 — 結論</div>
     <h2>它不是在驗收，是在猜</h2>
     <p class="lead">
       每 10 個檔案就有 4 個被標記為「不對」。而且錯誤不是隨機散布，是集中在特定聲調與特定韻尾上——
@@ -75,7 +58,6 @@
 <!-- ─────────── 02 聲調 ─────────── -->
 <section id="tone">
   <div class="wrap">
-    <div class="sec-label">02 — 聲調</div>
     <h2>四聲還行，輕聲幾乎全滅</h2>
     <p class="lead">
       音節本體對了、只有聲調不同的情況有 720 個。把期望聲調與模型判定的聲調交叉列表，
@@ -89,7 +71,7 @@
 
     <div class="card">
       <h3>聲調混淆矩陣</h3>
-      <p class="lead" style="font-size:13px;margin:-6px 0 18px">
+      <p class="lead" style="font-size:15px;margin:-6px 0 18px">
         列＝檔名標示的聲調，欄＝模型判定的聲調。綠色框是對角線（答對）。滑過去看細節。
       </p>
       <div class="mx" id="mx"></div>
@@ -106,7 +88,6 @@
 <!-- ─────────── 03 音節 ─────────── -->
 <section id="syllable">
   <div class="wrap">
-    <div class="sec-label">03 — 音節</div>
     <h2>翹舌、平舌與 n／ng</h2>
     <p class="lead">
       有 464 個檔案的聲母或韻母整個被聽錯。把這些配對分類後，兩個經典難點佔了三分之一以上。
@@ -123,10 +104,10 @@
       </div>
       <div class="card">
         <h3>最常出現的配對</h3>
-        <table id="pairTable">
+        <div class="tbl-scroll"><table id="pairTable">
           <thead><tr><th>檔名音節</th><th>模型聽成</th><th style="text-align:right">次數</th></tr></thead>
           <tbody></tbody>
-        </table>
+        </table></div>
       </div>
     </div>
 
@@ -140,7 +121,6 @@
 <!-- ─────────── 04 誰對誰錯 ─────────── -->
 <section id="who">
   <div class="wrap">
-    <div class="sec-label">04 — 仲裁</div>
     <h2>一半是它自己聽錯</h2>
     <p class="lead">
       被標記不等於音檔有問題。我從 1,184 個被標記的檔案隨機抽 150 個，
@@ -152,10 +132,10 @@
 
     <div class="card">
       <h3>抽樣對照（前 12 筆）</h3>
-      <table id="arbTable">
+      <div class="tbl-scroll"><table id="arbTable">
         <thead><tr><th>檔案</th><th>檔名</th><th>flash-lite</th><th>Argon</th><th>判定</th></tr></thead>
         <tbody></tbody>
-      </table>
+      </table></div>
       <p class="count" id="arbNote"></p>
     </div>
 
@@ -169,7 +149,6 @@
 <!-- ─────────── 05 清單 ─────────── -->
 <section id="list">
   <div class="wrap">
-    <div class="sec-label">05 — 完整清單</div>
     <h2>1,184 個被標記的檔案</h2>
     <p class="lead">
       這是模型認為有錯的全部清單。可以搜尋、篩選、排序；最後一欄只有抽樣過的檔案才有 Argon 的答案。
@@ -211,12 +190,11 @@
 <!-- ─────────── 06 成本 ─────────── -->
 <section id="cost">
   <div class="wrap">
-    <div class="sec-label">06 — 成本</div>
     <h2>全部跑完，US$0.095</h2>
     <p class="lead">用 flash-lite 做這種大量篩檢非常便宜，問題從來不是錢，是準不準。</p>
 
     <div class="card">
-      <table class="cost-table">
+      <div class="tbl-scroll"><table class="cost-table">
         <thead><tr><th>項目</th><th>數量</th><th>Tokens</th><th>成本</th></tr></thead>
         <tbody>
           <tr><td>文字輸入（提示詞）</td><td class="num">2,955 次呼叫</td><td class="num" id="tkText"></td><td class="num" id="csText"></td></tr>
@@ -225,7 +203,7 @@
           <tr><td><b>合計</b></td><td class="num"></td><td class="num"><b id="tkAll"></b></td><td class="num"><b id="csAll"></b></td></tr>
           <tr><td>Argon 抽樣仲裁（另計）</td><td class="num">150 次</td><td class="num">約 13,000</td><td class="num">約 US$0.036</td></tr>
         </tbody>
-      </table>
+      </table></div>
       <p class="count">
         牌價：文字輸入 $0.25／1M、音訊輸入 $0.50／1M、輸出 $1.50／1M。
         平均每個檔案 US$0.000033——全部 2,934 個檔案不到新台幣 3 元。
@@ -242,7 +220,6 @@
 <!-- ─────────── 07 方法 ─────────── -->
 <section id="method">
   <div class="wrap">
-    <div class="sec-label">07 — 方法與限制</div>
     <h2>怎麼做的，以及這份報告不能證明什麼</h2>
 
     <div class="grid2">
@@ -268,17 +245,4 @@
   </div>
 </section>
 
-</main>
-
-<footer>
-  <div class="wrap">
-    <div>
-      <div style="color:var(--ink2);margin-bottom:4px">注音音檔稽核 · gemini-3.1-flash-lite</div>
-      <div>2,934 個檔案 · 2,955 次呼叫 · <span id="fTok">273,028</span> tokens · US$<span id="fCost">0.095</span></div>
-    </div>
-    <div style="text-align:right">
-      <div>完整數據：<span class="mono">out/audit-report.md</span>、<span class="mono">out/audit-flags.csv</span></div>
-      <div style="margin-top:4px">原始紀錄：<span class="mono">data/audit/*.jsonl</span></div>
-    </div>
-  </div>
-</footer>
+<p class="wrap src">完整數據在專案的 <code>out/audit-report.md</code> 與 <code>out/audit-flags.csv</code>；原始紀錄在 <code>data/audit/*.jsonl</code>。</p>

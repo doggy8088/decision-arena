@@ -152,7 +152,7 @@ def build_home(out: Path = OUT) -> Path:
 
     # ------------------------------------------------------------ 早期研究
     w("""<section class="section" id="archive"><div class="section-head"><h2>早期研究</h2>
-<p>這個專案一開始只研究 Gemini Decision 1，以下報告保留原貌。</p></div>
+<p>這個專案一開始只研究 Gemini Decision 1。以下報告的內容與數據維持當時的版本，版面已改用本站設計。</p></div>
 <ul class="archive">
 <li><a href="report.html"><strong>Gemini Decision 1 的三項音訊研究</strong><span>單音節辨音、42 段音場分類、50 段發音判斷，與 Gemini 4 Argon 對照。</span><em>2026-11-17</em></a></li>
 <li><a href="audit-report.html"><strong>注音音檔稽核</strong><span>以 flash-lite 全量檢查 2,934 個注音音檔。</span><em>2026-11-17</em></a></li>

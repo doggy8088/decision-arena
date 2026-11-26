@@ -1,78 +1,43 @@
-<style>
-pre{background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:18px 20px;overflow-x:auto;
-    font-family:var(--mono);font-size:12.5px;line-height:1.7;color:var(--ink2);margin:14px 0}
-pre b{color:var(--ink);font-weight:600}
-.evidence{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--rule)}
-.evidence:last-child{border-bottom:0}
-.evidence .n{font-family:var(--serif);font-size:22px;color:var(--rust);min-width:26px;line-height:1.2}
-.evidence .b{font-size:14.5px;color:var(--ink2)}
-.evidence .b b{color:var(--ink)}
-.evidence .b .r{font-family:var(--mono);font-size:12.5px;color:var(--ink3);display:block;margin-top:4px}
-.big{display:flex;gap:0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:26px 0 0}
-.big > div{flex:1;padding:18px 20px 20px 0;border-right:1px solid var(--rule)}
-.big > div:last-child{border-right:0}
-.big .v{font-family:var(--serif);font-size:34px;line-height:1.1}
-.big .k{font-size:11.5px;color:var(--ink3);letter-spacing:.05em;margin-top:4px}
-table.plain{font-size:13.5px}
-table.plain td.t{white-space:normal;line-height:1.6}
-</style>
-
-<div class="bar-progress" id="prog"></div>
-
-<nav>
-  <div class="inner">
-    <div class="mark">MS Decision 1.1 <b>·</b> 實測</div>
-    <ul id="navlist">
-      <li><a href="#finding">核心發現</a></li>
-      <li><a href="#api">API 形狀</a></li>
-      <li><a href="#tasks">文字任務</a></li>
-      <li><a href="#ops">操作特性</a></li>
-      <li><a href="#impact">對專案的意義</a></li>
-      <li><a href="#method">方法</a></li>
-    </ul>
-    <button class="theme" id="themeBtn">深色</button>
-  </div>
-</nav>
-
-<header>
+<section class="page-hero">
   <div class="wrap">
-    <div class="kicker">實測報告 · 2026-11-19 · Azure AI Foundry</div>
-    <h1>它是一個決策 API<br><em>但這個端點沒有在聽</em></h1>
-    <p class="standfirst">
+    <p class="meta">實測報告｜2026-11-19｜Azure AI Foundry</p>
+    <h1>它是一個決策 API<em>但這個端點沒有在聽</em></h1>
+    <p class="lede">
       把先前三項音訊測試原封不動搬到 <span class="nowrap">Microsoft Decision 1.1</span>，
       結果是：送進去的音訊被當成 <b>base64 字串</b>、以純文字 token 計價，模型從頭到尾沒有看到聲音。
       在純文字任務上它與 <span class="nowrap">gemini-decision-1</span> 表現接近，但每通請求有 <b>七成機率要先失敗一次</b>。
     </p>
-    <div class="stats">
-      <div class="stat bad">
+    <div class="kpis">
+      <div class="kpi bad">
         <div class="v">0<small>/3</small></div>
         <div class="k">可執行的音訊測試</div>
         <div class="s">單音節、音場、發音全部無法跑</div>
       </div>
-      <div class="stat bad">
+      <div class="kpi bad">
         <div class="v" data-f="firstTry">27.6<small>%</small></div>
         <div class="k">第一次就成功的請求</div>
         <div class="s">其餘是 SSL 連線中斷</div>
       </div>
-      <div class="stat">
+      <div class="kpi">
         <div class="v" data-f="lat">961<small>ms</small></div>
         <div class="k">成功呼叫的延遲中位數</div>
         <div class="s">Gemini Decision 1 約 442 ms</div>
       </div>
-      <div class="stat">
+      <div class="kpi">
         <div class="v" data-f="agree">89<small>%</small></div>
         <div class="k">與 Gemini 答案一致</div>
         <div class="s">同一批文字、同一組題目</div>
       </div>
     </div>
+    <nav class="toc" aria-label="本頁內容">
+      <a href="#finding">核心發現</a><a href="#api">API 形狀</a><a href="#tasks">文字任務</a><a href="#ops">操作特性</a><a href="#impact">對專案的意義</a><a href="#method">方法</a>
+    </nav>
   </div>
-</header>
+</section>
 
-<main>
 
 <section id="finding">
   <div class="wrap">
-    <div class="sec-label">01 — 核心發現</div>
     <h2>它沒有在聽，而且可以證明</h2>
     <p class="lead">
       四個獨立實驗，任何一個都足以說明音訊沒有被解碼。我不是從文件推論，是直接把音訊丟進去量出來的。
@@ -129,7 +94,6 @@ table.plain td.t{white-space:normal;line-height:1.6}
 
 <section id="api">
   <div class="wrap">
-    <div class="sec-label">02 — API 形狀</div>
     <h2>介面幾乎一樣，但少了一塊</h2>
     <p class="lead">
       <code>noul</code> / <code>choice</code> / <code>score</code> 三種題型、回傳的欄位、
@@ -164,7 +128,6 @@ api-key: &lt;key&gt;
 
 <section id="tasks">
   <div class="wrap">
-    <div class="sec-label">03 — 文字任務</div>
     <h2>能跑的部分，兩邊幾乎同分</h2>
     <p class="lead">
       既然音訊走不通，就用兩邊都能吃的文字任務對照：一份有標準答案的分類、一份機率校準、一份垃圾訊息判斷。
@@ -172,16 +135,16 @@ api-key: &lt;key&gt;
 
     <div class="card">
       <h3>Task A · 42 段轉錄稿 → 7 類音場</h3>
-      <p class="lead" style="font-size:13px;margin:-6px 0 16px">
+      <p class="lead" style="font-size:15px;margin:-6px 0 16px">
         轉錄稿來自研究二的 Whisper 結果；音樂與噪音片段本來就是空字串，所以這題對兩邊都很難。
       </p>
-      <table class="plain">
+      <div class="tbl-scroll"><table class="plain">
         <thead><tr><th>模型</th><th>正確</th><th>正確率</th><th>平均延遲*</th><th>最終失敗</th></tr></thead>
         <tbody>
           <tr><td>MS Decision 1.1</td><td class="num">__MSA_OK__/__MSA_N__</td><td class="num">__MSA_ACC__%</td><td class="num">__MSA_MS__ ms</td><td class="num">__MSA_FAIL__</td></tr>
           <tr><td>Gemini Decision 1</td><td class="num">__GA_OK__/__GA_N__</td><td class="num">__GA_ACC__%</td><td class="num">__GA_MS__ ms</td><td class="num">__GA_FAIL__</td></tr>
         </tbody>
-      </table>
+      </table></div>
       <p class="count">* 含重試退避，所以 MS 那一格偏高；單次成功呼叫的實測中位數見第 4 節。</p>
       <p class="count" style="margin-top:10px">
         兩邊答案一致：<b>__AGREE__/__AGREE_N__（__AGREE_PCT__%）</b>。
@@ -191,8 +154,8 @@ api-key: &lt;key&gt;
     <div class="grid2">
       <div class="card">
         <h3>Task B · 商品評論正負向</h3>
-        <p class="lead" style="font-size:13px;margin:-6px 0 14px">18 句：6 正、6 負、6 中性／反諷</p>
-        <table class="plain">
+        <p class="lead" style="font-size:15px;margin:-6px 0 14px">18 句：6 正、6 負、6 中性／反諷</p>
+        <div class="tbl-scroll"><table class="plain">
           <thead><tr><th></th><th style="text-align:right">MS</th><th style="text-align:right">Gemini</th></tr></thead>
           <tbody>
             <tr><td>正面平均 P</td><td class="num" style="text-align:right">__B_MS_POS__</td><td class="num" style="text-align:right">__B_G_POS__</td></tr>
@@ -200,13 +163,13 @@ api-key: &lt;key&gt;
             <tr><td>負面平均 P</td><td class="num" style="text-align:right">__B_MS_NEG__</td><td class="num" style="text-align:right">__B_G_NEG__</td></tr>
             <tr><td>判對（≥0.5）</td><td class="num" style="text-align:right">__B_MS_OK__/__B_N__</td><td class="num" style="text-align:right">__B_G_OK__/__B_N__</td></tr>
           </tbody>
-        </table>
+        </table></div>
         <p class="count">兩邊 AUC 都 1.0。差別在銳利度：MS 把負面壓到 0.001。</p>
       </div>
       <div class="card">
         <h3>Task C · 垃圾／釣魚訊息</h3>
-        <p class="lead" style="font-size:13px;margin:-6px 0 14px">24 封：12 垃圾、12 正常</p>
-        <table class="plain">
+        <p class="lead" style="font-size:15px;margin:-6px 0 14px">24 封：12 垃圾、12 正常</p>
+        <div class="tbl-scroll"><table class="plain">
           <thead><tr><th></th><th style="text-align:right">MS</th><th style="text-align:right">Gemini</th></tr></thead>
           <tbody>
             <tr><td>垃圾平均 P</td><td class="num" style="text-align:right">__C_MS_SP__</td><td class="num" style="text-align:right">__C_G_SP__</td></tr>
@@ -214,7 +177,7 @@ api-key: &lt;key&gt;
             <tr><td>判對</td><td class="num" style="text-align:right">__C_MS_OK__/__C_MS_N__</td><td class="num" style="text-align:right">__C_G_OK__/__C_G_N__</td></tr>
             <tr><td>最終失敗</td><td class="num" style="text-align:right">__C_MS_FAIL__</td><td class="num" style="text-align:right">0</td></tr>
           </tbody>
-        </table>
+        </table></div>
         <p class="count">MS 只跑完 19 封（5 封連重試 6 次都失敗），但跑完的 19 封全對。</p>
       </div>
     </div>
@@ -228,7 +191,6 @@ api-key: &lt;key&gt;
 
 <section id="ops">
   <div class="wrap">
-    <div class="sec-label">04 — 操作特性</div>
     <h2>判斷力一樣，但這條路不太穩</h2>
 
     <div class="big">
@@ -253,11 +215,10 @@ api-key: &lt;key&gt;
 
 <section id="impact">
   <div class="wrap">
-    <div class="sec-label">05 — 對專案的意義</div>
     <h2>你的三個測試，它一個都不能接</h2>
 
     <div class="card">
-      <table class="plain">
+      <div class="tbl-scroll"><table class="plain">
         <thead><tr><th>你想做的事</th><th>MS Decision 1.1</th><th>建議</th></tr></thead>
         <tbody>
           <tr><td>單音節聲調驗收</td><td class="bad-t">✗ 收不到音訊</td><td>維持 Argon（12/12）</td></tr>
@@ -265,7 +226,7 @@ api-key: &lt;key&gt;
           <tr><td>發音練習判斷</td><td class="bad-t">✗ 收不到音訊</td><td>Argon ＋ 盲聽 ＋ 尾靜音補償</td></tr>
           <tr><td>純文字決策（分類、路由、審核）</td><td class="good-t">✓ 可用，與 Gemini 同級</td><td>已在 Azure 上的話合理；否則 Gemini 快兩倍且不丟包</td></tr>
         </tbody>
-      </table>
+      </table></div>
     </div>
 
     <div class="callout">
@@ -278,7 +239,6 @@ api-key: &lt;key&gt;
 
 <section id="method">
   <div class="wrap">
-    <div class="sec-label">06 — 方法與限制</div>
     <h2>怎麼測的，以及不能推論什麼</h2>
 
     <div class="grid2">
@@ -304,42 +264,4 @@ api-key: &lt;key&gt;
   </div>
 </section>
 
-</main>
-
-<footer>
-  <div class="wrap">
-    <div>
-      <div style="color:var(--ink2);margin-bottom:4px">Microsoft Decision 1.1 實測</div>
-      <div>端點 mvpai-eastus · deployment Decision-1.1 · 2026-11-19</div>
-    </div>
-    <div style="text-align:right">
-      <div>完整報告：<span class="mono">out/ms-decision-report.md</span></div>
-      <div style="margin-top:4px">原始數據：<span class="mono">out/ms-bench.json</span></div>
-    </div>
-  </div>
-</footer>
-
-<script>
-const root = document.documentElement;
-try { const s = localStorage.getItem('ms-theme'); if (s) root.dataset.theme = s; } catch (e) {}
-const btn = document.getElementById('themeBtn');
-function sync(){ btn.textContent = root.dataset.theme === 'dark' ? '淺色' : '深色'; }
-sync();
-btn.addEventListener('click', () => {
-  root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
-  try { localStorage.setItem('ms-theme', root.dataset.theme); } catch (e) {}
-  sync();
-});
-const prog = document.getElementById('prog');
-const links = Array.from(document.querySelectorAll('#navlist a'));
-const secs = ['finding','api','tasks','ops','impact','method'].map(id => document.getElementById(id));
-function onScroll(){
-  const h = document.documentElement;
-  prog.style.width = (h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight) * 100) + '%';
-  let cur = secs[0];
-  secs.forEach(s => { if (s && s.getBoundingClientRect().top <= 120) cur = s; });
-  links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + (cur ? cur.id : '')));
-}
-window.addEventListener('scroll', onScroll, { passive: true });
-onScroll();
-</script>
+<p class="wrap src">完整報告在專案的 <code>out/ms-decision-report.md</code>；原始數據在 <code>out/ms-bench.json</code>。</p>

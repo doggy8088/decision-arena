@@ -162,11 +162,16 @@ summary::before{content:"";width:8px;height:8px;border-right:2px solid currentCo
 details[open] summary::before{transform:rotate(45deg)}
 details[open]>*:not(summary){margin-top:12px}
 
+/* 本頁目錄 */
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.toc a{font-size:14px;font-weight:600;color:var(--ink-2);text-decoration:none;padding:6px 12px;border:1px solid var(--border);
+  border-radius:999px;background:var(--surface)}
+.toc a:hover{color:var(--accent);border-color:var(--accent)}
+
 /* 頁尾 */
 .site-foot{border-top:1px solid var(--border);margin-top:24px;padding:28px 0 40px;font-size:14px;color:var(--muted)}
 .site-foot .wrap{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
 .site-foot a{color:var(--ink-2)}
-.site-foot .copy{flex-basis:100%;color:var(--ink-2)}
 
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 """
@@ -278,9 +283,9 @@ def header(active: str) -> str:
 
 
 def footer(generated: str) -> str:
-    return (f'<footer class="site-foot"><div class="wrap"><span>Decision Arena｜資料產生於 {esc(generated)}</span>'
+    return (f'<footer class="site-foot"><div class="wrap">'
+            f'<span>© 2026 <a href="https://www.facebook.com/will.fans/" rel="noopener">Will 保哥</a>｜資料產生於 {esc(generated)}</span>'
             f'<span>雲端模型會持續更新，數字只代表測試當天的行為。</span>'
-            f'<span class="copy">© 2026 <a href="https://www.facebook.com/will.fans/" rel="noopener">Will 保哥</a></span>'
             f'</div></footer>')
 
 

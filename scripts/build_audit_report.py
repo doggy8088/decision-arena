@@ -13,10 +13,15 @@
 from __future__ import annotations
 
 import json
+import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from bench import legacy  # noqa: E402  共用網站外殼
+
 DATADIR = ROOT / "data" / "audit"
 TPL = ROOT / "scripts" / "report_audit"
 OUT = ROOT / "out"
@@ -139,12 +144,15 @@ def main() -> None:
         "flags": flags,
     }
 
-    head = (TPL / "head.html").read_text(encoding="utf-8")
+    css = (TPL / "style.css").read_text(encoding="utf-8")
     body = (TPL / "body.html").read_text(encoding="utf-8")
     js = (TPL / "app.js").read_text(encoding="utf-8")
     js = js.replace("__DATA__", json.dumps(data, ensure_ascii=False, separators=(",", ":")))
 
-    html = "\n".join([head, "<body>", body, "<script>", js, "</script>", "</body>", "</html>", ""])
+    html = legacy.render(
+        title="注音音檔稽核｜Decision Arena",
+        description="以 gemini-3.1-flash-lite 全量檢查 2,934 個注音音檔，並用 Gemini 4 Argon 仲裁抽樣結果。",
+        generated="2026-11-17", body=body, css=css, scripts=f"<script>\n{js}</script>")
     (ROOT / "audit-report.html").write_text(html, encoding="utf-8")
     print(f"✅ audit-report.html  {len(html)/1024:.0f} KB")
     print(f"   檔案 {n}、標記 {len(flags)}、仲裁 {len(arb)}")

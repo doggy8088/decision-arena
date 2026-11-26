@@ -53,11 +53,10 @@ function fill(el, v) { if (el) el.innerHTML = v; }
     html += `<div class="h row">${D.toneNames[i]}</div>`;
     row.forEach((v, j) => {
       const diag = i === j;
-      const a = v ? 0.08 + (v / max) * 0.72 : 0;
-      const bg = v ? (diag ? `rgba(47,111,94,${a})` : `rgba(168,67,26,${a})`) : 'transparent';
-      const color = v && a > 0.45 ? '#fff' : 'inherit';
+      const pct = v ? Math.round(10 + (v / max) * 35) : 0;
+      const bg = v ? `color-mix(in srgb, var(${diag ? '--ok' : '--bad'}) ${pct}%, transparent)` : 'transparent';
       html += `<div class="c ${diag ? 'diag' : ''} ${v ? '' : 'zero'}"
-        style="background:${bg};color:${color}"
+        style="background:${bg}"
         title="檔名 ${D.toneNames[i]} → 模型 ${D.toneNames[j]}：${nf(v)} 個">${v || '·'}</div>`;
     });
   });
@@ -211,33 +210,3 @@ renderTable();
   fill($('#fTok'), nf(t.text + t.audio + t.out));
   fill($('#fCost'), total.toFixed(3));
 })();
-
-/* ---------- 主題 ---------- */
-const root = document.documentElement;
-function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
-function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* ignore */ } }
-const saved = lsGet('audit-theme');
-if (saved) root.dataset.theme = saved;
-const btn = $('#themeBtn');
-function syncBtn() { btn.textContent = root.dataset.theme === 'dark' ? '淺色' : '深色'; }
-syncBtn();
-btn.addEventListener('click', () => {
-  root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
-  lsSet('audit-theme', root.dataset.theme);
-  syncBtn();
-});
-
-/* ---------- 捲動 ---------- */
-const prog = $('#prog');
-const links = $$('#navlist a');
-const secs = ['verdict', 'tone', 'syllable', 'who', 'list', 'cost', 'method']
-  .map((id) => document.getElementById(id)).filter(Boolean);
-function onScroll() {
-  const h = document.documentElement;
-  prog.style.width = (h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight) * 100) + '%';
-  let cur = secs[0];
-  secs.forEach((s) => { if (s.getBoundingClientRect().top <= 120) cur = s; });
-  links.forEach((a) => a.classList.toggle('on', a.getAttribute('href') === '#' + cur.id));
-}
-window.addEventListener('scroll', onScroll, { passive: true });
-onScroll();

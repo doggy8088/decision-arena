@@ -188,6 +188,22 @@ class ReportTests(unittest.TestCase):
         self.assertEqual(len(ids), len(REGISTRY))
 
 
+
+class SiteShellTests(unittest.TestCase):
+    def test_footer_shows_copyright_instead_of_brand(self):
+        from bench import site
+        foot = site.footer("2026-11-26")
+        self.assertIn('© 2026 <a href="https://www.facebook.com/will.fans/" rel="noopener">Will 保哥</a>｜資料產生於 2026-11-26', foot)
+        self.assertNotIn("Decision Arena", foot)
+
+    def test_legacy_render_uses_site_shell(self):
+        from bench import legacy
+        html_text = legacy.render(title="t", description="d", generated="2026-11-17", body="<p>x</p>")
+        self.assertIn('class="site-head"', html_text)
+        self.assertIn('<a href="index.html#archive" aria-current="page">早期研究</a>', html_text)
+        self.assertIn("Will 保哥", html_text)
+        self.assertIn('<div class="lg">', html_text)
+
 class DashboardTests(unittest.TestCase):
     def test_build_data_shape_and_composite_rule(self):
         from bench import dashboard

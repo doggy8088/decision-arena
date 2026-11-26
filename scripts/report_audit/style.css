@@ -1,0 +1,99 @@
+/* 注音音檔稽核（audit-report.html）與 Microsoft Decision 1.1 實測（ms-decision-report.html）共用的元件樣式。
+   色彩一律用網站 token（見 bench/site.py 與 bench/legacy.py），最小字級 14px。 */
+
+/* 堆疊條（一致／聲調／音節／其他）：狀態色當底，文字用 surface 色，深淺色都有足夠對比 */
+.lg .stack{display:flex;gap:2px;height:52px;border-radius:8px;overflow:hidden;margin:6px 0 0}
+.lg .stack div{display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--surface);white-space:nowrap;overflow:hidden}
+.lg .stack .ok{background:var(--ok)}
+.lg .stack .tone{background:var(--warn)}
+.lg .stack .syllable{background:var(--bad)}
+.lg .stack .err{background:var(--muted)}
+.lg .stack-key{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:14px;font-size:15px;color:var(--ink-2)}
+.lg .stack-key i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:7px;vertical-align:-1px}
+
+/* 聲調列 */
+.lg .tone-row{display:grid;grid-template-columns:84px 1fr 74px;gap:16px;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
+.lg .tone-row:last-child{border-bottom:0}
+.lg .tone-row .tl{font-size:17px;font-weight:600;line-height:1.4}
+.lg .tone-row .tl small{display:block;font-size:14px;font-weight:400;color:var(--muted)}
+.lg .tbar{height:12px;background:var(--track);border-radius:4px;overflow:hidden}
+.lg .tbar span{display:block;height:100%;background:var(--ok);border-radius:4px}
+.lg .tbar span.low{background:var(--bad)}
+.lg .tbar span.mid{background:var(--warn)}
+.lg .tone-row .tp{text-align:right;font-size:16px;font-weight:600;font-variant-numeric:tabular-nums}
+.lg .tone-note{font-size:14px;color:var(--muted);margin-top:3px}
+@media (max-width:640px){.lg .tone-row{grid-template-columns:64px 1fr 60px;gap:10px}}
+
+/* 混淆矩陣 */
+.lg .mx{display:grid;grid-template-columns:104px repeat(5,1fr);gap:5px;margin-top:4px}
+.lg .mx .h{display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ink-2);padding:4px;text-align:center;line-height:1.3}
+.lg .mx .h.row{justify-content:flex-end;text-align:right}
+.lg .mx .c{aspect-ratio:2.1;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:15px;font-weight:600;
+  font-variant-numeric:tabular-nums;color:var(--ink)}
+.lg .mx .c:hover{outline:2px solid var(--ink-2)}
+.lg .mx .c.diag{box-shadow:inset 0 0 0 2px var(--ok)}
+.lg .mx .c.zero{color:var(--muted);font-weight:400;background:transparent!important;box-shadow:none}
+@media (max-width:640px){.lg .mx{grid-template-columns:56px repeat(5,1fr);gap:3px}.lg .mx .c{aspect-ratio:1.3;font-size:14px}}
+
+/* 錯誤型態 */
+.lg .type-row{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;padding:8px 0}
+.lg .type-row .tn{font-size:15px}
+.lg .tybar{grid-column:1/-1;grid-row:2;height:10px;background:var(--track);border-radius:4px;overflow:hidden}
+.lg .tybar span{display:block;height:100%;background:var(--bad);border-radius:4px}
+.lg .type-row .tv{text-align:right;font-size:14px;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* 表格與標籤 */
+.lg td{font-variant-numeric:tabular-nums}
+.lg td.file{font-family:var(--mono);font-size:14px}
+.lg .tag{display:inline-block;font-size:14px;padding:1px 9px;border-radius:999px;font-weight:600;white-space:nowrap}
+.lg .tag.tone{background:var(--warn-bg);color:var(--warn)}
+.lg .tag.syllable,.lg .tag.bad{background:var(--bad-bg);color:var(--bad)}
+.lg .tag.ok{background:var(--ok-bg);color:var(--ok)}
+.lg mark{background:var(--warn-bg);color:inherit;padding:0 2px;border-radius:2px}
+
+/* 仲裁分段條 */
+.lg .split{display:flex;gap:2px;height:52px;border-radius:8px;overflow:hidden}
+.lg .split div{display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--surface);padding:0 8px;
+  text-align:center;line-height:1.3;overflow:hidden}
+
+/* 清單工具列 */
+.lg .tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:20px 0 14px}
+.lg .search{flex:1;min-width:190px;background:var(--surface);border:1px solid var(--border-strong);border-radius:10px;
+  padding:9px 13px;font:inherit;font-size:15px;color:var(--ink)}
+.lg .search:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+.lg .seg{display:inline-flex;height:auto;overflow:visible;background:var(--surface-2);border-radius:10px;padding:3px;gap:2px}
+.lg .seg button{background:transparent;border:0;color:var(--ink-2);font:inherit;font-size:14px;font-weight:600;padding:6px 12px;border-radius:8px;
+  cursor:pointer;white-space:nowrap}
+.lg .seg button.on{background:var(--surface);color:var(--ink);box-shadow:0 0 0 1px var(--border-strong)}
+.lg .btn{background:var(--surface);border:1px solid var(--border-strong);border-radius:10px;color:var(--ink);font:inherit;font-size:14px;
+  font-weight:600;padding:8px 14px;cursor:pointer}
+.lg .btn:hover{background:var(--surface-2)}
+.lg .tbl-wrap{max-height:620px;overflow:auto;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+.lg .tbl-wrap thead th{position:sticky;top:0;z-index:2;cursor:pointer;user-select:none}
+.lg .tbl-wrap thead th:hover{color:var(--ink)}
+.lg .count{font-size:14px;color:var(--muted);margin-top:10px}
+
+/* 成本與清單 */
+.lg .cost-table td:last-child,.lg .cost-table th:last-child{text-align:right}
+.lg ul.plain{padding-left:0;list-style:none;margin:0}
+.lg ul.plain li{padding:10px 0 10px 20px;position:relative;border-bottom:1px solid var(--border);font-size:16px;color:var(--ink-2)}
+.lg ul.plain li:last-child{border-bottom:0}
+.lg ul.plain li::before{content:"";position:absolute;left:2px;top:1.15em;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.lg ul.plain li b{color:var(--ink)}
+
+/* Microsoft 報告：請求範例、證據列表、大數字 */
+.lg pre{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;overflow-x:auto;
+  font-family:var(--mono);font-size:14px;line-height:1.7;color:var(--ink-2);margin:14px 0}
+.lg pre b{color:var(--ink);font-weight:600}
+.lg .evidence{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--border)}
+.lg .evidence:last-child{border-bottom:0}
+.lg .evidence .n{font-size:1.3rem;font-weight:700;color:var(--accent);min-width:26px;line-height:1.3}
+.lg .evidence .b{font-size:16px;color:var(--ink-2)}
+.lg .evidence .b b{color:var(--ink)}
+.lg .evidence .b .r{font-size:14px;color:var(--muted);display:block;margin-top:4px;word-break:break-word}
+.lg .big{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;margin:20px 0 0}
+.lg .big>div{background:var(--surface);padding:16px 18px}
+.lg .big .v{font-size:1.7rem;font-weight:700;line-height:1.25;font-variant-numeric:tabular-nums}
+.lg .big .k{font-size:14px;color:var(--ink-2);margin-top:4px}
+.lg table.plain td.t{white-space:normal;line-height:1.6}

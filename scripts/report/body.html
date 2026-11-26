@@ -1,24 +1,7 @@
-<div class="progress"><i id="prog"></i></div>
-
-<nav class="topbar">
-  <div class="inner">
-    <div class="brand">Decisions <span>1</span> 實測</div>
-    <ul id="navlist">
-      <li><a href="#map">能力地圖</a></li>
-      <li><a href="#s1">單音節</a></li>
-      <li><a href="#s2">音場分類</a></li>
-      <li><a href="#s3">發音練習</a></li>
-      <li><a href="#guide">選型指南</a></li>
-      <li><a href="#cost">成本</a></li>
-    </ul>
-    <button class="theme" id="themeBtn">☾ 深色</button>
-  </div>
-</nav>
-
-<header class="hero">
+<section class="page-hero">
   <div class="wrap">
-    <div class="eyebrow"><i></i>2026-11-17 · 三組實測 · <span data-f="meta.calls">—</span> 次呼叫 · US$<span data-f="meta.cost">—</span></div>
-    <h1>Gemini Decisions 1<br><em>能做什麼、不能做什麼</em></h1>
+    <p class="meta">2026-11-17｜三組實測｜<span data-f="meta.calls">—</span> 次呼叫｜US$<span data-f="meta.cost">—</span></p>
+    <h1>Gemini Decisions 1<em>能做什麼、不能做什麼</em></h1>
     <p class="lede">
       這是一個「給你校準機率、卻不產生任何文字」的 API。我用聲音當試紙做了三組測試，
       量出它的真實邊界：<b>語意分類它很行，數字、場合與音素它不行</b>。
@@ -26,31 +9,33 @@
     </p>
     <div class="kpis">
       <div class="kpi">
-        <div class="v" style="color:var(--good)">42<span style="font-size:20px;color:var(--ink-3)">/42</span></div>
+        <div class="v" style="color:var(--ok)">42<small>/42</small></div>
         <div class="l">「有沒有人聲」全對</div>
-        <div class="s">500 ms · US$0.00009／次</div>
+        <div class="s">500 ms｜US$0.00009／次</div>
       </div>
       <div class="kpi bad">
-        <div class="v" style="color:var(--bad)">0<span style="font-size:20px;color:var(--ink-3)">/6</span></div>
+        <div class="v">0<small>/6</small></div>
         <div class="l">演唱會全判成「唱歌」</div>
         <div class="s">它聽不到「場合」</div>
       </div>
       <div class="kpi bad">
-        <div class="v" style="color:var(--bad)">0<span style="font-size:20px;color:var(--ink-3)">/34</span></div>
+        <div class="v">0<small>/34</small></div>
         <div class="l">逐字發音錯誤都沒抓到</div>
         <div class="s">逐字機率是裝飾品</div>
       </div>
     </div>
+    <nav class="toc" aria-label="本頁內容">
+      <a href="#map">能力地圖</a><a href="#s1">單音節</a><a href="#s2">音場分類</a><a href="#s3">發音練習</a>
+      <a href="#guide">選型指南</a><a href="#cost">成本</a><a href="#limits">限制</a>
+    </nav>
   </div>
-</header>
+</section>
 
-<main>
 
 <!-- ══════════ 01 能力地圖 ══════════ -->
 <section id="map">
   <div class="wrap">
     <div class="sec-head reveal">
-      <div class="sec-no">01 / CAPABILITY MAP</div>
       <h2>一張圖看懂它的能力邊界</h2>
       <p>每一列是一個判斷任務，兩條槓分別是 <b style="color:var(--acc)">Decisions</b> 與
          <b style="color:var(--acc-2)">Argon</b> 的正確率。滑過去看數字，低於 80% 的列就是「不能直接上線」的地方。</p>
@@ -78,7 +63,6 @@
 <section id="s1">
   <div class="wrap">
     <div class="sec-head reveal">
-      <div class="sec-no">02 / STUDY 1 · SYLLABLE</div>
       <h2>單音節聲調：機率完全沒有鑑別力</h2>
       <p>14 段國語單音節，其中一組是難得的 labeled pair——同一個「ㄌㄨˊ」，一段確定唸錯（驢）、一段確定唸對（爐）。
          問題只有一個：<code>是「ㄌㄨˊ」嗎？</code></p>
@@ -103,11 +87,11 @@
         <div style="display:flex;gap:32px;margin-top:6px;flex-wrap:wrap">
           <div>
             <div class="mono" style="font-size:30px;font-weight:800" data-f="single.meanPos">—</div>
-            <div style="font-size:12px;color:var(--ink-3)">應為「是」的平均 P</div>
+            <div style="font-size:14px;color:var(--ink-3)">應為「是」的平均 P</div>
           </div>
           <div>
             <div class="mono" style="font-size:30px;font-weight:800;color:var(--ink-2)" data-f="single.meanNeg">—</div>
-            <div style="font-size:12px;color:var(--ink-3)">其餘 12 段的平均 P</div>
+            <div style="font-size:14px;color:var(--ink-3)">其餘 12 段的平均 P</div>
           </div>
         </div>
         <div class="callout bad" style="margin-top:20px;margin-bottom:0">
@@ -120,17 +104,17 @@
         <p class="hint">盲聽、不給答案，要求寫出注音與聲調</p>
         <div style="display:flex;align-items:baseline;gap:10px">
           <div class="mono" style="font-size:30px;font-weight:800;color:var(--good)">12/12</div>
-          <div style="font-size:12px;color:var(--ink-3)">首輪全對，含 4 段「已知對錯」的關鍵樣本</div>
+          <div style="font-size:14px;color:var(--ink-3)">首輪全對，含 4 段「已知對錯」的關鍵樣本</div>
         </div>
-        <table style="margin-top:14px">
+        <div class="tbl-scroll" style="margin-top:14px"><table>
           <thead><tr><th>關鍵案例</th><th>應該</th><th>Argon 聽到</th></tr></thead>
           <tbody>
             <tr><td>舊音檔（爐 → 驢）</td><td>錯</td><td class="bad-t">lü2 🎯 抓到</td></tr>
             <tr><td>新音檔（爐）</td><td>對</td><td class="good-t">lu2 ✓</td></tr>
             <tr><td>重跑同一批</td><td>—</td><td class="bad-t">1 次誤判（lóng）</td></tr>
           </tbody>
-        </table>
-        <p style="font-size:12.5px;color:var(--ink-3);margin:14px 0 0">
+        </table></div>
+        <p style="font-size:14px;color:var(--ink-3);margin:14px 0 0">
           連「一聲 vs 三聲」（ma / ma3）都分得出來——所以它真的在判聲調，不是猜的。但單次結果不可信，要 2–3 次取樣。
         </p>
       </div>
@@ -142,7 +126,6 @@
 <section id="s2">
   <div class="wrap">
     <div class="sec-head reveal">
-      <div class="sec-no">03 / STUDY 2 · SOUND SCENE</div>
       <h2>七類音場：強在內容，弱在場合</h2>
       <p>42 段 YouTube 10 秒片段（每類 6 段），從演講、流行歌、交響樂、雨聲到演唱會與 podcast。
          標註完全不採用 Gemini 的輸出，而是用 Groq Whisper 獨立驗證——這一步抓出我自己標錯的 6 段。</p>
@@ -156,9 +139,9 @@
           <button class="on" data-m="d">Decisions</button>
           <button data-m="a">Argon</button>
         </div>
-        <div class="mono" style="font-size:13px;color:var(--ink-2)">正確 <b id="mxScore" style="color:var(--ink)">—</b></div>
+        <div class="mono" style="font-size:14px;color:var(--ink-2)">正確 <b id="mxScore" style="color:var(--ink)">—</b></div>
       </div>
-      <div class="mx" id="mx"></div>
+      <div class="mx-scroll"><div class="mx" id="mx"></div></div>
       <div class="detail" id="mxDetail">點任何一格，看它把哪些片段放到那裡。</div>
     </div>
 
@@ -187,7 +170,6 @@
 <section id="s3">
   <div class="wrap">
     <div class="sec-head reveal">
-      <div class="sec-no">04 / STUDY 3 · PRONUNCIATION</div>
       <h2>發音練習：句子對了，字還是不對</h2>
       <p>50 段合成語料：10 個句子 × 正確／聲調錯／換詞／漏字／唸成別句，外加「正確＋背景噪音」。
          兩個模型都要回答同一件事：<code>這段錄音有沒有把句子唸對？</code></p>
@@ -217,13 +199,13 @@
           同一段音檔、同一個模型，只差「有沒有補尾靜音」，判定就從「漏三個字」變成「全對」。
           小朋友唸完通常立刻按停止——這個補償在實務上是必要的。
         </p>
-        <table>
+        <div class="tbl-scroll"><table>
           <thead><tr><th>送出的音訊</th><th>它聽到</th><th>判定</th></tr></thead>
           <tbody>
             <tr><td>原始檔（結尾乾淨、無尾靜音）</td><td class="mono">The cat sat on</td><td class="bad-t">「the mat」漏掉，67 分</td></tr>
             <tr><td>補 600 ms 尾靜音</td><td class="mono">The cat sat on the mat</td><td class="good-t">6/6 全對，100 分</td></tr>
           </tbody>
-        </table>
+        </table></div>
         <div class="callout" style="margin-bottom:0">
           量化版本：10 段正確句 <b>94.0 → 99.1 分</b>，有 2 段原本會出現結尾異常。
         </div>
@@ -234,7 +216,7 @@
           音檔裡明明唸的是 <code>hooks</code>（不是 books），但模型有很強的語言先驗，會把它「聽成」books。
           這對發音教學是致命的：<b>越像真字的錯誤越容易被吃掉</b>。
         </p>
-        <table>
+        <div class="tbl-scroll"><table>
           <thead><tr><th>提示方式</th><th>轉錄結果</th><th>結果</th></tr></thead>
           <tbody>
             <tr><td>給目標句（一般寫法）</td><td class="mono">I like to read books</td><td class="bad-t">100 分，全錯</td></tr>
@@ -242,7 +224,7 @@
             <tr><td>盲聽＋「可能有唸錯，照實寫」</td><td class="mono">I like to read hooks</td><td class="good-t">抓到</td></tr>
             <tr><td>給目標句＋「不要自動修正」</td><td class="mono">I like to read hooks</td><td class="good-t">抓到</td></tr>
           </tbody>
-        </table>
+        </table></div>
         <div class="callout warn" style="margin-bottom:0">
           所以報告用的 App 同時跑一支<b>完全不給答案的盲聽</b>，逐字比對交給程式（<code>difflib</code>）算，
           不讓模型自己說「我聽到的和題目一樣」。
@@ -254,7 +236,7 @@
           同一段完全正確的音檔，Argon 給過 65、82、100 三種分數；而中文聲調錯的句子平均還拿 <b>93.4 分</b>。
           <b>總分不能當及格線</b>，要看它標記了哪個字。
         </p>
-        <table>
+        <div class="tbl-scroll"><table>
           <thead><tr><th>中文聲調錯的 5 段</th><th>Argon 分數</th><th>它怎麼說</th></tr></thead>
           <tbody>
             <tr><td>蘋<b>鍋</b>（應為蘋<b>果</b>）</td><td class="mono">82</td><td class="good-t">有指出聲調錯</td></tr>
@@ -263,7 +245,7 @@
             <tr><td><b>死</b>是四（應為<b>四</b>是四）</td><td class="mono">100</td><td class="bad-t">轉錄成正確句子</td></tr>
             <tr><td>媽媽<b>馬</b>馬（應為媽媽<b>罵</b>馬）</td><td class="mono">85</td><td class="good-t">有指出聲調錯</td></tr>
           </tbody>
-        </table>
+        </table></div>
         <div class="callout bad" style="margin-bottom:0">
           <b>5 段裡 3 段直接給 100 分。</b>對照研究一：<b>單獨聽一個音節時它的聲調判斷是準的</b>，
           但放進句子裡，語言先驗就蓋過了聽覺證據。
@@ -278,14 +260,14 @@
         <div style="display:flex;gap:36px;align-items:baseline;flex-wrap:wrap">
           <div>
             <div class="mono" style="font-size:36px;font-weight:800;color:var(--bad)" data-f="pron.decisions.word_error_recall">—</div>
-            <div style="font-size:12px;color:var(--ink-3)">Decisions</div>
+            <div style="font-size:14px;color:var(--ink-3)">Decisions</div>
           </div>
           <div>
             <div class="mono" style="font-size:36px;font-weight:800;color:var(--acc-2)" data-f="pron.argon.word_error_recall">—</div>
-            <div style="font-size:12px;color:var(--ink-3)">Argon</div>
+            <div style="font-size:14px;color:var(--ink-3)">Argon</div>
           </div>
         </div>
-        <p style="font-size:13px;color:var(--ink-2);margin:18px 0 0">
+        <p style="font-size:14px;color:var(--ink-2);margin:18px 0 0">
           Decisions 的逐字 <code>choice</code> 題一個都沒抓到——那 12 個題目只是把同一個機率拆成 12 份。
         </p>
       </div>
@@ -295,14 +277,14 @@
         <div style="display:flex;gap:36px;align-items:baseline;flex-wrap:wrap">
           <div>
             <div class="mono" style="font-size:36px;font-weight:800;color:var(--good)">99.1</div>
-            <div style="font-size:12px;color:var(--ink-3)">乾淨</div>
+            <div style="font-size:14px;color:var(--ink-3)">乾淨</div>
           </div>
           <div>
             <div class="mono" style="font-size:36px;font-weight:800;color:var(--good)">99.6</div>
-            <div style="font-size:12px;color:var(--ink-3)">加噪音</div>
+            <div style="font-size:14px;color:var(--ink-3)">加噪音</div>
           </div>
         </div>
-        <p style="font-size:13px;color:var(--ink-2);margin:18px 0 0">
+        <p style="font-size:14px;color:var(--ink-2);margin:18px 0 0">
           一分都沒掉。對教室或家裡的環境音來說，這是好消息。
         </p>
       </div>
@@ -314,7 +296,6 @@
 <section id="guide">
   <div class="wrap">
     <div class="sec-head reveal">
-      <div class="sec-no">05 / DECISION GUIDE</div>
       <h2>所以，你該用哪一個？</h2>
       <p>選一個你要做的事，看實測怎麼說。</p>
     </div>
@@ -332,7 +313,6 @@
 <section id="cost">
   <div class="wrap">
     <div class="sec-head reveal">
-      <div class="sec-no">06 / COST</div>
       <h2>成本：Decisions 幾乎免費</h2>
       <p>整份研究（含換素材、重跑）約 <b>US$<span data-f="meta.cost">—</span></b>，其中 Argon 佔了 97.5%。
          預算 US$5，實際只用了兩成。</p>
@@ -340,7 +320,7 @@
 
     <div class="card reveal">
       <h3>研究二：210 次呼叫的成本結構</h3>
-      <p class="hint">同樣的 42 段音訊，兩個模型的錢差了两个數量級</p>
+      <p class="hint">同樣的 42 段音訊，兩個模型的錢差了兩個數量級</p>
       <div class="costbar">
         <div class="a" style="flex:97.5">Argon US$0.3103</div>
         <div class="d" style="flex:2.5">0.0078</div>
@@ -349,14 +329,14 @@
         <span><i style="background:var(--acc-2)"></i>gemini-4-argon · 126 次 · 97.5%</span>
         <span><i style="background:var(--acc)"></i>gemini-decision-1 · 84 次 · 2.5%</span>
       </div>
-      <table style="margin-top:22px">
+      <div class="tbl-scroll" style="margin-top:22px"><table>
         <thead><tr><th></th><th>延遲</th><th>每次（10 秒音訊）</th><th>輸出</th></tr></thead>
         <tbody>
           <tr><td style="color:var(--acc)">gemini-decision-1</td><td class="num">500 ms</td><td class="num">US$0.00009</td><td class="bad-t">只有機率，沒有文字</td></tr>
           <tr><td style="color:var(--acc-2)">gemini-4-argon</td><td class="num">6 704 ms</td><td class="num">US$0.0025</td><td class="good-t">可解釋的理由與建議</td></tr>
         </tbody>
-      </table>
-      <p style="font-size:12.5px;color:var(--ink-3);margin:16px 0 0">
+      </table></div>
+      <p style="font-size:14px;color:var(--ink-3);margin:16px 0 0">
         牌價：Decisions 輸入 $0.10／1M、輸出 0 token；Argon $2／$2／$10（2026-11-30 前促銷價）。
       </p>
     </div>
@@ -367,7 +347,6 @@
 <section id="limits">
   <div class="wrap">
     <div class="sec-head reveal">
-      <div class="sec-no">07 / LIMITS</div>
       <h2>這些結論的邊界</h2>
     </div>
     <div class="grid2">
@@ -403,19 +382,8 @@
   </div>
 </section>
 
-</main>
 
-<footer>
-  <div class="wrap">
-    <div>
-      <div style="color:var(--ink-2);font-weight:600;margin-bottom:4px">Gemini Decisions 1 能力實測</div>
-      <div>三組實驗 · <span data-f="meta.calls">—</span> 次呼叫 · US$<span data-f="meta.cost">—</span> · 2026-11-17</div>
-    </div>
-    <div style="text-align:right">
-      <div>完整方法與原始數據在 <code>README.md</code></div>
-      <div style="margin-top:4px">素材：YouTube 10 秒片段 · macOS <code>say</code> 合成語料</div>
-    </div>
-  </div>
-</footer>
 
 <div id="tip"></div>
+
+<p class="wrap src">完整方法與原始數據在專案的 <code>README.md</code>；素材為 YouTube 10 秒片段與 macOS <code>say</code> 合成語料。</p>

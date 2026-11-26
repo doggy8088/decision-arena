@@ -115,11 +115,16 @@ summary::before{content:"";width:8px;height:8px;border-right:2px solid currentCo
 details[open] summary::before{transform:rotate(45deg)}
 details[open]>*:not(summary){margin-top:12px}
 
+/* 本頁目錄 */
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.toc a{font-size:14px;font-weight:600;color:var(--ink-2);text-decoration:none;padding:6px 12px;border:1px solid var(--border);
+  border-radius:999px;background:var(--surface)}
+.toc a:hover{color:var(--accent);border-color:var(--accent)}
+
 /* 頁尾 */
 .site-foot{border-top:1px solid var(--border);margin-top:24px;padding:28px 0 40px;font-size:14px;color:var(--muted)}
 .site-foot .wrap{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
 .site-foot a{color:var(--ink-2)}
-.site-foot .copy{flex-basis:100%;color:var(--ink-2)}
 
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 
@@ -188,10 +193,6 @@ details[open]>*:not(summary){margin-top:12px}
 .svg-wrap .bl{stroke:var(--border-strong)}
 .svg-wrap .pt{stroke:var(--surface);stroke-width:2}
 
-.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
-.toc a{font-size:14px;font-weight:600;color:var(--ink-2);text-decoration:none;padding:6px 12px;border:1px solid var(--border);
-  border-radius:999px;background:var(--surface)}
-.toc a:hover{color:var(--accent);border-color:var(--accent)}
 .verdict-panel{border-left:4px solid var(--accent)}
 .verdict{font-size:1.3rem;font-weight:700;line-height:1.5;margin:0 0 16px;color:var(--ink)}
 .points{margin:0;padding-left:1.15em}
@@ -252,7 +253,7 @@ details.more{border-top:0;padding-top:0;margin-top:10px}
 <p class="lede">市面上「一次前向傳播、直接回傳校準機率」的決策模型，在多模態與五類情境下的實測。所有模型共用同一套任務與評分程式，數字由 <code>python3 -m bench site</code> 從 <code>results/</code> 直接產生。想用圖表比較、快速篩選可用模型，請開 <a href="bench-dashboard.html">Dashboard</a>。</p>
 <dl class="stats"><div><dt>已實測模型</dt><dd>34</dd></div><div><dt>任務</dt><dd>20</dd></div>
 <div><dt>請求數</dt><dd>7,327</dd></div><div><dt>總花費</dt><dd>US$0.277</dd></div></dl>
-<p class="meta">產生時間 2026-11-22 11:43｜合併 6 次執行</p>
+<p class="meta">產生時間 2026-11-26 10:36｜合併 6 次執行</p>
 <nav class="toc" aria-label="本頁內容"><a href="#summary">總結</a><a href="#findings">重點</a><a href="#roster">模型名冊</a><a href="#overview">總覽</a><a href="#s-audio">語音與音訊</a><a href="#s-image">影像判斷</a><a href="#s-zh_text">中文文字決策</a><a href="#s-agent">Agent 守門／路由</a><a href="#s-taiwan">台灣政經</a><a href="#notes">註記</a><a href="#method">方法</a></nav>
 </header>
 <section class="section" id="summary"><div class="section-head"><h2>總結</h2></div><div class="panel verdict-panel"><p class="verdict">沒有一個模型全面勝出：先看要不要聽音訊，再依情境挑模型。</p><ul class="points">
@@ -3270,7 +3271,7 @@ details.more{border-top:0;padding-top:0;margin-top:10px}
 <tr><th>快取與預算</th><td>原始回應以「不含金鑰的請求內容」雜湊快取；每次執行有美元上限，超過即停止。</td></tr>
 </tbody></table></div></section></div>
 </main>
-<footer class="site-foot"><div class="wrap"><span>Decision Arena｜資料產生於 2026-11-22 11:43</span><span>雲端模型會持續更新，數字只代表測試當天的行為。</span><span class="copy">© 2026 <a href="https://www.facebook.com/will.fans/" rel="noopener">Will 保哥</a></span></div></footer>
+<footer class="site-foot"><div class="wrap"><span>© 2026 <a href="https://www.facebook.com/will.fans/" rel="noopener">Will 保哥</a>｜資料產生於 2026-11-26 10:36</span><span>雲端模型會持續更新，數字只代表測試當天的行為。</span></div></footer>
 <script>(()=>{
   const root=document.documentElement, btn=document.getElementById('theme-btn');
   if(!btn) return;

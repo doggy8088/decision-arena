@@ -376,10 +376,6 @@ def build_report(run_ids: list[str] | None = None, out: Path = OUT) -> Path:
 
 
 REPORT_CSS = r"""
-.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
-.toc a{font-size:14px;font-weight:600;color:var(--ink-2);text-decoration:none;padding:6px 12px;border:1px solid var(--border);
-  border-radius:999px;background:var(--surface)}
-.toc a:hover{color:var(--accent);border-color:var(--accent)}
 .verdict-panel{border-left:4px solid var(--accent)}
 .verdict{font-size:1.3rem;font-weight:700;line-height:1.5;margin:0 0 16px;color:var(--ink)}
 .points{margin:0;padding-left:1.15em}

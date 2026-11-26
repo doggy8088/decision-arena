@@ -93,10 +93,8 @@ function renderMatrix() {
     cats.forEach((p) => {
       const v = (mx[t] || {})[p] || 0;
       const diag = t === p;
-      const alpha = v ? 0.14 + (v / max) * 0.62 : 0;
-      const bg = diag
-        ? `rgba(45,212,191,${alpha})`
-        : (v ? `rgba(248,113,113,${alpha})` : 'transparent');
+      const pct = v ? Math.round(12 + (v / max) * 33) : 0;
+      const bg = v ? `color-mix(in srgb, var(${diag ? '--ok' : '--bad'}) ${pct}%, transparent)` : 'transparent';
       html += `<div class="cell ${v ? '' : 'empty'} ${diag ? 'diag' : ''}"
         style="background:${bg}" data-t="${t}" data-p="${p}" data-v="${v}">${v || '·'}</div>`;
     });
@@ -238,7 +236,7 @@ const GUIDE = [
   function draw(key) {
     const g = GUIDE.find((x) => x.key === key) || GUIDE[0];
     $('#gpanel').innerHTML = `
-      <div style="font-size:12px;color:var(--ink-3);letter-spacing:.08em">${g.sub}</div>
+      <div style="font-size:14px;color:var(--ink-3);letter-spacing:.08em">${g.sub}</div>
       <div class="verdict" style="color:${g.color}">${g.verdict}</div>
       <div class="why">${g.why}</div>
       <div class="gpills">${g.pills.map((p) => `<span class="pill ${p[1]}">${p[0]}</span>`).join('')}</div>
@@ -252,71 +250,3 @@ const GUIDE = [
   });
   draw(GUIDE[0].key);
 })();
-
-/* ---------- 主題切換 ---------- */
-const root = document.documentElement;
-// file:// 底下 localStorage 可能丟 SecurityError，一律包起來
-function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
-function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* ignore */ } }
-const saved = lsGet('rep-theme');
-if (saved) root.dataset.theme = saved;
-const themeBtn = $('#themeBtn');
-function syncTheme() {
-  themeBtn.textContent = root.dataset.theme === 'dark' ? '☾ 深色' : '☀ 淺色';
-}
-syncTheme();
-themeBtn.addEventListener('click', () => {
-  root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
-  lsSet('rep-theme', root.dataset.theme);
-  syncTheme();
-  renderMatrix();
-});
-
-/* ---------- 捲動：進度、導覽、reveal、長條動畫 ---------- */
-const prog = $('#prog');
-const navLinks = $$('#navlist a');
-const sections = ['map', 's1', 's2', 's3', 'guide', 'cost', 'limits']
-  .map((id) => document.getElementById(id)).filter(Boolean);
-
-function onScroll() {
-  const h = document.documentElement;
-  const p = h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight);
-  prog.style.width = (p * 100).toFixed(1) + '%';
-  let cur = sections[0];
-  sections.forEach((s) => { if (s.getBoundingClientRect().top <= 140) cur = s; });
-  navLinks.forEach((a) => a.classList.toggle('on', a.getAttribute('href') === '#' + cur.id));
-}
-window.addEventListener('scroll', onScroll, { passive: true });
-onScroll();
-
-// 進場動畫：不用 IntersectionObserver（headless / 舊瀏覽器都可能不動作），
-// 改成「進視窗就開」，並保證任何情況下內容一定看得到。
-const pending = $$('.reveal');
-pending.forEach((el) => {
-  const r = el.getBoundingClientRect();
-  if (r.top < window.innerHeight * 0.95) el.classList.add('reveal-live');
-  else el.classList.add('anim');
-});
-
-let pendingLeft = pending.filter((el) => el.classList.contains('anim'));
-function revealPass() {
-  if (!pendingLeft.length) return;
-  const keep = [];
-  pendingLeft.forEach((el) => {
-    if (el.getBoundingClientRect().top < window.innerHeight * 0.95) {
-      el.classList.add('in');
-    } else keep.push(el);
-  });
-  pendingLeft = keep;
-}
-window.addEventListener('scroll', revealPass, { passive: true });
-revealPass();
-
-// 保險：3 秒後仍在畫面上方的就直接顯示（避免任何情況白畫面）
-setTimeout(() => {
-  pendingLeft.forEach((el) => {
-    if (el.getBoundingClientRect().top < window.innerHeight * 1.2) {
-      el.classList.add('in');
-    }
-  });
-}, 3000);

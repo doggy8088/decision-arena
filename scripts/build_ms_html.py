@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""把 out/ms-bench.json 組成單檔 HTML 報告（沿用注音稽核報告的版面）。
+"""把 out/ms-bench.json 組成單檔 HTML 報告（套用網站外殼，元件樣式與注音稽核報告共用）。
 
 用法：
   python3 scripts/build_ms_html.py
@@ -9,13 +9,16 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-HEAD = ROOT / "scripts" / "report_audit" / "head.html"
+sys.path.insert(0, str(ROOT))
+
+from bench import legacy  # noqa: E402  共用網站外殼
+
+CSS = ROOT / "scripts" / "report_audit" / "style.css"
 BODY = ROOT / "scripts" / "report_ms" / "body.html"
-TITLE_OLD = "<title>注音音檔稽核 · gemini-3.1-flash-lite</title>"
-TITLE_NEW = "<title>Microsoft Decision 1.1 實測 · Azure AI Foundry</title>"
 
 
 def main() -> None:
@@ -23,7 +26,6 @@ def main() -> None:
     s, a, tb, tc = d["summary"], d["summary"]["taskA"], d["summary"]["taskB"], d["summary"]["taskC"]
     ops = s.get("ops") or {}
 
-    head = HEAD.read_text(encoding="utf-8").replace(TITLE_OLD, TITLE_NEW)
     body = BODY.read_text(encoding="utf-8")
 
     m = {
@@ -49,7 +51,10 @@ def main() -> None:
     for k, v in m.items():
         body = body.replace(k, str(v))
 
-    html = "\n".join([head, "<body>", body, "</body>", "</html>", ""])
+    html = legacy.render(
+        title="Microsoft Decision 1.1 實測｜Decision Arena",
+        description="Microsoft Decision 1.1（Azure AI Foundry）的音訊支援查證與純文字任務對照。",
+        generated="2026-11-19", body=body, css=CSS.read_text(encoding="utf-8"))
     (ROOT / "ms-decision-report.html").write_text(html, encoding="utf-8")
     print(f"✅ ms-decision-report.html  {len(html)/1024:.0f} KB"
           f"（殘留佔位符 {html.count('__')}）")

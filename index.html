@@ -115,11 +115,16 @@ summary::before{content:"";width:8px;height:8px;border-right:2px solid currentCo
 details[open] summary::before{transform:rotate(45deg)}
 details[open]>*:not(summary){margin-top:12px}
 
+/* 本頁目錄 */
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.toc a{font-size:14px;font-weight:600;color:var(--ink-2);text-decoration:none;padding:6px 12px;border:1px solid var(--border);
+  border-radius:999px;background:var(--surface)}
+.toc a:hover{color:var(--accent);border-color:var(--accent)}
+
 /* 頁尾 */
 .site-foot{border-top:1px solid var(--border);margin-top:24px;padding:28px 0 40px;font-size:14px;color:var(--muted)}
 .site-foot .wrap{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
 .site-foot a{color:var(--ink-2)}
-.site-foot .copy{flex-basis:100%;color:var(--ink-2)}
 
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 
@@ -273,14 +278,14 @@ details[open]>*:not(summary){margin-top:12px}
 <p>同一個模型在不同情境的表現差很多，請依你的用途挑模型。Dashboard 可以直接依情境排序與篩選。</p></div>
 <div class="scen"><article><img src="assets/site/spot-audio.webp" alt="" width="84" height="84" loading="lazy"><h3>語音與音訊</h3><p>辨音、音場分類、發音練習判斷（4 個計分任務）</p><div class="best">最高平均 <b>89%</b>｜<code>clef-omni</code></div></article><article><img src="assets/site/spot-image.webp" alt="" width="84" height="84" loading="lazy"><h3>影像判斷</h3><p>形近字、注音字卡、數方塊、App 錯誤畫面、圖文一致（6 個計分任務）</p><div class="best">最高平均 <b>91%</b>｜<code>jev-1.14</code></div></article><article><img src="assets/site/spot-text.webp" alt="" width="84" height="84" loading="lazy"><h3>中文文字決策</h3><p>繁中評論情緒、詐騙簡訊、客服意圖路由（3 個計分任務）</p><div class="best">最高平均 <b>100%</b>，共 20 個模型同分</div></article><article><img src="assets/site/spot-agent.webp" alt="" width="84" height="84" loading="lazy"><h3>Agent 守門／路由</h3><p>工具選擇、是否轉真人、LLM-as-judge（3 個計分任務）</p><div class="best">最高平均 <b>100%</b>，共 27 個模型同分</div></article><article><img src="assets/site/spot-taiwan.webp" alt="" width="84" height="84" loading="lazy"><h3>台灣政經</h3><p>政治制度與經濟數據、新聞分類、立場對稱（3 個計分任務）</p><div class="best">最高平均 <b>86%</b>｜<code>gpt-6-luna-decisions</code></div></article></div></section>
 <section class="section" id="archive"><div class="section-head"><h2>早期研究</h2>
-<p>這個專案一開始只研究 Gemini Decision 1，以下報告保留原貌。</p></div>
+<p>這個專案一開始只研究 Gemini Decision 1。以下報告的內容與數據維持當時的版本，版面已改用本站設計。</p></div>
 <ul class="archive">
 <li><a href="report.html"><strong>Gemini Decision 1 的三項音訊研究</strong><span>單音節辨音、42 段音場分類、50 段發音判斷，與 Gemini 4 Argon 對照。</span><em>2026-11-17</em></a></li>
 <li><a href="audit-report.html"><strong>注音音檔稽核</strong><span>以 flash-lite 全量檢查 2,934 個注音音檔。</span><em>2026-11-17</em></a></li>
 <li><a href="ms-decision-report.html"><strong>Microsoft Decision 1.1 實測</strong><span>音訊支援查證與純文字任務對照。</span><em>2026-11-19</em></a></li>
 </ul></section></div>
 </main>
-<footer class="site-foot"><div class="wrap"><span>Decision Arena｜資料產生於 2026-11-22 11:43</span><span>雲端模型會持續更新，數字只代表測試當天的行為。</span><span class="copy">© 2026 <a href="https://www.facebook.com/will.fans/" rel="noopener">Will 保哥</a></span></div></footer>
+<footer class="site-foot"><div class="wrap"><span>© 2026 <a href="https://www.facebook.com/will.fans/" rel="noopener">Will 保哥</a>｜資料產生於 2026-11-26 10:36</span><span>雲端模型會持續更新，數字只代表測試當天的行為。</span></div></footer>
 <script>(()=>{
   const root=document.documentElement, btn=document.getElementById('theme-btn');
   if(!btn) return;

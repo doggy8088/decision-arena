@@ -11,9 +11,14 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from bench import legacy  # noqa: E402  共用網站外殼
+
 OUT = ROOT / "out"
 TPL = ROOT / "scripts" / "report"
 
@@ -167,15 +172,17 @@ def main() -> None:
         "pron": {"variants": variants, **pron["summary"]},
     }
 
-    head = (TPL / "head.html").read_text(encoding="utf-8")
+    css = (TPL / "style.css").read_text(encoding="utf-8")
     body = (TPL / "body.html").read_text(encoding="utf-8")
     js = (TPL / "app.js").read_text(encoding="utf-8")
 
     payload = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
     js = js.replace("__DATA__", payload)
 
-    parts = [head, "<body>", body, "\n<script>", js, "</script>", "</body>", "</html>", ""]
-    html = "\n".join(parts)
+    html = legacy.render(
+        title="Gemini Decision 1 的三項音訊研究｜Decision Arena",
+        description="單音節辨音、42 段音場分類、50 段發音判斷：Gemini Decision 1 與 Gemini 4 Argon 的實測對照。",
+        generated="2026-11-17", body=body, css=css, scripts=f"<script>\n{js}</script>")
     target = ROOT / "report.html"
     target.write_text(html, encoding="utf-8")
     print(f"✅ {target.relative_to(ROOT)}  ({len(html) / 1024:.1f} KB)")
