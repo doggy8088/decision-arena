@@ -31,6 +31,7 @@ jobs:
           cp pages/robots.txt pages/CNAME _site/
           cp index.html bench-dashboard.html bench-report.html report.html audit-report.html ms-decision-report.html _site/
           mkdir -p _site/assets && cp -r assets/site _site/assets/site
+          cp assets/site/favicon.ico _site/favicon.ico   # 瀏覽器預設會要 /favicon.ico
           touch _site/.nojekyll
           ls -la _site
 

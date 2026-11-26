@@ -203,6 +203,9 @@ class SiteShellTests(unittest.TestCase):
         self.assertIn('<a href="index.html#archive" aria-current="page">早期研究</a>', html_text)
         self.assertIn("Will 保哥", html_text)
         self.assertIn('<div class="lg">', html_text)
+        for href in ("assets/site/favicon.ico", "assets/site/favicon.svg", "assets/site/apple-touch-icon.png"):
+            self.assertIn(f'href="{href}"', html_text)
+            self.assertTrue((ROOT / href).exists(), href)
 
 class DashboardTests(unittest.TestCase):
     def test_build_data_shape_and_composite_rule(self):

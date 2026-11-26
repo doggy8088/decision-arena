@@ -6,6 +6,11 @@
 <title>評測報告｜Decision Arena</title>
 <meta name="description" content="Decision 模型多模態評測的完整報告：總結與選型建議、模型名冊與模態探針、每個任務的正確率與校準。">
 <meta name="color-scheme" content="light dark">
+<link rel="icon" href="assets/site/favicon.ico" sizes="32x32">
+<link rel="icon" href="assets/site/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/site/apple-touch-icon.png">
+<meta name="theme-color" content="#f5f6f8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)">
 <script>(()=>{try{const t=localStorage.getItem('da-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}})();</script>
 <style>
 :root{color-scheme:light;--bg:#f5f6f8;--surface:#ffffff;--surface-2:#eef0f3;--surface-3:#e4e7ec;--ink:#14171c;--ink-2:#4a515c;--muted:#646c79;--border:#dde1e6;--border-strong:#c3c9d1;--accent:#7a2e5c;--accent-ink:#ffffff;--accent-soft:#f4e6ee;--link:#7a2e5c;--ok:#1f7a3d;--ok-bg:#e2f3e7;--warn:#875700;--warn-bg:#fcefd5;--bad:#a3261e;--bad-bg:#fbe6e4;--tier-text:#2a78d6;--tier-image:#eb6834;--tier-audio:#1baf7a;--seq-0:#cde2fb;--seq-1:#9ec5f4;--seq-2:#6da7ec;--seq-3:#3987e5;--seq-4:#256abf;--seq-5:#184f95;--seq-6:#0d366b;--seqi-0:#13233a;--seqi-1:#13233a;--seqi-2:#13233a;--seqi-3:#ffffff;--seqi-4:#ffffff;--seqi-5:#ffffff;--seqi-6:#ffffff;--pos:#2a78d6;--neg:#eb6834;--track:#e9ecf0;--grid:#e3e6ea;--shadow:0 1px 2px rgba(20,23,28,.04), 0 8px 24px rgba(20,23,28,.06);}
@@ -253,7 +258,7 @@ details.more{border-top:0;padding-top:0;margin-top:10px}
 <p class="lede">市面上「一次前向傳播、直接回傳校準機率」的決策模型，在多模態與五類情境下的實測。所有模型共用同一套任務與評分程式，數字由 <code>python3 -m bench site</code> 從 <code>results/</code> 直接產生。想用圖表比較、快速篩選可用模型，請開 <a href="bench-dashboard.html">Dashboard</a>。</p>
 <dl class="stats"><div><dt>已實測模型</dt><dd>34</dd></div><div><dt>任務</dt><dd>20</dd></div>
 <div><dt>請求數</dt><dd>7,327</dd></div><div><dt>總花費</dt><dd>US$0.277</dd></div></dl>
-<p class="meta">產生時間 2026-11-26 10:36｜合併 6 次執行</p>
+<p class="meta">產生時間 2026-11-26 10:42｜合併 6 次執行</p>
 <nav class="toc" aria-label="本頁內容"><a href="#summary">總結</a><a href="#findings">重點</a><a href="#roster">模型名冊</a><a href="#overview">總覽</a><a href="#s-audio">語音與音訊</a><a href="#s-image">影像判斷</a><a href="#s-zh_text">中文文字決策</a><a href="#s-agent">Agent 守門／路由</a><a href="#s-taiwan">台灣政經</a><a href="#notes">註記</a><a href="#method">方法</a></nav>
 </header>
 <section class="section" id="summary"><div class="section-head"><h2>總結</h2></div><div class="panel verdict-panel"><p class="verdict">沒有一個模型全面勝出：先看要不要聽音訊，再依情境挑模型。</p><ul class="points">
@@ -3271,7 +3276,7 @@ details.more{border-top:0;padding-top:0;margin-top:10px}
 <tr><th>快取與預算</th><td>原始回應以「不含金鑰的請求內容」雜湊快取；每次執行有美元上限，超過即停止。</td></tr>
 </tbody></table></div></section></div>
 </main>
-<footer class="site-foot"><div class="wrap"><span>© 2026 <a href="https://www.facebook.com/will.fans/" rel="noopener">Will 保哥</a>｜資料產生於 2026-11-26 10:36</span><span>雲端模型會持續更新，數字只代表測試當天的行為。</span></div></footer>
+<footer class="site-foot"><div class="wrap"><span>© 2026 <a href="https://www.facebook.com/will.fans/" rel="noopener">Will 保哥</a>｜資料產生於 2026-11-26 10:42</span><span>雲端模型會持續更新，數字只代表測試當天的行為。</span></div></footer>
 <script>(()=>{
   const root=document.documentElement, btn=document.getElementById('theme-btn');
   if(!btn) return;

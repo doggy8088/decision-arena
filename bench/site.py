@@ -299,6 +299,11 @@ def page(*, title: str, description: str, active: str, body: str, generated: str
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(description)}">
 <meta name="color-scheme" content="light dark">
+<link rel="icon" href="assets/site/favicon.ico" sizes="32x32">
+<link rel="icon" href="assets/site/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/site/apple-touch-icon.png">
+<meta name="theme-color" content="{TOKENS["light"]["bg"]}" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="{TOKENS["dark"]["bg"]}" media="(prefers-color-scheme: dark)">
 {HEAD_SCRIPT}
 <style>
 {tokens_css()}{BASE_CSS}{CHART_CSS}{extra_css}
